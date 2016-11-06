@@ -12,7 +12,7 @@ Holding all PSQL code for CMPT 355 team 8 project
 
 #Time Table
 |TIME|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|
-|------|:------|:------|:------|:------|:------|
+|------|:------|:------|:-------|:------|:------|
 |8:00||||||
 |8:30||||U||
 |9:00||||u||
