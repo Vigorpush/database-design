@@ -14,7 +14,7 @@ Holding all PSQL code for CMPT 355 team 8 project
 |TIME|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|
 |------|:------|:------|:-------|:------|:------|
 |8:00||||||
-|8:30||||U||
+|8:30||||u||
 |9:00||||u||
 |9:30||||u||
 |10:00||u||u||
@@ -29,10 +29,10 @@ Holding all PSQL code for CMPT 355 team 8 project
 |2:30|u|u|u|u||
 |3:00|u|u|u|u||
 |3:30|u|u|u|u||
-|4:00|u|u|u|U||
-|4:30|u||u|U||
-|5:00||||||
-|5:30||||||
+|4:00|u|u|u|u||
+|4:30|u||u|u||
+|5:00||||u||
+|5:30||||u||
 |6:00||||||
 |6:30||||||
 |7:00||||||
