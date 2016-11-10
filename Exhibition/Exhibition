@@ -23,9 +23,8 @@
 * PK	elMuseum			(FK: Exhibition)
 * PK	elName				(FK: Exhibition)
 * PK	elStartDate			(FK: Exhibition)
-* -----------------------------------------------------------------------
-* ATR	elExhibitingMuseum		(FK: Museum)
-* ATR	elExhibitingRoom		(FK: Location)
+* PK	elExhibitingMuseum		(FK: Museum)
+* PK	elExhibitingRoom		(FK: Location)
 */
 
 

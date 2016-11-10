@@ -1,1 +1,16 @@
---
+-- This file will be create 
+-- Location table (Main Table)
+
+
+/**
+* Location table will contain information for 5 coopration museum
+* -----------------------------------------------------------------------
+* PK 	lMuseum			(FK: Museum)
+* PK	lRoomName
+* -----------------------------------------------------------------------
+* ATR	lLength
+* ATR	lWidth
+* ATR	lMinCapacity
+* ATR	lMaxCapacity
+* ATR	lRoomCondition
+*/
