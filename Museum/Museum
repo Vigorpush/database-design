@@ -1,2 +1,14 @@
 -- This file will created
--- Museum information
+-- Museum information 		(Main table)
+
+
+/**
+* Museum information table will contain information for 5 coopration museum
+* -----------------------------------------------------------------------
+* PK 	museum name 		(make the museum to be specific)
+* PK 	museum city or location (make the museum to be specific)
+* -----------------------------------------------------------------------
+* ATR 	museum contact name 
+* ATR 	museum contact email
+* ATR 	museum contact phone number
+*/

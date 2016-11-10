@@ -1,3 +1,19 @@
 --This file mainly create Domain for project
 
---Domain for works table
+-- Domain for works table
+-- Domain for works additional table
+
+-- Domain for museum information table
+
+-- Domain for Room table
+-- Domain for Connection/Door table
+
+-- Domain for Exhibtion table
+-- Domain for Exhibition item table
+
+-- Domain for Location table
+-- Domain for Location item table
+
+
+-- Domain for Loan table
+-- Domain for Traveling table

@@ -1,0 +1,42 @@
+-- This file will create tables about exhibition
+-- Exhibition table (Main Table)
+-- Exhibition Location
+-- Exhibition Item table
+
+
+/**
+* Exhibition table will Exhibition information for 5 coopration museum
+* -----------------------------------------------------------------------
+* PK	eMuseum			(FK: Museum)
+* PK	eName			
+* PK	eStartDate
+* -----------------------------------------------------------------------
+* ATR 	eEndDate
+* ATR 	eDescription
+*/
+
+
+
+/**
+* Exhibition Location table will Exhibition Location information for 5 coopration museum
+* -----------------------------------------------------------------------
+* PK	elMuseum			(FK: Exhibition)
+* PK	elName				(FK: Exhibition)
+* PK	elStartDate			(FK: Exhibition)
+* -----------------------------------------------------------------------
+* ATR	elExhibitingMuseum		(FK: Museum)
+* ATR	elExhibitingRoom		(FK: Location)
+*/
+
+
+
+/**
+* Exhibition Item table will Exhibition Item information for 5 coopration museum
+* -----------------------------------------------------------------------
+* PK	eiMuseum			(FK: Exhibition)
+* PK	eiName				(FK: Exhibition)
+* PK	eiStartDate			(FK: Exhibition)
+* PK	eiMuseum			(FK: Museum)
+* PK	eiLetterKey			(FK: Works)
+* PK	eiNumberKey			(FK: Works)
+*/
