@@ -1,84 +1,109 @@
 
+----  start of CORE VIEWS
+
+-- Works  view
+CREATE VIEW WorksView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+
+-- Work Mediums
+
+CREATE VIEW WorkMediumsView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+
+  
+-- Location view
+CREATE VIEW LocationView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+-- Worklocations view
+CREATE VIEW WorkLocationsView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions; 
 
 -- Exhibitions view
 CREATE VIEW ExhibitionsView
   AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
   FROM Exhibitions;
-
--- Location view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
-
--- Exhibition view
-CREATE VIEW ExhibitionsView
+  
+-- Doors view
+CREATE VIEW DoorsView
   AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
   FROM Exhibitions;
   
+
+-- ExhibitionLocations view
+CREATE VIEW ExhibitionLocationsView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+  
+-- ExhibitionWorks view
+CREATE VIEW ExhibitionWorksView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+-- Owners view
+CREATE VIEW OwnersView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+  
+-- WorkOwners view
+CREATE VIEW WorkOwnersView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+  
+  
+ -- WorkTransactions view
+CREATE VIEW WorkTransactionsView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+  
+-- Sponsors view
+CREATE VIEW SponsorsView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+-- WorkThemes view
+CREATE VIEW WorkThemesView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+-- WorksInsurance view
+CREATE VIEW WorksInsuranceView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+  
+
+----  end of CORE VIEWS
+  
+
+----  OTHER  VIEWS
+
 -- Travelling exhibiton view
 CREATE VIEW ExhibitionsView
   AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
   FROM Exhibitions;
   
--- Works  view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+
   
--- Workmedias view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
-  CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+
+
   
--- Worklocations view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+
   
--- Doors view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+
   
--- Exhibitionlocations view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+
   
--- Exhibitionworks view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+
   
--- owners view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+
   
--- workowners view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+
   
--- worktrasactions view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
-  
--- sponsors view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
-  
--- Workthemes view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
-  
--- worksinsurance view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
