@@ -45,39 +45,44 @@ CREATE VIEW ExhibitionWorksView
   AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
   FROM Exhibitions;
   
+  
+-------------------------------
+
+
 -- Owners view
 CREATE VIEW OwnersView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
-  
-  
+  AS SELECT own-Name, own-Email, own-City, own-State, own-Streetname, own-BuildingNumber, own-isPartnerMuseum
+  FROM Owners;
+    
 -- WorkOwners view
 CREATE VIEW WorkOwnersView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT won-WorkCharID, won-WorkNumID, won-DatabaseEntryLocation,won-OwnerName, won-OwnershipStartDate, won-OwnershipEndDate
+  FROM WorkOwners;
   
-  
-  
+
+    
  -- WorkTransactions view
 CREATE VIEW WorkTransactionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT wtr-WorkCharID, wtr-WorkNumID,wtr-DatabaseEntryMuseum, wtr-MuseumAffected, wtr-Client, wtr-TransactionType, wtr-TransactionTime
+  FROM WorkTransactions;
   
   
 -- Sponsors view
 CREATE VIEW SponsorsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT spo-SponsorName, spo-ExhibitName, spo-MuseumName, spo-ExhibitStartDate, spo-SponsorAmount
+  FROM Sponsors;
+  
+  wth-DatabaseEntryLocation
   
 -- WorkThemes view
 CREATE VIEW WorkThemesView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT wth-WorkCharID, wth-WorkNumID, wth-DatabaseEntryLocation, wth-DatabaseEntryLocationAddress, wth-Theme
+  FROM WorkThemes;
   
 -- WorksInsurance view
 CREATE VIEW WorksInsuranceView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT win-WorkCharID, win-WorkNumID, win-DatabaseEntryLocation, win-WorkInsureValue, win-InsureStartDate, win-InsureEndDate
+  FROM WorksInsuranc;
   
 
 ----  end of CORE VIEWS
