@@ -80,20 +80,3 @@ CREATE VIEW WorksInsuranceView
   
 
 ---  OTHER  VIEWS
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
