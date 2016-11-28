@@ -1,5 +1,5 @@
 
-----  start of CORE VIEWS
+--  start of CORE VIEWS
 
 -- Works  view
 CREATE VIEW WorksView
@@ -45,10 +45,6 @@ CREATE VIEW ExhibitionWorksView
   AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
   FROM Exhibitions;
   
-  
--------------------------------
-
-
 -- Owners view
 CREATE VIEW OwnersView
   AS SELECT own-Name, own-Email, own-City, own-State, own-Streetname, own-BuildingNumber, own-isPartnerMuseum
@@ -58,21 +54,16 @@ CREATE VIEW OwnersView
 CREATE VIEW WorkOwnersView
   AS SELECT won-WorkCharID, won-WorkNumID, won-DatabaseEntryLocation,won-OwnerName, won-OwnershipStartDate, won-OwnershipEndDate
   FROM WorkOwners;
-  
-
-    
+      
  -- WorkTransactions view
 CREATE VIEW WorkTransactionsView
   AS SELECT wtr-WorkCharID, wtr-WorkNumID,wtr-DatabaseEntryMuseum, wtr-MuseumAffected, wtr-Client, wtr-TransactionType, wtr-TransactionTime
   FROM WorkTransactions;
-  
-  
+    
 -- Sponsors view
 CREATE VIEW SponsorsView
   AS SELECT spo-SponsorName, spo-ExhibitName, spo-MuseumName, spo-ExhibitStartDate, spo-SponsorAmount
   FROM Sponsors;
-  
-  wth-DatabaseEntryLocation
   
 -- WorkThemes view
 CREATE VIEW WorkThemesView
@@ -85,16 +76,10 @@ CREATE VIEW WorksInsuranceView
   FROM WorksInsuranc;
   
 
-----  end of CORE VIEWS
+-- end of CORE VIEWS
   
 
-----  OTHER  VIEWS
-
--- Travelling exhibiton view
-CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
-  
+---  OTHER  VIEWS
 
   
 
