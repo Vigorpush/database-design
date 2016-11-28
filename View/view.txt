@@ -8,3 +8,11 @@
 
 --
 
+
+-- Create a View for the Exhibitions Table
+-- .. This view allows insertion, updates and deletes (Read/Write View)
+
+CREATE VIEW ExhibitionsView
+  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  FROM Exhibitions;
+
