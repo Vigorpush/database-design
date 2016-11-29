@@ -1,6 +1,5 @@
 
---  start of CORE VIEWS
-
+-- start of CORE VIEWS
 -- Works  view
 CREATE VIEW WorksView
   AS SELECT 
@@ -101,32 +100,67 @@ AS SELECT
   
 -- Owners view
 CREATE VIEW OwnersView
-  AS SELECT own-Name, own-Email, own-City, own-State, own-Streetname, own-BuildingNumber, own-isPartnerMuseum
+  AS SELECT 
+      own-Name, 
+      own-Email, 
+      own-City,
+      own-State, 
+      own-Streetname, 
+      own-BuildingNumber,
+      own-isPartnerMuseum
   FROM Owners;
     
 -- WorkOwners view
 CREATE VIEW WorkOwnersView
-  AS SELECT won-WorkCharID, won-WorkNumID, won-DatabaseEntryLocation,won-OwnerName, won-OwnershipStartDate, won-OwnershipEndDate
+  AS SELECT 
+      won-WorkCharID, 
+      won-WorkNumID, 
+      won-DatabaseEntryLocation,
+      won-OwnerName,
+      won-OwnershipStartDate, 
+      won-OwnershipEndDate
   FROM WorkOwners;
       
  -- WorkTransactions view
 CREATE VIEW WorkTransactionsView
-  AS SELECT wtr-WorkCharID, wtr-WorkNumID,wtr-DatabaseEntryMuseum, wtr-MuseumAffected, wtr-Client, wtr-TransactionType, wtr-TransactionTime
+  AS SELECT wtr-WorkCharID, 
+      wtr-WorkNumID,
+      wtr-DatabaseEntryMuseum, 
+      wtr-MuseumAffected,
+      wtr-Client, 
+      wtr-TransactionType, 
+      wtr-TransactionTime
   FROM WorkTransactions;
     
 -- Sponsors view
 CREATE VIEW SponsorsView
-  AS SELECT spo-SponsorName, spo-ExhibitName, spo-MuseumName, spo-ExhibitStartDate, spo-SponsorAmount
+  AS SELECT 
+      spo-SponsorName, 
+      spo-ExhibitName, 
+      spo-MuseumName, 
+      spo-ExhibitStartDate, 
+      spo-SponsorAmount
   FROM Sponsors;
   
 -- WorkThemes view
 CREATE VIEW WorkThemesView
-  AS SELECT wth-WorkCharID, wth-WorkNumID, wth-DatabaseEntryLocation, wth-DatabaseEntryLocationAddress, wth-Theme
+  AS SELECT 
+      wth-WorkCharID, 
+      wth-WorkNumID, 
+      wth-DatabaseEntryLocation, 
+      wth-DatabaseEntryLocationAddress, 
+      wth-Theme
   FROM WorkThemes;
   
 -- WorksInsurance view
 CREATE VIEW WorksInsuranceView
-  AS SELECT win-WorkCharID, win-WorkNumID, win-DatabaseEntryLocation, win-WorkInsureValue, win-InsureStartDate, win-InsureEndDate
+  AS SELECT 
+      win-WorkCharID, 
+      win-WorkNumID, 
+      win-DatabaseEntryLocation, 
+      win-WorkInsureValue, 
+      win-InsureStartDate, 
+      win-InsureEndDate
   FROM WorksInsuranc;
   
 
