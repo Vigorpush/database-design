@@ -1,0 +1,6 @@
+CREATE schema "wwf594" authorization cmpt355_team08;
+CREATE schema "sjg970" authorization cmpt355_team08;
+CREATE schema "rig821" authorization cmpt355_team08;
+CREATE schema "mgk787" authorization cmpt355_team08;
+CREATE schema "jiz457" authorization cmpt355_team08;
+
