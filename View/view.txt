@@ -3,47 +3,101 @@
 
 -- Works  view
 CREATE VIEW WorksView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT 
+      wor-WorkCharID, 
+      wor-WorkNumID,
+      wor-DatabaseEntryMuseum, 
+      wor-WorkDescription, 
+      wor-WorkPhysicalProperty,
+      wor-WorkClassification,
+      wor-WorkCreator,
+      wor-WorkCreationDate,
+      wor-WorkBorrowable,
+      wor-GeographicRegion,
+      wor-FieldofScience
+   FROM Works;
 
 -- Work Mediums
 
 CREATE VIEW WorkMediumsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT 
+      wme-WorkCharID, 
+      wme-WorkNumID,
+      wme-DatabaseEntrymuseum, 
+      wme-WorkMedium
+   FROM WorkMediums;
 
   
 -- Location view
 CREATE VIEW LocationView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT 
+      loc-RoomName, 
+      loc-BuildingName,
+      loc-travelingExhibtionlocation, 
+      loc-LocationSuggestedCapacityMin,
+      loc-LocationSuggestedCapacityMax,
+      loc-LocationWidth,
+      loc-LocationLength
+  FROM Locations;
   
 -- Worklocations view
 CREATE VIEW WorkLocationsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions; 
+   AS SELECT 
+      wol-WorkCharID, 
+      wol-WorkNumID,
+      wol-DatabaseEntryMuseum, 
+      wol-LocationName,
+      wol-MuseumName,
+      wol-WorkArrivalTime,
+      wol-WorkDepartureTime
+   FROM WorkLocations; 
 
 -- Exhibitions view
 CREATE VIEW ExhibitionsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
+  AS SELECT 
+      exh-ExhibitName,
+      exh-MuseumName,
+      exh-ExhibitStartDate, 
+      exh-ExhibitEndDate,
+      exh-ExhibitDescription,
+      exh-Security,
+      exh-TravelingExhibtion,
+      exh-ExhibitDepartureDate
   FROM Exhibitions;
   
 -- Doors view
 CREATE VIEW DoorsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+  AS SELECT 
+      dor-MuseumNameOrigin,
+      dor-MuseumNameEnd,
+      dor-LocationNameOrigin, 
+      dor-LocationNameEnd
+  FROM Doors;
   
 
 -- ExhibitionLocations view
 CREATE VIEW ExhibitionLocationsView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
-  
+AS SELECT 
+      elo-ExhibitName,
+      elo-ExhibitStartDate,
+      elo-LocationName, 
+      elo-MuseumName,
+      elo-LocationStartDaye,
+      elo-LocationEndDate
+  FROM ExhibitionLocations;
   
 -- ExhibitionWorks view
 CREATE VIEW ExhibitionWorksView
-  AS SELECT EX_ExhName, EX_ExhStartdate, EX_ExhEnddate, EX_ExhLocation, EX_ExhDescription
-  FROM Exhibitions;
+AS SELECT 
+      exw-ExhibitName,
+      exw-ExhibitStartDate,
+      exw-MuseumName, 
+      exw-WorkCharID,
+      exw-WorkNumID,
+      exw-DatabaseEntryMuseum,
+      exw-DateAdded,
+      exw-DateRemoved
+  FROM ExhibitionLocations;
   
 -- Owners view
 CREATE VIEW OwnersView
