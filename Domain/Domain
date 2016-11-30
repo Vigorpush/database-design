@@ -94,8 +94,8 @@ DROP DOMAIN IF EXISTS NS_WorkDepartureTime CASCADE;
 CREATE DOMAIN NS_WorkDepartureTime as timestamp;
 
 
-DROP DOMAIN IF EXISTS NS_WorkArrivalTime CASCADE;
-CREATE DOMAIN NS_WorkArrivalTime as timestamp;
+DROP DOMAIN IF EXISTS NS_InsureDate CASCADE;
+CREATE DOMAIN NS_InsureDate as timestamp;
 
 
 DROP DOMAIN IF EXISTS NS_ExhibitDescription CASCADE;
