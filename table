@@ -10,12 +10,6 @@ CREATE TABLE NS_Owners (
 );
 
 
-
-
-
-
-
-
 CREATE TABLE NS_Works (
     worWorkCharID NS_WorkCharID NOT NULL,
     worWorkNumID NS_WorkNumID NOT NULL,
@@ -57,10 +51,10 @@ CREATE TABLE NS_Locations (
     locIsTravellingExhibitionLocation NS_IsTravellingExhibitionLocation,
     locLocationSuggestedCapacityMin NS_LocationSuggestedCapacity,
     locLocationSuggestedCapacityMax NS_LocationSuggestedCapacity,
-    locLocationsWidth NS_LocationWidth,
-    locLocationLength NS_LocationLength,
+    locLocationMeasurementWidth NS_LocationMeasurement,
+    locLocationMeasurementLength NS_LocationMeasurement,
     FOREIGN KEY(locBuildingName) REFERENCES NS_Owners(ownName),
-    PRIMARY KEY(locLocationName, locBuildingName)
+    PRIMARY KEY(locLocationName, locBuildingName),
 CHECK(locLocationSuggestedCapacityMin < locLocationSuggestedCapacityMax)
 );
 
@@ -77,11 +71,12 @@ CREATE TABLE NS_WorkLocations (
     wolWorkDatabaseEntryMuseum NS_OwnerName NOT NULL,
     wolLocationName NS_LocationName NOT NULL,
     wolMuseumName NS_OwnerName NOT NULL,
-    wolWorkArrivalTime NS_WorkDepartureTime NOT NULL,
-    wolWorkDepartureTime NS_WorkDepartureTime,
+    wolWorkTimeArrival NS_WorkTime NOT NULL,
+    wolWorkTimeDeparture NS_WorkTime,
     Foreign Key (wolWorkCharID, wolWorkNumID, wolWorkDatabaseEntryMuseum) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
     Foreign Key (wolLocationName, wolMuseumName) REFERENCES NS_Locations(locLocationName, locBuildingName),
-    PRIMARY KEY(wolWorkCharID, wolWorkNumID, wolWorkDatabaseEntryMuseum, wolLocationName, wolMuseumName)
+    PRIMARY KEY(wolWorkCharID, wolWorkNumID, wolWorkDatabaseEntryMuseum, wolLocationName, wolMuseumName),
+CHECK ((wolWorkTimeArrival<wolWorkTimeDeparture) OR (wolWorkTimeDeparture is NULL))
 );
 
 
@@ -102,21 +97,16 @@ CREATE TABLE NS_Doors (
 );
 
 
-
-
-
-
-
-
 CREATE TABLE NS_Exhibitions (
     exhExhibitName NS_ExhibitName NOT NULL,
     exhMuseumName NS_OwnerName NOT NULL,
-    exhExhibitStartDate NS_ExhibitStartDate NOT Null,
-    exhExhibitEndDate NS_ExhibitEndDate,         --was not null in report
-    exhSecurityPersonName NS_SecurityName,
+    exhExhibitDateStart NS_ExhibitDate NOT NULL,
+    exhExhibitDateEnd NS_ExhibitDate NOT NULL,
+exhSecurityPersonName NS_SecurityName,
     exhIsTravellingExhibition NS_IsTravellingExhibition,
-    PRIMARY KEY(exhExhibitName, exhMuseumName, exhExhibitStartDate),
-    FOREIGN KEY(exhMuseumName) REFERENCES NS_Owners(OwnName)
+    PRIMARY KEY(exhExhibitName, exhMuseumName, exhExhibitDateStart),
+    FOREIGN KEY(exhMuseumName) REFERENCES NS_Owners(OwnName),
+CHECK( exhExhibitDateStart<exhExhibitDateEnd)
 );
 
 
@@ -128,16 +118,17 @@ CREATE TABLE NS_Exhibitions (
 
 CREATE TABLE NS_ExhibitionLocations (
     eloExhibitName NS_ExhibitName NOT NULL,
-    eloExhibitStartDate NS_ExhibitStartDate NOT NULL,
+    eloExhibitDateStart NS_ExhibitDate NOT NULL,
     eloLocationName NS_LocationName NOT NULL,
     eloMuseumOfLocation NS_OwnerName NOT NULL,
     eloMuseumOfExhibition NS_OwnerName NOT NULL,
-    eloLocationStartDate NS_LocationStartDate NOT NULL,
-    eloLocationEndDate NS_LocationEndDate,
-    PRIMARY KEY(eloExhibitName, eloExhibitStartDate, eloLocationName, eloMuseumOfLocation, eloLocationStartDate),
-    FOREIGN KEY(eloExhibitname, eloExhibitStartDate,eloMuseumOfExhibition) REFERENCES NS_Exhibitions(exhExhibitName, exhExhibitStartDate, exhMuseumName),
-    FOREIGN KEY(eloLocationName, eloMuseumOfLocation) REFERENCES NS_Locations(locLocationName, locBuildingName)
-CHECK((eloLocationStartDate<eloLocationEndDate) AND (eloExhibitStartDate<=eloLocationStartDate)
+    eloLocationDateStart NS_LocationDate NOT NULL,
+    eloLocationDateEnd NS_LocationDate,
+    PRIMARY KEY(eloExhibitName, eloExhibitDateStart, eloLocationName, eloMuseumOfLocation, eloLocationDateStart),
+    FOREIGN KEY(eloExhibitname, eloExhibitDateStart,eloMuseumOfExhibition) REFERENCES NS_Exhibitions(exhExhibitName, exhExhibitDateStart, exhMuseumName),
+    FOREIGN KEY(eloLocationName, eloMuseumOfLocation) REFERENCES NS_Locations(locLocationName, locBuildingName),
+        CHECK(((eloLocationDateEnd is NULL) OR (eloLocationDateStart<eloLocationDateEnd)) 
+                AND (eloExhibitDateStart<=eloLocationDateStart))
 );
 
 
@@ -149,17 +140,17 @@ CHECK((eloLocationStartDate<eloLocationEndDate) AND (eloExhibitStartDate<=eloLoc
 
 CREATE TABLE NS_ExhibitionWorks (
     exwExhibitName NS_ExhibitName NOT NULL,
-    exwExhibitStartDate NS_ExhibitStartDate NOT NULL,
+    exwExhibitDateStart NS_ExhibitDate NOT NULL,
     exwMuseumOfExhibition NS_OwnerName NOT NULL,
     exwWorkCharID NS_WorkCharID NOT NULL,
     exwWorkNumID NS_WorkNumID NOT NULL,
     exwWorkDataBaseEntryMuseum NS_OwnerName NOT NULL,
     exwDateWorkAdded NS_DateWorkAdded NOT NULL,
     exwDateWorkRemoved NS_DateWorkRemoved,
-    PRIMARY KEY(exwExhibitname, exwExhibitStartDate, exwMuseumOfExhibition, exwWorkCharID, exwWorkNumID, exwWorkDataBaseEntryMuseum, exwDateWorkAdded),
-    FOREIGN KEY(exwExhibitName, exwExhibitStartDate,exwMuseumOfExhibition) REFERENCES NS_Exhibitions(exhExhibitName,exhExhibitStartDate, exhMuseumName),
-    FOREIGN KEY(exwWorkCharID, exwWorkNumID, exwWorkDatabaseEntryMuseum) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum)
-CHECK(exwDateWorkAdded<exwDateWorkRemoved)
+    PRIMARY KEY(exwExhibitname, exwExhibitDateStart, exwMuseumOfExhibition, exwWorkCharID, exwWorkNumID, exwWorkDataBaseEntryMuseum, exwDateWorkAdded),
+    FOREIGN KEY(exwExhibitName, exwExhibitDateStart,exwMuseumOfExhibition) REFERENCES NS_Exhibitions(exhExhibitName,exhExhibitDateStart, exhMuseumName),
+    FOREIGN KEY(exwWorkCharID, exwWorkNumID, exwWorkDatabaseEntryMuseum) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
+        CHECK((exwDateWorkAdded<exwDateWorkRemoved) OR (exwDateWorkRemoved is NULL))
 );
 
 
@@ -174,12 +165,12 @@ CREATE TABLE NS_WorkOwners (
     wonWorkNumID NS_WorkNumID NOT NULL,
     wonWorkDatabaseEntryLocation NS_OwnerName NOT NULL,
     wonOwnerName NS_OwnerName NOT NULL,
-    wonOwnershipStartDate NS_OwnershipStartDate NOT NULL,
-    wonOwnershipEndDate NS_OwnershipStartDate,
-    PRIMARY KEY(wonWorkCharID, wonWorkNumId, wonworkDatabaseEntryLocation, wonOwnerName, wonOwnershipStartDate),
+    wonOwnershipDateStart NS_OwnershipDate NOT NULL,
+    wonOwnershipDateEnd NS_OwnershipDate,
+    PRIMARY KEY(wonWorkCharID, wonWorkNumId, wonworkDatabaseEntryLocation, wonOwnerName, wonOwnershipDateStart),
     FOREIGN KEY(wonWorkCharID, wonWorkNumID, wonWorkDatabaseEntryLocation) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
-    FOREIGN KEY(wonOwnerName) REFERENCES NS_Owners(ownName)
-CHECK(wonOwnershipStartDate<wonOwnershipEndDate)
+    FOREIGN KEY(wonOwnerName) REFERENCES NS_Owners(ownName),
+        CHECK((wonOwnershipDateStart<wonOwnershipDateEnd) OR (wonOwnershipDateEnd is NULL))
 );
 
 
@@ -218,10 +209,10 @@ CREATE TABLE NS_SponsorExhibitions (
     speSponsorName NS_SponsorName NOT NULL,
     speExhibitName NS_ExhibitName NOT NULL,
     speMuseumName NS_OwnerName NOT NULL,
-    speExhibitStartDate NS_ExhibitStartDate NOT NULL,
+    speExhibitDateStart NS_ExhibitDate NOT NULL,
     speSponsorAmount NS_SponsorAmount,
-    PRIMARY KEY(speSponsorName, speExhibitName, speMuseumName, speExhibitStartDate),
-    FOREIGN KEY(speExhibitName, speMuseumName, speExhibitStartDate) REFERENCES NS_Exhibitions(exhExhibitName, exhMuseumName, exhExhibitStartDate)
+    PRIMARY KEY(speSponsorName, speExhibitName, speMuseumName, speExhibitDateStart),
+    FOREIGN KEY(speExhibitName, speMuseumName, speExhibitDateStart) REFERENCES NS_Exhibitions(exhExhibitName, exhMuseumName, exhExhibitDateStart)
 );
 
 
@@ -256,7 +247,7 @@ CREATE TABLE NS_WorksInsurance (
     winInsureDateEnd NS_InsureDate,
     PRIMARY KEY(winWorkCharID, winWorkNumID, winWorkDatabaseEntryLocation, winInsureDateStart),
     FOREIGN KEY(winWorkCharID, winWorkNumID, winWorkDatabaseEntryLocation) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
-CHECK(
+CHECK((winInsureDateStart< winInsureDateEnd) OR (winInsureDateEnd is NULL))
 );
 
 
