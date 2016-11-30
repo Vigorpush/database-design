@@ -1,3 +1,19 @@
+DROP table if exists NS_WorksInsurance cascade;
+DROP table if exists NS_Themes cascade;
+DROP table if exists NS_SponsorExhibitions cascade;
+DROP table if exists NS_WorkTransaction cascade;
+DROP table if exists NS_ExhibitionLocations cascade;
+DROP table if exists NS_ExhibitionWorks cascade;
+DROP table if exists NS_WorkOwners cascade;
+DROP table if exists NS_WorksMedium cascade;
+DROP table if exists NS_Works cascade;
+DROP table if exists NS_Owners cascade;
+DROP table if exists NS_Locations cascade;
+DROP table if exists NS_Exhibitions cascade;
+DROP table if exists NS_Doors cascade;
+DROP table if exists NS_WorkLocations cascade;
+
+
 CREATE TABLE NS_Owners (
         ownName NS_OwnerName NOT NULL,
         ownEmail NS_OwnerEmail,
@@ -39,12 +55,6 @@ CREATE TABLE NS_WorksMedium (
 );
 
 
-
-
-
-
-
-
 CREATE TABLE NS_Locations (
     locLocationName NS_LocationName,    --was RoomName but could be towns
     locBuildingName NS_OwnerName,    --will have to be owner name and the name building name should change
@@ -57,12 +67,6 @@ CREATE TABLE NS_Locations (
     PRIMARY KEY(locLocationName, locBuildingName),
 CHECK(locLocationSuggestedCapacityMin < locLocationSuggestedCapacityMax)
 );
-
-
-
-
-
-
 
 
 CREATE TABLE NS_WorkLocations (
@@ -78,12 +82,6 @@ CREATE TABLE NS_WorkLocations (
     PRIMARY KEY(wolWorkCharID, wolWorkNumID, wolWorkDatabaseEntryMuseum, wolLocationName, wolMuseumName),
 CHECK ((wolWorkTimeArrival<wolWorkTimeDeparture) OR (wolWorkTimeDeparture is NULL))
 );
-
-
-
-
-
-
 
 
 CREATE TABLE NS_Doors (
@@ -110,12 +108,6 @@ CHECK( exhExhibitDateStart<exhExhibitDateEnd)
 );
 
 
-
-
-
-
-
-
 CREATE TABLE NS_ExhibitionLocations (
     eloExhibitName NS_ExhibitName NOT NULL,
     eloExhibitDateStart NS_ExhibitDate NOT NULL,
@@ -130,13 +122,6 @@ CREATE TABLE NS_ExhibitionLocations (
         CHECK(((eloLocationDateEnd is NULL) OR (eloLocationDateStart<eloLocationDateEnd)) 
                 AND (eloExhibitDateStart<=eloLocationDateStart))
 );
-
-
-
-
-
-
-
 
 CREATE TABLE NS_ExhibitionWorks (
     exwExhibitName NS_ExhibitName NOT NULL,
@@ -154,12 +139,6 @@ CREATE TABLE NS_ExhibitionWorks (
 );
 
 
-
-
-
-
-
-
 CREATE TABLE NS_WorkOwners (
     wonWorkCharID NS_WorkCharID NOT NULL,
     wonWorkNumID NS_WorkNumID NOT NULL,
@@ -172,11 +151,6 @@ CREATE TABLE NS_WorkOwners (
     FOREIGN KEY(wonOwnerName) REFERENCES NS_Owners(ownName),
         CHECK((wonOwnershipDateStart<wonOwnershipDateEnd) OR (wonOwnershipDateEnd is NULL))
 );
-
-
-
-
-
 
 
 
@@ -195,16 +169,6 @@ CREATE TABLE NS_WorkTransaction (
 );
 
 
-
-
-
-
-
-
-
-
-
-
 CREATE TABLE NS_SponsorExhibitions (
     speSponsorName NS_SponsorName NOT NULL,
     speExhibitName NS_ExhibitName NOT NULL,
@@ -216,12 +180,6 @@ CREATE TABLE NS_SponsorExhibitions (
 );
 
 
-
-
-
-
-
-
 CREATE TABLE NS_Themes (
     wthWorkCharID NS_WorkCharID NOT NULL,
     wthWorkNumID NS_WorkNumID NOT NULL,
@@ -230,12 +188,6 @@ CREATE TABLE NS_Themes (
     PRIMARY KEY(wthWorkCharID, wthWorkNumID, wthWorkDatabaseEntryLocation, wthTheme),
     FOREIGN KEY(wthWorkCharID, wthWorkNumID, wthWorkDatabaseEntryLocation) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum)
 );
-
-
-
-
-
-
 
 
 CREATE TABLE NS_WorksInsurance (
@@ -249,23 +201,5 @@ CREATE TABLE NS_WorksInsurance (
     FOREIGN KEY(winWorkCharID, winWorkNumID, winWorkDatabaseEntryLocation) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
 CHECK((winInsureDateStart< winInsureDateEnd) OR (winInsureDateEnd is NULL))
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
