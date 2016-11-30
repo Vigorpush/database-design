@@ -1,67 +1,50 @@
 
 
-
-
 --Create and Drop the domains for individual users
 DROP DOMAIN IF EXISTS NS_WorkCharID CASCADE;
 CREATE DOMAIN NS_WorkCharID as varchar(10);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_WorkNumID CASCADE;
 CREATE DOMAIN NS_WorkNumID as bigint;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_DatabaseEntryLocation CASCADE;
 CREATE DOMAIN NS_DatabaseEntryLocation as varchar(60);
 
 
+DROP DOMAIN IF EXISTS NS_WorkName CASCADE;
+CREATE DOMAIN NS_WorkName AS varchar(200);
 
 
 DROP DOMAIN IF EXISTS NS_WorkDescription CASCADE;
 CREATE DOMAIN NS_WorkDescription as text;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkPhysicalProperty CASCADE;
-CREATE DOMAIN NS_WorkPhysicalProperty as varchar(30);
-
-
+CREATE DOMAIN NS_WorkPhysicalProperty as varchar(30)
+CHECK (VALUE  IN ('Metalwork', 'Furniture', 'Carving', 'Ceramics', 'Painting', 'Textile', 'Electrical', 'Mechanical'));
 
 
 DROP DOMAIN IF EXISTS NS_WorkClassification CASCADE;
 CREATE DOMAIN NS_WorkClassification as varchar(30);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkCreationDate CASCADE;
 CREATE DOMAIN NS_WorkCreationDate as date;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_WorkCreator CASCADE;
 CREATE DOMAIN NS_WorkCreator as varchar(50);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkMedium CASCADE;
 CREATE DOMAIN NS_WorkMedium as varchar(40);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_LocationName CASCADE;
 --I noticed in the report that we have 2 attributes of LocationName
-CREATE DOMAIN NS_LocationName as varchar(80);
-
-
+CREATE DOMAIN NS_LocationName as varchar(50);
 
 
 DROP DOMAIN IF EXISTS NS_MuseumName CASCADE;
@@ -70,134 +53,90 @@ DROP DOMAIN IF EXISTS NS_MuseumName CASCADE;
 CREATE DOMAIN NS_MuseumName as varchar(50);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkInsureValue CASCADE;
 CREATE DOMAIN NS_WorkInsureValue as float;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_OwnerName CASCADE;
 CREATE DOMAIN NS_OwnerName as varchar(50);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_OwnerEmail CASCADE;
 CREATE DOMAIN NS_OwnerEmail as varchar(80);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_OwnershipStartDate CASCADE;
 CREATE DOMAIN NS_OwnershipStartDate as timestamp;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_OwnershipEndDate CASCADE;
 CREATE DOMAIN NS_OwnershipEndDate as timestamp;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_LocationSuggestedCapacity CASCADE;
 CREATE DOMAIN NS_LocationSuggestedCapacity as int;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_LocationWidth CASCADE;
 CREATE DOMAIN NS_LocationWidth as float;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_LocationLength CASCADE;
 CREATE DOMAIN NS_LocationLength as float;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkDepartureTime CASCADE;
 CREATE DOMAIN NS_WorkDepartureTime as timestamp;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkArrivalTime CASCADE;
 CREATE DOMAIN NS_WorkArrivalTime as timestamp;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_ExhibitName CASCADE;
 CREATE DOMAIN NS_ExhibitName as varchar(150);--This file mainly create Domain for project
 
 
-
-
 --Create and Drop the domains for individual users
 DROP DOMAIN IF EXISTS NS_WorkCharID CASCADE;
 CREATE DOMAIN NS_WorkCharID as varchar(10);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_WorkNumID CASCADE;
 CREATE DOMAIN NS_WorkNumID as bigint;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_DatabaseEntryLocation CASCADE;
 CREATE DOMAIN NS_DatabaseEntryLocation as varchar(60);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_WorkDescription CASCADE;
 CREATE DOMAIN NS_WorkDescription as text;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkPhysicalProperty CASCADE;
 CREATE DOMAIN NS_WorkPhysicalProperty as varchar(30);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_WorkClassification CASCADE;
 CREATE DOMAIN NS_WorkClassification as varchar(30);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkCreationDate CASCADE;
 CREATE DOMAIN NS_WorkCreationDate as date;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_WorkCreator CASCADE;
 CREATE DOMAIN NS_WorkCreator as varchar(50);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkMedium CASCADE;
 CREATE DOMAIN NS_WorkMedium as varchar(40);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_LocationName CASCADE;
 --I noticed in the report that we have 2 attributes of LocationName
 CREATE DOMAIN NS_LocationName as varchar(80);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_MuseumName CASCADE;
@@ -206,106 +145,73 @@ DROP DOMAIN IF EXISTS NS_MuseumName CASCADE;
 CREATE DOMAIN NS_MuseumName as varchar(50);
 
 
-
-
-DROP DOMAIN IF EXISTS NS_WorkInsureValue CASCADE;
-CREATE DOMAIN NS_WorkInsureValue as float;
-
-
-
-
 DROP DOMAIN IF EXISTS NS_OwnerName CASCADE;
 CREATE DOMAIN NS_OwnerName as varchar(50);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_OwnerEmail CASCADE;
 CREATE DOMAIN NS_OwnerEmail as varchar(80);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_OwnershipStartDate CASCADE;
 CREATE DOMAIN NS_OwnershipStartDate as timestamp;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_OwnershipEndDate CASCADE;
 CREATE DOMAIN NS_OwnershipEndDate as timestamp;
 
 
-
-
-DROP DOMAIN IF EXISTS NS_LocationSuggestedCapacity CASCADE;
-CREATE DOMAIN NS_LocationSuggestedCapacity as int;
-
-
+--memo from sam, all of these are created twice
 
 
 DROP DOMAIN IF EXISTS NS_LocationWidth CASCADE;
 CREATE DOMAIN NS_LocationWidth as float;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_LocationLength CASCADE;
 CREATE DOMAIN NS_LocationLength as float;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_WorkDepartureTime CASCADE;
 CREATE DOMAIN NS_WorkDepartureTime as timestamp;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkArrivalTime CASCADE;
 CREATE DOMAIN NS_WorkArrivalTime as timestamp;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_ExhibitName CASCADE;
 CREATE DOMAIN NS_ExhibitName as varchar(150);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_ExhibitDescription CASCADE;
 CREATE DOMAIN NS_ExhibitDescription as text;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_ExhibitStartDate CASCADE;
 CREATE DOMAIN NS_ExhibitStartDate as date;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_ExhibitEndDate CASCADE;
 CREATE DOMAIN NS_ExhibitEndDate as date;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_TransactionType CASCADE;
-CREATE DOMAIN NS_TransactionType as varchar(100);
-
-
+CREATE DOMAIN NS_TransactionType as varchar(25)
+CHECK (VALUE IN ('Purchased', 'Sold', 'Loaned', 'Borrowed', 'Returned', 'Missing', 'Destroyed', 'Sent for Repairs or Restoration'));
 
 
 DROP DOMAIN IF EXISTS NS_TransactionTime CASCADE;
 CREATE DOMAIN NS_TransactionTime as timestamp;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_WorkBorrowable CASCADE;
 CREATE DOMAIN NS_WorkBorrowable as boolean;
+--Sam changed from boolean, answers will be YES and NO
+
+
+
+
 
 
 
@@ -316,111 +222,6 @@ CREATE DOMAIN NS_SecurityName as varchar(200);
 
 
 
-DROP DOMAIN IF EXISTS NS_ExhibitArrivalDate CASCADE;
-CREATE DOMAIN NS_ExhibitArrivalDate as timestamp;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_ExhibitDepartureDate CASCADE;
-CREATE DOMAIN NS_ExhibitDepartureDate as timestamp;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_DestinationPhone CASCADE;
-CREATE DOMAIN NS_DestinationPhone as bigint;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_SponsorName CASCADE;
-CREATE DOMAIN NS_SponsorName as varchar(100);
-
-
-
-
-DROP DOMAIN IF EXISTS NS_SponsorAmount CASCADE;
-CREATE DOMAIN NS_SponsorAmount as float;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_InsureStartDate CASCADE;
-CREATE DOMAIN NS_InsureStartDate as timestamp;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_InsureEndDate CASCADE;
-CREATE DOMAIN NS_InsureEndDate as timestamp;
-
-
-
-
---not sure if we named this differently or removed it.
-DROP DOMAIN IF EXISTS NS_Theme CASCADE;
-CREATE DOMAIN NS_Theme as varchar(60);
-
-
-
-
---Adding the new domains we discussed in the previous meeting
-DROP DOMAIN IF EXISTS NS_GeographicRegion CASCADE;
-CREATE DOMAIN NS_GeographicRegion as varchar(100);
-
-
-
-
-DROP DOMAIN IF EXISTS NS_FieldOfScience CASCADE;
-CREATE DOMAIN NS_FieldOfScience as varchar(100);
-
-
-
-
-DROP DOMAIN IF EXISTS NS_Requirements CASCADE;
-CREATE DOMAIN NS_Requirements as text;
-
-
-
-DROP DOMAIN IF EXISTS NS_ExhibitDescription CASCADE;
-CREATE DOMAIN NS_ExhibitDescription as text;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_ExhibitStartDate CASCADE;
-CREATE DOMAIN NS_ExhibitStartDate as date;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_ExhibitEndDate CASCADE;
-CREATE DOMAIN NS_ExhibitEndDate as date;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_TransactionType CASCADE;
-CREATE DOMAIN NS_TransactionType as varchar(100);
-
-
-
-
-DROP DOMAIN IF EXISTS NS_TransactionTime CASCADE;
-CREATE DOMAIN NS_TransactionTime as timestamp;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_WorkBorrowable CASCADE;
-CREATE DOMAIN NS_WorkBorrowable as boolean;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_SecurityName CASCADE;
-CREATE DOMAIN NS_SecurityName as varchar(200);
 
 
 
@@ -429,42 +230,20 @@ DROP DOMAIN IF EXISTS NS_ExhibitArrivalDate CASCADE;
 CREATE DOMAIN NS_ExhibitArrivalDate as timestamp;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_ExhibitDepartureDate CASCADE;
 CREATE DOMAIN NS_ExhibitDepartureDate as timestamp;
-
-
 
 
 DROP DOMAIN IF EXISTS NS_DestinationPhone CASCADE;
 CREATE DOMAIN NS_DestinationPhone as bigint;
 
 
-
-
 DROP DOMAIN IF EXISTS NS_SponsorName CASCADE;
-CREATE DOMAIN NS_SponsorName as varchar(100);
-
-
+CREATE DOMAIN NS_SponsorName as varchar(70);
 
 
 DROP DOMAIN IF EXISTS NS_SponsorAmount CASCADE;
 CREATE DOMAIN NS_SponsorAmount as float;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_InsureStartDate CASCADE;
-CREATE DOMAIN NS_InsureStartDate as timestamp;
-
-
-
-
-DROP DOMAIN IF EXISTS NS_InsureEndDate CASCADE;
-CREATE DOMAIN NS_InsureEndDate as timestamp;
-
-
 
 
 --not sure if we named this differently or removed it.
@@ -472,29 +251,117 @@ DROP DOMAIN IF EXISTS NS_Theme CASCADE;
 CREATE DOMAIN NS_Theme as varchar(60);
 
 
-
-
 --Adding the new domains we discussed in the previous meeting
 DROP DOMAIN IF EXISTS NS_GeographicRegion CASCADE;
 CREATE DOMAIN NS_GeographicRegion as varchar(100);
-
-
 
 
 DROP DOMAIN IF EXISTS NS_FieldOfScience CASCADE;
 CREATE DOMAIN NS_FieldOfScience as varchar(100);
 
 
-
-
 DROP DOMAIN IF EXISTS NS_Requirements CASCADE;
 CREATE DOMAIN NS_Requirements as text;
 
 
+-- Memo from sam - changed name from just NS_SecurityName
+DROP DOMAIN IF EXISTS NS_SecurityPersonName CASCADE;
+CREATE DOMAIN NS_SecurityPersonName as varchar(200);
+
+
+DROP DOMAIN IF EXISTS NS_ExhibitArrivalDate CASCADE;
+CREATE DOMAIN NS_ExhibitArrivalDate as timestamp;
+
+
+DROP DOMAIN IF EXISTS NS_ExhibitDepartureDate CASCADE;
+CREATE DOMAIN NS_ExhibitDepartureDate as timestamp;
+
+
+DROP DOMAIN IF EXISTS NS_DestinationPhone CASCADE;
+CREATE DOMAIN NS_DestinationPhone as bigint;
+
+
+DROP DOMAIN IF EXISTS NS_SponsorName CASCADE;
+CREATE DOMAIN NS_SponsorName as varchar(100);
+
+
+DROP DOMAIN IF EXISTS NS_SponsorAmount CASCADE;
+CREATE DOMAIN NS_SponsorAmount as float;
+
+
+DROP DOMAIN IF EXISTS NS_InsureStartDate CASCADE;
+CREATE DOMAIN NS_InsureStartDate as timestamp;
+
+
+DROP DOMAIN IF EXISTS NS_InsureEndDate CASCADE;
+CREATE DOMAIN NS_InsureEndDate as timestamp;
+
+
+--Adding the new domains we discussed in the previous meeting
+DROP DOMAIN IF EXISTS NS_GeographicRegionOfOrigin CASCADE;
+CREATE DOMAIN NS_GeographicRegionOfOrigin as varchar(100);
+-- Sam changed from GeographicRegion and added CountryOfOrigin
+
+
+DROP DOMAIN IF EXISTS NS_CountryOfOrigin CASCADE;
+CREATE DOMAIN NS_CountryOfOrigin AS varchar(70);
+
+
+DROP DOMAIN IF EXISTS NS_FieldOfScience CASCADE;
+CREATE DOMAIN NS_FieldOfScience as varchar(70);
+
+
+DROP DOMAIN IF EXISTS NS_Requirements CASCADE;
+CREATE DOMAIN NS_Requirements as text;
+-- memo : Sam created these domains
 
 
 
 
+DROP DOMAIN IF EXISTS NS_IsTravellingExhibition;
+CREATE DOMAIN NS_IsTravellingExhibition AS boolean;
+-- 3 because it will either be yes or no
+
+
+DROP DOMAIN IF EXISTS NS_DateWorkAdded;
+CREATE DOMAIN NS_DateWorkAdded AS DATE;
+
+
+DROP DOMAIN IF EXISTS NS_DateWorkRemoved;
+CREATE DOMAIN NS_DateWorkRemoved AS DATE;
+
+
+DROP DOMAIN IF EXISTS NS_IsPartnerMuseum;
+CREATE DOMAIN NS_IsPartnerMuseum AS boolean;
+-- will either be yes or no
+
+
+DROP DOMAIN IF EXISTS NS_OwnerCity;
+CREATE DOMAIN NS_OwnerCity AS Varchar(60);
+
+
+DROP DOMAIN IF EXISTS NS_OwnerState;
+CREATE DOMAIN NS_OwnerState AS Varchar(60);
+
+
+DROP DOMAIN IF EXISTS NS_OwnerStreetName;
+CREATE DOMAIN NS_OwnerStreetName AS Varchar(60);
+
+
+DROP DOMAIN IF EXISTS NS_OwnerBuildingNumber;
+CREATE DOMAIN NS_OwnerBuildingNumber AS BIGINT;
+
+
+DROP DOMAIN IF EXISTS NS_IsTravellingExhibitionLocation;
+CREATE DOMAIN NS_IsTravellingExhibitionLocation boolean;
+
+
+DROP DOMAIN IF EXISTS NS_LocationStartDate;
+CREATE DOMAIN NS_LocationStartDate AS DATE;
+
+
+DROP DOMAIN IF EXISTS NS_LocationEndDate;
+CREATE DOMAIN NS_LocationEndDate AS DATE;
 
 
 
