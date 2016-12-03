@@ -27,8 +27,9 @@ DROP DOMAIN IF EXISTS NS_WorkClassification CASCADE;
 CREATE DOMAIN NS_WorkClassification as varchar(30);
 
 
+--Set as varchar(40) instead!!! Dates give huge problem.
 DROP DOMAIN IF EXISTS NS_WorkCreationDate CASCADE;
-CREATE DOMAIN NS_WorkCreationDate as date;
+CREATE DOMAIN NS_WorkCreationDate as varchar(40);
 
 
 DROP DOMAIN IF EXISTS NS_WorkCreator CASCADE;
@@ -60,38 +61,25 @@ DROP DOMAIN IF EXISTS NS_OwnerEmail CASCADE;
 CREATE DOMAIN NS_OwnerEmail as varchar(80);
 
 
-DROP DOMAIN IF EXISTS NS_OwnershipStartDate CASCADE;
-CREATE DOMAIN NS_OwnershipStartDate as timestamp;
-
-
-DROP DOMAIN IF EXISTS NS_OwnershipEndDate CASCADE;
-CREATE DOMAIN NS_OwnershipEndDate as timestamp;
+DROP DOMAIN IF EXISTS NS_OwnershipDate CASCADE;
+CREATE DOMAIN NS_OwnershipDate as timestamp;
 
 
 DROP DOMAIN IF EXISTS NS_LocationSuggestedCapacity CASCADE;
 CREATE DOMAIN NS_LocationSuggestedCapacity as int;
 
 
-DROP DOMAIN IF EXISTS NS_LocationWidth CASCADE;
-CREATE DOMAIN NS_LocationWidth as float
+DROP DOMAIN IF EXISTS NS_LocationMeasurement CASCADE;
+CREATE DOMAIN NS_LocationMeasurement as float
 CHECK (VALUE > 0);
 
 
-DROP DOMAIN IF EXISTS NS_LocationLength CASCADE;
-CREATE DOMAIN NS_LocationLength as float
-CHECK (VALUE > 0);
-
-
-DROP DOMAIN IF EXISTS NS_WorkArrivalTime CASCADE;
-CREATE DOMAIN NS_WorkArrivalTime as timestamp;
+DROP DOMAIN IF EXISTS NS_WorkTime CASCADE;
+CREATE DOMAIN NS_WorkTime as timestamp;
 
 
 DROP DOMAIN IF EXISTS NS_ExhibitName CASCADE;
 CREATE DOMAIN NS_ExhibitName as varchar(150);
-
-
-DROP DOMAIN IF EXISTS NS_WorkDepartureTime CASCADE;
-CREATE DOMAIN NS_WorkDepartureTime as timestamp;
 
 
 DROP DOMAIN IF EXISTS NS_InsureDate CASCADE;
@@ -102,14 +90,8 @@ DROP DOMAIN IF EXISTS NS_ExhibitDescription CASCADE;
 CREATE DOMAIN NS_ExhibitDescription as text;
 
 
-DROP DOMAIN IF EXISTS NS_ExhibitStartDate CASCADE;
-CREATE DOMAIN NS_ExhibitStartDate as date;
-
-
-DROP DOMAIN IF EXISTS NS_ExhibitEndDate CASCADE;
-CREATE DOMAIN NS_ExhibitEndDate as date;
-
-
+DROP DOMAIN IF EXISTS NS_ExhibitDate CASCADE;
+CREATE DOMAIN NS_ExhibitDate as date;
 DROP DOMAIN IF EXISTS NS_TransactionType CASCADE;
 CREATE DOMAIN NS_TransactionType as varchar(25)
 CHECK (VALUE IN ('Purchased', 'Sold', 'Loaned', 'Borrowed', 'Returned', 'Missing', 'Destroyed', 'Sent for Repairs or Restoration'));
@@ -144,6 +126,8 @@ DROP DOMAIN IF EXISTS NS_SponsorName CASCADE;
 CREATE DOMAIN NS_SponsorName as varchar(70);
 
 
+
+
 DROP DOMAIN IF EXISTS NS_SponsorAmount CASCADE;
 CREATE DOMAIN NS_SponsorAmount as float
 CHECK (VALUE > 0);
@@ -163,14 +147,6 @@ CREATE DOMAIN NS_Requirements as text;
 
 DROP DOMAIN IF EXISTS NS_ExhibitArrivalDate CASCADE;
 CREATE DOMAIN NS_ExhibitArrivalDate as timestamp;
-
-
-DROP DOMAIN IF EXISTS NS_InsureStartDate CASCADE;
-CREATE DOMAIN NS_InsureStartDate as timestamp;
-
-
-DROP DOMAIN IF EXISTS NS_InsureEndDate CASCADE;
-CREATE DOMAIN NS_InsureEndDate as timestamp;
 
 
 DROP DOMAIN IF EXISTS NS_GeographicRegionOfOrigin CASCADE;
@@ -226,31 +202,5 @@ DROP DOMAIN IF EXISTS NS_IsTravellingExhibitionLocation;
 CREATE DOMAIN NS_IsTravellingExhibitionLocation boolean;
 
 
-DROP DOMAIN IF EXISTS NS_LocationStartDate;
-CREATE DOMAIN NS_LocationStartDate AS DATE;
-
-
-DROP DOMAIN IF EXISTS NS_LocationEndDate;
-CREATE DOMAIN NS_LocationEndDate AS DATE;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+DROP DOMAIN IF EXISTS NS_LocationDate;
+CREATE DOMAIN NS_LocationDate AS DATE;
