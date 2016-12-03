@@ -14,6 +14,11 @@ DROP table if exists NS_Doors cascade;
 DROP table if exists NS_WorkLocations cascade;
 
 
+--Need to create a simple data attribute for phone numbers. If you don’t have them, don’t worry!
+--CREATE DOMAIN NS_PhoneNumber as varchar(13);
+--ALTER TABLE ns_owners add column ownphonenumber NS_PhoneNumber;
+
+
 CREATE TABLE NS_Owners (
         ownName NS_OwnerName NOT NULL,
         ownEmail NS_OwnerEmail,
@@ -26,10 +31,12 @@ CREATE TABLE NS_Owners (
 );
 
 
+
+
 CREATE TABLE NS_Works (
     worWorkCharID NS_WorkCharID NOT NULL,
     worWorkNumID NS_WorkNumID NOT NULL,
-    worDatabaseEntryMuseum NS_OwnerName NOT NULL, 
+    worDatabaseEntryMuseum NS_OwnerName NOT NULL,
     worWorkName NS_WorkName,
     worWorkDescription NS_WorkDescription,
     worWorkPhysicalProperty NS_WorkPhysicalProperty,
@@ -37,12 +44,14 @@ CREATE TABLE NS_Works (
     worWorkCreator NS_WorkCreator,
     worWorkCreationDate NS_WorkCreationDate,
     worWorkBorrowable NS_WorkBorrowable NOT NULL,        
-    worWorkGeographicRegionOfOrigin NS_GeographicRegionOfOrigin, 
+    worWorkGeographicRegionOfOrigin NS_GeographicRegionOfOrigin,
     worWorkCountryOfOrigin NS_CountryOfOrigin,
     worWorkFieldOfScience NS_FieldOfScience,     --coordinate name
     PRIMARY KEY(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
     FOREIGN KEY(worDatabaseEntryMuseum) REFERENCES NS_Owners(ownName) ON UPDATE CASCADE
 );
+
+
 
 
 CREATE TABLE NS_WorksMedium (
@@ -55,6 +64,7 @@ CREATE TABLE NS_WorksMedium (
 );
 
 
+--Call locBuildingName locOwnerName (building name too vague)
 CREATE TABLE NS_Locations (
     locLocationName NS_LocationName,    --was RoomName but could be towns
     locBuildingName NS_OwnerName,    --will have to be owner name and the name building name should change
@@ -69,6 +79,8 @@ CHECK(locLocationSuggestedCapacityMin < locLocationSuggestedCapacityMax)
 );
 
 
+
+
 CREATE TABLE NS_WorkLocations (
     wolWorkCharID NS_WorkCharID NOT NULL,
     wolWorkNumID NS_WorkNumID NOT NULL,
@@ -79,9 +91,11 @@ CREATE TABLE NS_WorkLocations (
     wolWorkTimeDeparture NS_WorkTime,
     Foreign Key (wolWorkCharID, wolWorkNumID, wolWorkDatabaseEntryMuseum) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
     Foreign Key (wolLocationName, wolMuseumName) REFERENCES NS_Locations(locLocationName, locBuildingName),
-    PRIMARY KEY(wolWorkCharID, wolWorkNumID, wolWorkDatabaseEntryMuseum, wolLocationName, wolMuseumName),
-CHECK ((wolWorkTimeArrival<wolWorkTimeDeparture) OR (wolWorkTimeDeparture is NULL))
+    PRIMARY KEY(wol_WorkCharID, wol_WorkNumID, wol_WorkDatabaseEntryMuseum, wol_LocationName, wol_MuseumName,wol_WorkTimeArrival),
+CHECK ((wolWorkTimeArrival<=wolWorkTimeDeparture) OR (wolWorkTimeDeparture is NULL))
 );
+
+
 
 
 CREATE TABLE NS_Doors (
@@ -91,21 +105,25 @@ CREATE TABLE NS_Doors (
     dorLocationNameDestination NS_LocationName NOT NULL,
     FOREIGN KEY(dorMuseumNameOrigin, dorLocationNameOrigin) REFERENCES NS_Locations(locBuildingName, locLocationName),
     FOREIGN KEY(dorMuseumNameDestination, dorLocationNameDestination) REFERENCES NS_Locations(locBuildingName, locLocationName),
-    PRIMARY KEY(dorMuseumNameOrigin, dorMuseumNameDestination)
+    PRIMARY KEY(dorMuseumNameOrigin, dorLocationNameOrigin, dorMuseumNameDestination,dorLocationNameDestination)
 );
 
 
+--Missing Descriptions!!!
 CREATE TABLE NS_Exhibitions (
     exhExhibitName NS_ExhibitName NOT NULL,
     exhMuseumName NS_OwnerName NOT NULL,
     exhExhibitDateStart NS_ExhibitDate NOT NULL,
     exhExhibitDateEnd NS_ExhibitDate NOT NULL,
+exhExhibitDescription NS_ExhibitDescription,  -- Added description
 exhSecurityPersonName NS_SecurityName,
     exhIsTravellingExhibition NS_IsTravellingExhibition,
     PRIMARY KEY(exhExhibitName, exhMuseumName, exhExhibitDateStart),
     FOREIGN KEY(exhMuseumName) REFERENCES NS_Owners(OwnName),
 CHECK( exhExhibitDateStart<exhExhibitDateEnd)
 );
+
+
 
 
 CREATE TABLE NS_ExhibitionLocations (
@@ -119,9 +137,10 @@ CREATE TABLE NS_ExhibitionLocations (
     PRIMARY KEY(eloExhibitName, eloExhibitDateStart, eloLocationName, eloMuseumOfLocation, eloLocationDateStart),
     FOREIGN KEY(eloExhibitname, eloExhibitDateStart,eloMuseumOfExhibition) REFERENCES NS_Exhibitions(exhExhibitName, exhExhibitDateStart, exhMuseumName),
     FOREIGN KEY(eloLocationName, eloMuseumOfLocation) REFERENCES NS_Locations(locLocationName, locBuildingName),
-        CHECK(((eloLocationDateEnd is NULL) OR (eloLocationDateStart<eloLocationDateEnd)) 
+        CHECK(((eloLocationDateEnd is NULL) OR (eloLocationDateStart<eloLocationDateEnd))
                 AND (eloExhibitDateStart<=eloLocationDateStart))
 );
+
 
 CREATE TABLE NS_ExhibitionWorks (
     exwExhibitName NS_ExhibitName NOT NULL,
@@ -139,6 +158,7 @@ CREATE TABLE NS_ExhibitionWorks (
 );
 
 
+--Change EntryLocation to EntryMuseum?
 CREATE TABLE NS_WorkOwners (
     wonWorkCharID NS_WorkCharID NOT NULL,
     wonWorkNumID NS_WorkNumID NOT NULL,
@@ -151,6 +171,9 @@ CREATE TABLE NS_WorkOwners (
     FOREIGN KEY(wonOwnerName) REFERENCES NS_Owners(ownName),
         CHECK((wonOwnershipDateStart<wonOwnershipDateEnd) OR (wonOwnershipDateEnd is NULL))
 );
+
+
+
 
 
 
@@ -169,6 +192,8 @@ CREATE TABLE NS_WorkTransaction (
 );
 
 
+
+
 CREATE TABLE NS_SponsorExhibitions (
     speSponsorName NS_SponsorName NOT NULL,
     speExhibitName NS_ExhibitName NOT NULL,
@@ -180,6 +205,7 @@ CREATE TABLE NS_SponsorExhibitions (
 );
 
 
+--Change EntryLocation to EntryMuseum
 CREATE TABLE NS_Themes (
     wthWorkCharID NS_WorkCharID NOT NULL,
     wthWorkNumID NS_WorkNumID NOT NULL,
@@ -190,6 +216,7 @@ CREATE TABLE NS_Themes (
 );
 
 
+--Change EntryLocation to EntryMuseum?
 CREATE TABLE NS_WorksInsurance (
     winWorkCharID NS_WorkCharID NOT NULL,
     winWorkNumID NS_WorkNumID NOT NULL,
@@ -203,3 +230,8 @@ CHECK((winInsureDateStart< winInsureDateEnd) OR (winInsureDateEnd is NULL))
 );
 
 
+
+
+--We can add this at merge time
+--RoomCondition
+--Table
