@@ -1,0 +1,224 @@
+Transfer notes:
+
+NOTE: NEED TO MAKE UP DIMENSIONS FOR GALLERY LOCATIONS.
+
+29 total
+Tables finished:owners,loaners,ns_owners,ns_works,workdata,
+exhibitions,locations,exhibitionlocations,connections,ns_doors,
+ns_worksinsurance,ns_exhibitions,travelexhibit,ns_sponsorexhibitions,workmediums
+ns_worksmedium,tedestinations,telocations,ns_exhibitionlocations,ns_locations,
+workexhibitions,ns_workexhibitions,worktransfers,workloans,ns_worktransaction
+workowners,ns_workowners
+
+
+worklocations,locations,ns_themes
+
+
+
+Created all new tables and domains from our joint files.
+CREATE DOMAIN NS_PhoneNumber as varchar(15);
+ALTER TABLE ns_owners add column ownphonenumber NS_PhoneNumber;
+
+To get owner information into new owners table...
+insert into ns_owners (ownname,ownphonenumber,ownispartnermuseum)
+SELECT oowner,ocontactinfo,FALSE from owners order by oowner;
+
+insert into ns_owners (ownname,ownphonenumber,ownemail,ownispartnermuseum)
+SELECT loname,lophonenumber,loemail,FALSE from loaners order by loname;
+
+No easy way to parse my addresses, do it by hand via UPDATES.
+
+To transfer works
+--insert into ns_works (worworkcharid,worworknumid,wordatabaseentrymuseum,worworkname,worworkdescription,worworkphysicalproperty,worworkclassification,worworkcreator,worworkborrowable,worworkgeographicregionoforigin,worworkcountryoforigin,worworkcreationdate)
+--SELECT pricharid,prinumid,'Smithsonian American Art Museum',priworkname,priworkdescription,'Painting',priworktype,priauthor,FALSE,'United States','USA',priyearcompleted from workdata order by pricharid, prinumid;
+
+--insert into ns_exhibitions(exhexhibitname,exhmuseumname,exhexhibitdatestart,exhexhibitdateend,exhistravellingexhibition,exhexhibitdescription)
+--SELECT exexhibitname,'Smithsonian American Art Museum',exexhibitstart,exexhibitend,FALSE,exexhibitdescrip from exhibitions;
+
+--insert into ns_locations (loclocationname,locbuildingname,locistravellingexhibitionlocation,loclocationsuggestedcapacitymin,loclocationsuggestedcapacitymax)
+--SELECT loclocation, 'Smithsonian American Art Museum', FALSE, locgallerycapmin,locgallerycapmax FROM locations;
+
+--insert into ns_exhibitionlocations (eloexhibitname,eloexhibitdatestart,elolocationname,elomuseumoflocation,elomuseumofexhibition,elolocationdatestart,elolocationdateend)
+--select exl.exlexhibitname, exl.exlexhibitstart, exl.exllocation, 'Smithsonian American Art Museum','Smithsonian American Art Museum',exl.exlexhibitstart, e.exexhibitend
+--from exhibitionlocations AS exl, exhibitions AS e
+--WHERE exl.exlexhibitname=e.exexhibitname;
+
+
+--insert into ns_doors (dormuseumnameorigin,dorlocationnameorigin,dormuseumnamedestination,dorlocationnamedestination)
+--select 'Smithsonian American Art Museum',conlocationA,'Smithsonian American Art Museum',conlocationB from connections;
+
+--insert into ns_worksinsurance (winworkcharid,winworknumid,winworkdatabaseentrylocation,winworkinsurevalue,wininsuredatestart)
+--select pricharid,prinumid,'Smithsonian American Art Museum',priinsvalue,priyearacquiredate from workdata;
+
+Unfortunately, couldn't get info for insvalue on the travelling exhibition, maybe later?
+
+--insert into ns_exhibitions(exhexhibitname,exhmuseumname,exhexhibitdatestart,exhexhibitdateend,exhistravellingexhibition,exhexhibitdescription,exhsecuritypersonname)
+--Values ('Faces Of The Past: Mementos Of Another Time','Smithsonian American Art Museum','May-01-2017','Sep-05-2017',TRUE,
+--'This exhibit showcases a set of people who lived in the 1800''s. Through lockets and various other memoribilia, we are able to gain a glimpse on what they looked like.','Jack Johnson');
+
+Converted tedestinations to locations manually
+
+insert into ns_owners (ownname,owncity,ownstate,ownphonenumber,ownispartnermuseum)
+VALUES('University of Saskatchewan','Saskatoon','SK','13065555555',FALSE),
+('University of Regina','Regina','SK','13065551234',FALSE),
+('Raymore United Church','Raymore','SK','13065551234',FALSE),
+('City of Yorkton','Yorkton','SK','16547895555',FALSE),
+('City of North Battleford','North Battleford','SK','15553069753',FALSE);
+
+insert into ns_locations(loclocationname,locbuildingname,locistravellingexhibitionlocation)
+VALUES('Arts Building','University of Saskatchewan',TRUE),
+('Administration Building','University of Regina',TRUE),
+('Raymore United Church','Raymore United Church',TRUE),
+('City Hall','City of Yorkton',TRUE),
+('Civic Center','City of North Battleford',TRUE);
+
+insert into ns_exhibitionlocations(eloexhibitname,eloexhibitdatestart,elolocationname,elomuseumoflocation,elomuseumofexhibition,elolocationdatestart,elolocationend)
+values('Faces Of The Past: Mementos Of Another Time','May-01-2017','City Hall','City of Yorkton','Smithsonian American Art Museum','May-07-2017','May-28-2017'),
+('Faces Of The Past: Mementos Of Another Time','May-01-2017','Administration Building','University of Regina','Smithsonian American Art Museum','Jun-02-2017','Jun-23-2017'),
+('Faces Of The Past: Mementos Of Another Time','May-01-2017','Raymore United Church','Raymore United Church','Smithsonian American Art Museum','Jun-30-2017','Jul-21-2017'),
+('Faces Of The Past: Mementos Of Another Time','May-01-2017','Arts Building','University of Saskatchewan','Smithsonian American Art Museum','Jul-28-2017','Aug-05-2017'),
+('Faces Of The Past: Mementos Of Another Time','May-01-2017','Civic Center','City of North Battleford','Smithsonian American Art Museum','Aug-12-2017','Sep-05-2017');
+
+Also needed to properly record the movements of the items in my travelling exhibition
+Used a search exhibition to check certain items...
+select * from workexhibitions 
+where wexexhibitname='Faces Of The Past: Mementos Of Another Time'
+order by wexcharid,wexnumid;
+
+insert into ns_exhibitionworks (exwmuseumofexhibition,exwexhibitname,exwexhibitdatestart,exwworkcharid,exwworknumid,exwworkdatabaseentrymuseum,exwdateworkadded,exwdateworkremoved)
+select 'Smithsonian American Art Museum',wex.wexexhibitname, wex.wexexhibitstart, wex.wexcharid, wex.wexnumid,'Smithsonian American Art Museum',wex.wexexhibitstart,e.exexhibitend
+FROM workexhibitions AS wex, Exhibitions AS e
+WHERE wex.wexexhibitname=e.exexhibitname AND wex.wexexhibitstart=e.exexhibitstart;
+
+ID NUMS for ones in that exhibit. Can't use 35, all the other ones can be used for road.
+1,2,3,4,8,9,10,11,12,26,27,28,29,30,31,35
+
+insert into ns_exhibitionworks (exwmuseumofexhibition,exwexhibitname,exwexhibitdatestart,exwworkcharid,exwworknumid,exwworkdatabaseentrymuseum,exwdateworkadded,exwdateworkremoved)
+SELECT 'Smithsonian American Art Museum','Faces Of The Past: Mementos Of Another Time','May-01-2017','AMER',val1,'Smithsonian American Art Museum','May-01-2017','Sep-05-2017'
+from temp;
+
+--Make changes for worklocations
+
+
+
+
+
+--Transfer transactions over:
+--Initial buy time:
+insert into ns_worktransaction(wtrworkcharid,wtrworknumid,wtrworkdatabaseentrymuseum,wtrmuseuminvolved,wtrtransactiontype,wtrtransactiontime)
+select pricharid,prinumid,'Smithsonian American Art Museum','Smithsonian American Art Museum','Purchased',priyearacquiredate 
+FROM workdata
+WHERE pricharid='AMER';
+
+--Donors
+insert into ns_worktransaction(wtrworkcharid,wtrworknumid,wtrworkdatabaseentrymuseum,wtrmuseuminvolved,wtrtransactiontype,wtrtransactiontime,wtrclient)
+select pricharid,prinumid,'Smithsonian American Art Museum','Smithsonian American Art Museum','Borrowed',priyearacquiredate,priworkowner 
+FROM workdata
+WHERE pricharid='DONR';
+
+--Sales
+insert into ns_worktransaction(wtrworkcharid,wtrworknumid,wtrworkdatabaseentrymuseum,wtrmuseuminvolved,wtrtransactiontype,wtrtransactiontime,wtrclient)
+select pricharid,prinumid,'Smithsonian American Art Museum','Smithsonian American Art Museum','Sold','Nov-30-2016 20:15:00','Sothebys Auction House' 
+FROM workdata
+WHERE priworkownershipstatus='Sold';
+
+--Loans
+insert into ns_worktransaction(wtrworkcharid,wtrworknumid,wtrworkdatabaseentrymuseum,wtrmuseuminvolved,wtrtransactiontype,wtrtransactiontime,wtrclient)
+VALUES ('AMER',60,'Smithsonian American Art Museum','Smithsonian American Art Museum','Loaned','Dec-10-2016','New England Gallery'),
+('AMER',61,'Smithsonian American Art Museum','Smithsonian American Art Museum','Loaned','Dec-10-2016','New England Gallery'),
+('AMER',62,'Smithsonian American Art Museum','Smithsonian American Art Museum','Loaned','Dec-10-2016','New England Gallery');
+
+insert into ns_worktransaction(wtrworkcharid,wtrworknumid,wtrworkdatabaseentrymuseum,wtrmuseuminvolved,wtrtransactiontype,wtrtransactiontime,wtrclient)
+VALUES ('AMER',60,'Smithsonian American Art Museum','Smithsonian American Art Museum','Returned','Feb-10-2017','New England Gallery'),
+('AMER',61,'Smithsonian American Art Museum','Smithsonian American Art Museum','Returned','Feb-10-2017','New England Gallery'),
+('AMER',62,'Smithsonian American Art Museum','Smithsonian American Art Museum','Returned','Feb-10-2017','New England Gallery');
+
+--WorkOwners
+insert into ns_workowners (wonworkcharid,wonworknumid,wonworkdatabaseentrylocation,wonownername,wonownershipdatestart)
+select pricharid,prinumid,'Smithsonian American Art Museum','Smithsonian American Art Museum',priyearacquiredate from workdata;
+
+--and update for sold and loaned works
+
+UPDATE ns_workowners
+SET wonownershipdateend='Nov-30-2016 20:15:00'
+WHERE wonworkcharid='AMER' AND wonworknumid IN (63,64,65);
+
+insert into ns_workowners (wonworkcharid,wonworknumid,wonworkdatabaseentrylocation,wonownername,wonownershipdatestart)
+select wtrworkcharid,wtrworknumid,'Smithsonian American Art Museum','Sothebys Auction House','Nov-30-2016 20:15:00' 
+from ns_worktransaction
+where wtrtransactiontype='Sold';
+
+UPDATE ns_workowners
+SET wonownershipdateend='Dec-10-2016 00:00:00'
+WHERE wonworkcharid='AMER' AND wonworknumid IN (60,61,62);
+
+insert into ns_workowners (wonworkcharid,wonworknumid,wonworkdatabaseentrylocation,wonownername,wonownershipdatestart,wonownershipdateend)
+select wtrworkcharid,wtrworknumid,'Smithsonian American Art Museum','New England Gallery','Dec-10-2016','Feb-10-2017' 
+from ns_worktransaction
+where wtrtransactiontype='Loaned';
+
+insert into ns_workowners (wonworkcharid,wonworknumid,wonworkdatabaseentrylocation,wonownername,wonownershipdatestart)
+select wtrworkcharid,wtrworknumid,'Smithsonian American Art Museum','Smithsonian American Art Museum','Feb-10-2017' 
+from ns_worktransaction
+where wtrtransactiontype='Returned';
+
+
+
+--Worklocations
+--initial import:
+
+--insert into ns_worklocations (wolworkcharid,wolworknumid,wolworkdatabaseentrymuseum,wollocationname,wolmuseumname,wolworktimearrival)
+--select wlcharid,wlnumid,'Smithsonian American Art Museum',wllocation,'Smithsonian American Art Museum',wlmovingdate
+--from worklocations;
+
+--update ns_worklocations
+--set wolworktimedeparture='Jan-11-2016 07:15:00'
+--where wolworktimearrival='Jan-01-2016 12:00:00' AND wolworkcharid='AMER' AND wolworknumid IN (33,35,37,38,39,40,41,42,44,46,47,48,49,50,51,53,56,34,36,45,52,54,55,43);
+
+--update ns_worklocations
+--set wolworktimedeparture='Jun-06-2016 20:15:00'
+--where wolworktimearrival='Jan-11-2016 07:15:00' AND wolworkcharid='AMER' AND wolworknumid IN (33,35,37,38,39,40,41,42,44,46,47,48,49,50,51,53,56,34,36,45,52,54,55,43);
+
+--update ns_worklocations
+--set wolworktimedeparture='Jan-27-2016 07:15:00'
+--where wolworktimearrival='Jan-01-2016 12:00:00' AND wolworkcharid='AMER' AND wolworknumid IN (17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32);
+
+--update ns_worklocations
+--set wolworktimedeparture='Jun-16-2016 20:00:00'
+--where wolworktimearrival='Jan-27-2016 07:15:00' AND wolworkcharid='AMER' AND wolworknumid IN (17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32);
+
+--update ns_worklocations
+--set wolworktimedeparture='Feb-24-2016 07:15:00'
+--where wolworktimearrival='Jan-01-2016 12:00:00' AND wolworkcharid='AMER' AND wolworknumid IN (1,2,3,4,5,8,9,10,11,13,14,15,16,6,7,12);
+
+--update ns_worklocations
+--set wolworktimedeparture='Jun-26-2016 20:30:00'
+--where wolworktimearrival='Feb-24-2016 07:15:00' AND wolworkcharid='AMER' AND wolworknumid IN (1,2,3,4,5,8,9,10,11,13,14,15,16,6,7,12);
+
+--update ns_worklocations
+--set wolworktimedeparture='Aug-01-2016'
+--where wolworktimearrival='Jan-01-2016 12:00:00' AND wolworkcharid='AMER' AND (wolworknumid > 56) AND (wolworknumid < 66);
+
+--update ns_worklocations
+--set wolworktimedeparture='Aug-01-2016'
+--where wolworktimearrival='Jan-01-2016 12:00:00' AND wolworkcharid='AMER' AND (wolworknumid > 56) AND (wolworknumid < 66);
+
+update ns_worklocations
+set wolworktimedeparture='Jul-07-2016'
+where wollocationname='Storage' AND wolworktimedeparture is NULL AND wolworkcharid='AMER' AND wolworknumid IN (1,2,3,9,10,26,27,28,31,35);
+
+update ns_worklocations
+set wolworktimedeparture='Sep-01-2016'
+where wollocationname='Storage' AND wolworktimedeparture is NULL AND wolworkcharid='AMER' AND wolworknumid IN (5,6,7,13,14,15,16,17,18,19,20,22,23,24,25,32);
+
+--update ns_worklocations
+--set wolworktimedeparture='Oct-28-2016 21:30:00'
+--where wollocationname='Storage' AND wolworktimedeparture is NULL AND wolworkcharid='AMER' AND wolworknumid IN (21,33,37,38,39,34,36);
+
+update ns_worklocations
+set wolworktimedeparture='Oct-28-2016 22:00:00'
+where wollocationname='Storage' AND wolworktimedeparture is NULL AND wolworkcharid='AMER' AND wolworknumid IN (40,41,42,43,44,45,46,47);
+
+
+-A few other things...
+-then add the sold works:

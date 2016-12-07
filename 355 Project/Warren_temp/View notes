@@ -1,0 +1,312 @@
+Recreating views From Previous Assignments:
+
+NOTE: SAM NEEDS TO FIX WORKLOCATIONS, IMPORT WORKOWNERS
+
+--Used for Assignment questions
+CREATE VIEW PaintingsInStoragePrivate AS 
+SELECT w.worworkcharid AS CharId,w.worworknumid AS NumberID,w.wordatabaseentrymuseum AS EntryMuseum,w.worworkname AS WorkName,
+w.workphysicalproperty, w.priInsValue AS Insurance_Value
+FROM WorkData AS w, ItemStatusLocation as l
+WHERE l.location='Storage'
+ORDER BY w.priWorkName;
+
+CREATE VIEW ExhibitionsPublicSize AS
+SELECT e.exhExhibitName AS Name, e.exhexhibitDescription AS Description, e.exExhibitdateStart AS Exhibition_Start, e.exExhibitEnd AS Exhibition_End,
+c.number_of_works AS Number_Of_Works, e.exLocation AS Location
+FROM Exhibitions AS e, ExhibitWorkCount AS c
+WHERE c.ID=e.exID
+ORDER BY e.exExhibitName;
+
+CREATE VIEW AllPaintingInformationPublicByExhibit AS 
+SELECT w.priWorkName AS Name,w.priWorkDescription AS Description, w.priWorkType AS Type, w.priWorkSubType AS Period,
+w.priAuthor AS Author, w.priYearCompleted AS Completion_Date, w.priYearAcquireDate AS Year_Acquired,
+w.priLocation AS Location,m.medmedium AS Medium, e.exExhibitName AS Exhibit
+FROM WorkData AS w, WorkMediums AS m, Exhibitions AS e
+WHERE w.priCharID=m.medCharID AND w.priNumID=m.medNumID AND e.exID = w.priExID
+ORDER BY w.priExID, w.priWorkName;
+
+CREATE VIEW WorksFree AS
+SELECT charid,numberid,workname,addedtoexhibit AS DATEFree from itemstatusexhibit
+ORDER BY charid,numberid,WorkName;
+
+CREATE VIEW ExhibitWorkCount AS
+SELECT e.exhexhibitname AS Name, e.exhexhibitdatestart AS ExhibitStart, COUNT(w.exwworkcharid) AS Number_Of_Works
+FROM ExhibitionWorks AS w, Exhibitions AS e 
+WHERE e.exhexhibitname=w.exwexhibitname AND e.exhexhibitdatestart=w.exwexhibitdatestart
+GROUP BY Name,e.exhexhibitdatestart;
+
+CREATE VIEW CapacitytoFull AS
+SELECT DISTINCT el.eloExhibitName AS Name, (l.loclocationsuggestedcapacitymax-c.number_of_works) AS UnusedCapacity, el.eloExhibitdatestart
+FROM Locations AS l, ExhibitWorkCount AS c, ExhibitionLocations as el
+WHERE el.eloexhibitname=c.Name AND el.eloexhibitdatestart=c.ExhibitStart AND
+el.elolocationname=l.loclocationname  AND el.elomuseumoflocation=locbuildingname AND l.loclocationsuggestedcapacitymax is not NULL
+ORDER BY Name;
+
+
+
+New views:
+create view itemstatusall AS
+SELECT w.worworkcharid AS CharId,w.worworknumid AS NumberID,w.wordatabaseentrymuseum AS EntryMuseum,w.worworkname AS WorkName,w.worworkcreator AS Creator,
+w.worworkborrowable AS isborrowable, wl.wolworktimearrival AS ArrivalTime, wl.wollocationname AS location, ew.exwexhibitname AS Exhibit,
+ew.exwdateworkadded AS AddedtoExhibit, win.winworkinsurevalue AS insurancevalue,win.wininsuredatestart AS insuranceIssued,won.wonownername AS Owner, 
+won.wonownershipdatestart AS OwnershipStarted
+FROM works AS w, worklocations AS wl, Exhibitionworks AS ew, worksinsurance AS win, workowners AS won
+WHERE w.worworkcharid=wl.wolworkcharid AND w.worworknumid=wl.wolworknumid AND w.wordatabaseentrymuseum=wl.wolworkdatabaseentrymuseum AND
+w.worworkcharid=ew.exwworkcharid AND w.worworknumid=ew.exwworknumid AND w.wordatabaseentrymuseum=ew.exwworkdatabaseentrymuseum AND
+w.worworkcharid=win.winworkcharid AND w.worworknumid=win.winworknumid AND w.wordatabaseentrymuseum=win.winworkdatabaseentrylocation AND
+w.worworkcharid=won.wonworkcharid AND w.worworknumid=won.wonworknumid AND w.wordatabaseentrymuseum=won.wonworkdatabaseentrylocation;
+
+create view isetemp AS
+SELECT  CharID, NumberID, EntryMuseum, WorkName, Creator, IsBorrowable, Exhibit, AddedtoExhibit,
+        max(addedtoExhibit) over (partition by charid,numberid,entrymuseum) max_addedtoExhibit
+        from itemstatusall;
+
+create view ItemStatusExhibit AS
+Select DISTINCT CharID, NumberID, EntryMuseum, WorkName, Creator, IsBorrowable, Exhibit, AddedtoExhibit
+FROM isetemp
+where addedtoexhibit= max_addedtoExhibit;
+
+create view isltemp AS
+SELECT CharID, NumberID, EntryMuseum, WorkName, Creator, IsBorrowable, Location, ArrivalTime,
+	max(ArrivalTime) over (partition by charid,numberid,entrymuseum) max_ArrivalTime
+        from itemstatusall;
+
+create view ItemStatusLocation AS
+Select DISTINCT CharID, NumberID, EntryMuseum, WorkName, Creator, IsBorrowable, Location, ArrivalTime
+FROM isltemp
+where ArrivalTime = max_ArrivalTime;
+
+create view ItemStatusLocation AS
+Select DISTINCT CharID, NumberID, EntryMuseum, WorkName, Creator, IsBorrowable, Location, ArrivalTime
+FROM isltemp
+where ArrivalTime = max_ArrivalTime;
+
+create view isitemp AS
+SELECT CharID, NumberID, EntryMuseum, WorkName, Creator, IsBorrowable, Insurancevalue, Insuranceissued,
+	max(InsuranceIssued) over (partition by charid,numberid,entrymuseum) max_InsuranceIssued
+        from itemstatusall; 
+
+create view ItemStatusInsurance AS
+SELECT DISTINCT CharID, NumberID, EntryMuseum, WorkName, Creator, IsBorrowable, Insurancevalue, Insuranceissued
+FROM isitemp
+where InsuranceIssued = max_InsuranceIssued;
+
+create view ItemStatus AS
+Select ie.CharID, ie.NumberID, ie.EntryMuseum, ie.WorkName, ie.Creator, ie.IsBorrowable, ie.Exhibit, ie.AddedtoExhibit, il.Location, il.ArrivalTime, ii.Insurancevalue, ii.Insuranceissued
+FROM ItemStatusExhibit AS ie, ItemStatusLocation AS il, ItemStatusInsurance AS ii
+WHERE ie.charID=il.charID AND ie.NumberID=il.NumberID AND ie.EntryMuseum=il.EntryMuseum AND
+ie.charID=ii.charID AND ie.NumberID=ii.NumberID AND ie.EntryMuseum=ii.EntryMuseum;
+
+Functions:---------------------------------------
+
+
+--Single work searh functions:
+	
+DROP FUNCTION if exists exhibitioncheck(integer, text, text);
+CREATE FUNCTION exhibitioncheck(integer, text, text, OUT text,OUT date)
+RETURNS SETOF RECORD AS $$ 
+		SELECT Exhibit,AddedtoExhibit 
+		FROM ItemStatusExhibit
+		WHERE charid=$2 AND numberid=$1 AND entrymuseum=$3;
+$$ LANGUAGE SQL;
+select exhibitioncheck(1,'AMER','Smithsonian American Art Museum');
+
+DROP FUNCTION if exists locationcheck(integer, text, text);
+CREATE FUNCTION locationcheck(integer, text, text, OUT text,OUT timestamp)
+RETURNS SETOF RECORD AS $$ 
+		SELECT Location,ArrivalTime 
+		FROM ItemStatusLocation
+		WHERE charid=$2 AND numberid=$1 AND entrymuseum=$3;
+$$ LANGUAGE SQL;
+select locationcheck(1,'AMER','Smithsonian American Art Museum');
+
+DROP FUNCTION if exists insurancecheck(integer, text, text);
+CREATE FUNCTION insurancecheck(integer, text, text, OUT float,OUT timestamp)
+RETURNS SETOF RECORD AS $$ 
+		SELECT Insurancevalue,Insuranceissued 
+		FROM ItemStatusInsurance
+		WHERE charid=$2 AND numberid=$1 AND entrymuseum=$3;
+$$ LANGUAGE SQL;
+select insurancecheck(1,'AMER','Smithsonian American Art Museum');
+
+DROP FUNCTION if exists currentinfowork(integer, text, text);
+CREATE FUNCTION currentinfowork(integer, text, text)
+RETURNS SETOF itemstatus AS $$ 
+		SELECT * 
+		FROM ItemStatus
+		WHERE charid=$2 AND numberid=$1 AND entrymuseum=$3;
+$$ LANGUAGE SQL;
+select currentinfowork(1,'AMER','Smithsonian American Art Museum');
+
+DROP FUNCTION if exists workinfo(integer, text, text);
+CREATE FUNCTION workinfo(integer,text,text)
+RETURNS SETOF Works AS $$ 
+		SELECT *
+		FROM Works
+		WHERE worworkcharid=$2 AND worworknumid=$1 AND wordatabaseentrymuseum=$3;
+$$ LANGUAGE SQL;
+select workinfo(1,'AMER','Smithsonian American Art Museum');
+
+
+--Histories
+--Gives full transaction history of an item
+DROP FUNCTION if exists transactionhistory(integer, text, text);
+CREATE FUNCTION transactionhistory(integer, text, text)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from worktransaction
+		WHERE wtrworkcharid=$2 AND wtrworknumid=$1 AND wtrworkdatabaseentrymuseum=$3
+		ORDER BY wtrtransactiontime;
+$$ LANGUAGE SQL;
+select transactionhistory(60,'AMER','Smithsonian American Art Museum');
+
+DROP FUNCTION if exists locationhistory(integer, text, text);
+CREATE FUNCTION locationhistory(integer, text, text)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from worklocations
+		WHERE wolworkcharid=$2 AND wolworknumid=$1 AND wolworkdatabaseentrymuseum=$3
+		ORDER BY wolworktimearrival;
+$$ LANGUAGE SQL;
+select locationhistory(1,'AMER','Smithsonian American Art Museum');
+
+DROP FUNCTION if exists ownerhistory(integer, text, text);
+CREATE FUNCTION ownerhistory(integer, text, text)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from workowners
+		WHERE wonworkcharid=$2 AND wonworknumid=$1 AND wonworkdatabaseentrylocation=$3
+		ORDER BY wonownershipdatestart;
+$$ LANGUAGE SQL;
+select ownerhistory(60,'AMER','Smithsonian American Art Museum');
+
+
+
+--History over time
+DROP FUNCTION if exists daytransactions(date);
+CREATE FUNCTION daytransactions(date)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from worktransaction
+		WHERE wtrtransactiontime>=($1 || ' 00:00:00')::timestamp AND wtrtransactiontime<=($1 || ' 23:59:59')::timestamp
+		ORDER BY wtrworkcharid, wtrworknumid;
+$$ LANGUAGE SQL;
+select daytransactions('May-30-2015');
+
+DROP FUNCTION if exists transactionsperiod(date, date);
+CREATE FUNCTION transactionsperiod(date, date)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from worktransaction
+		WHERE wtrtransactiontime>=($1 || ' 00:00:00')::timestamp AND wtrtransactiontime<=($2 || ' 23:59:59')::timestamp
+		ORDER BY wtrworkcharid, wtrworknumid;
+$$ LANGUAGE SQL;
+select transactionsperiod('July-01-1990', 'Jul-14-1990');
+
+DROP FUNCTION if exists dayownership(date);
+CREATE FUNCTION dayownership(date)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from workowners
+		WHERE wonownershipdatestart>=($1 || ' 00:00:00')::timestamp AND wonownershipdatestart<=($1 || ' 23:59:59')::timestamp
+		ORDER BY wonworkcharid, wonworknumid;
+$$ LANGUAGE SQL;
+select dayownership('Jul-01-1990');
+
+DROP FUNCTION if exists ownershipperiod(date, date);
+CREATE FUNCTION ownershipperiod(date, date)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from workowners
+		WHERE wonownershipdatestart>=($1 || ' 00:00:00')::timestamp AND wonownershipdatestart<=($2 || ' 23:59:59')::timestamp
+		ORDER BY wonworkcharid, wonworknumid;
+$$ LANGUAGE SQL;
+select ownershipperiod('July-01-1990', 'Jul-14-1990');
+
+DROP FUNCTION if exists daylocations(date);
+CREATE FUNCTION daylocations(date)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from worklocations
+		WHERE wolworktimearrival>=($1 || ' 00:00:00')::timestamp AND wolworktimearrival<=($1 || ' 23:59:59')::timestamp
+		ORDER BY wolworkcharid, wolworknumid;
+$$ LANGUAGE SQL;
+select daylocations('May-30-2015');
+
+DROP FUNCTION if exists locationsperiod(date,date);
+CREATE FUNCTION locationsperiod(date,date)
+RETURNS SETOF RECORD AS $$ 
+		SELECT * 
+		from worklocations
+		WHERE wolworktimearrival>=($1 || ' 00:00:00')::timestamp AND wolworktimearrival<=($2 || ' 23:59:59')::timestamp
+		ORDER BY wolworkcharid, wolworknumid;
+$$ LANGUAGE SQL;
+select locationsperiod('July-01-1990', 'Jul-14-1990');
+
+
+
+
+
+--Global Search functions
+--Reports all works that have been in one museum, and their current status.
+DROP FUNCTION if exists museuminventory(text);
+CREATE FUNCTION museuminventory(text)
+RETURNS SETOF itemstatus AS $$ 
+		SELECT * 
+		FROM ItemStatus
+		WHERE entrymuseum=$1;
+$$ LANGUAGE SQL;
+select * from museuminventory('Smithsonian American Art Museum');
+
+--Reports all works of a certain type.
+DROP FUNCTION if exists classificationinventory(text);
+CREATE FUNCTION classificationinventory(text)
+RETURNS SETOF RECORD AS $$ 
+		SELECT worworkname AS Name, worworkcharid AS CharId, worworknumid AS Numid
+		FROM Works
+		WHERE worworkphysicalproperty=$1
+		ORDER BY Name;
+$$ LANGUAGE SQL;
+select classificationinventory('Painting');
+
+--
+DROP FUNCTION if exists classificationmuseum(text, text);
+CREATE FUNCTION classificationmuseum(text, text)
+RETURNS SETOF RECORD AS $$ 
+		SELECT worworkname AS Name, worworkphysicalproperty AS PhysicalType, worworkcharid AS CharId, worworknumid AS Numid
+		FROM Works
+		WHERE worworkphysicalproperty=$1 AND wordatabaseentrymuseum=$2
+		ORDER BY PhysicalType, Name;
+$$ LANGUAGE SQL;
+select classificationmuseum('Painting', 'Smithsonian American Art Museum');
+
+
+--Gives a list of all works in an exhibition.
+DROP FUNCTION if exists exhibitionlist(text,text,date);
+CREATE FUNCTION exhibitionlist(text,text,date, OUT text, OUT bigint, OUT text)
+RETURNS SETOF RECORD AS $$ 
+		SELECT exwworkcharid,exwworknumid,exwworkdatabaseentrymuseum 
+		FROM ExhibitionWorks
+		WHERE exwexhibitname=$1 AND exwmuseumofexhibition=$2 AND exwexhibitdatestart=$3;
+$$ LANGUAGE SQL;
+select * from exhibitionlist('ExhibitA', 'Smithsonian American Art Museum', 'Dec-05-2016');
+
+--Gives a count of how many things there are in an exhibition.
+DROP FUNCTION if exists exhibitioncount(text,text,date);
+CREATE FUNCTION exhibitioncount(text,text,date, OUT bigint)
+RETURNS SETOF bigint AS $$ 
+		SELECT COUNT(exwworkcharid) 
+		FROM ExhibitionWorks
+		WHERE exwexhibitname=$1 AND exwmuseumofexhibition=$2 AND exwexhibitdatestart=$3;
+$$ LANGUAGE SQL;
+select * from exhibitioncount('ExhibitA', 'Smithsonian American Art Museum', 'Dec-05-2016');
+
+
+Themes?
+Locations for All Exhibitions?
+
+
+
+
+
+

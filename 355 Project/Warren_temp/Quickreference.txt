@@ -1,0 +1,21 @@
+Reference notes:
+
+select exhibitioncheck(1,'AMER','Smithsonian American Art Museum');
+select locationcheck(1,'AMER','Smithsonian American Art Museum');
+select insurancecheck(1,'AMER','Smithsonian American Art Museum');
+select currentinfowork(1,'AMER','Smithsonian American Art Museum');
+select workinfo(1,'AMER','Smithsonian American Art Museum');
+select transactionhistory(60,'AMER','Smithsonian American Art Museum');
+select locationhistory(1,'AMER','Smithsonian American Art Museum');
+select ownerhistory(60,'AMER','Smithsonian American Art Museum');
+select daytransactions('May-30-2015');
+select transactionsperiod('July-01-1990', 'Jul-14-1990');
+select dayownership('Jul-01-1990');
+select ownershipperiod('July-01-1990', 'Jul-14-1990');
+select daylocations('May-30-2015');
+select locationsperiod('July-01-1990', 'Jul-14-1990');
+select * from museuminventory('Smithsonian American Art Museum');
+select classificationinventory('Painting');
+select classificationmuseum('Painting', 'Smithsonian American Art Museum');
+select * from exhibitionlist('ExhibitA', 'Smithsonian American Art Museum', 'Dec-05-2016');
+select * from exhibitioncount('ExhibitA', 'Smithsonian American Art Museum', 'Dec-05-2016');

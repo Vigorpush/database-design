@@ -1,0 +1,48 @@
+Tables to do:
+doors					Done
+exhibitionlocations		Done
+exhibitions				Done
+exhibitionworks			Done
+locations				Done
+owners 					Done
+sponsorexhibitions 		Done
+themes
+worklocations			Done
+workowners				Done
+works					Done
+worksinsurance			Done
+worksmedium				Done
+worktransaction			Done
+
+Used export of dbvisualizer to output my tables into a file "olddb.sql", then imported it into my own schema in the central db in dbvisualizer.
+--From there, it was all simple copy operations
+
+insert into public.owners(ownname,ownemail,owncity,ownstate,ownstreetname,ownbuildingnumber,ownispartnermuseum,ownphonenumber)
+select ownname ownemail,owncity,ownstate,ownstreetname,ownbuildingnumber,ownispartnermuseum,ownphonenumber;
+
+insert into public.owners(ownname,ownemail,owncity,ownstate,ownstreetname,ownbuildingnumber,ownispartnermuseum,ownphonenumber)
+select ownname,ownemail,owncity,ownstate,ownstreetname,ownbuildingnumber,ownispartnermuseum,ownphonenumber from wwf594.ns_owners
+where ownname<>'Bugs Bunny';
+
+insert into locations (loclocationname,locbuildingname,locistravellingexhibitionlocation,loclocationsuggestedcapacitymin,loclocationsuggestedcapacitymax)
+select loclocationname,locbuildingname,locistravellingexhibitionlocation,loclocationsuggestedcapacitymin,loclocationsuggestedcapacitymax from wwf594.ns_locations;
+
+
+
+insert into ns_workstemp (worworkcharid,worworknumid,wordatabaseentrymuseum,worworkname,worworkdescription,worworkphysicalproperty,worworkclassification,worworkcreator,worworkborrowable,worworkgeographicregionoforigin,worworkcountryoforigin)
+select worworkcharid,worworknumid,wordatabaseentrymuseum,worworkname,worworkdescription,worworkphysicalproperty,worworkclassification,worworkcreator,worworkborrowable,worworkgeographicregionoforigin,worworkcountryoforigin
+from ns_works;
+
+--insert into exhibitions(exhexhibitname,exhmuseumname,exhexhibitdatestart,exhexhibitdateend,exhistravellingexhibition,exhexhibitdescription,exhsecuritypersonname)
+--select exhexhibitname,exhmuseumname,exhexhibitdatestart,exhexhibitdateend,exhistravellingexhibition,exhexhibitdescription,exhsecuritypersonname from wwf594.ns_exhibitions
+
+insert into works (worworkcharid,worworknumid,wordatabaseentrymuseum,worworkname,worworkdescription,worworkphysicalproperty,worworkclassification,worworkcreator,worworkborrowable,worworkgeographicregionoforigin,worworkcountryoforigin)
+select worworkcharid,worworknumid,wordatabaseentrymuseum,worworkname,worworkdescription,worworkphysicalproperty,worworkclassification,worworkcreator,worworkborrowable,worworkgeographicregionoforigin,worworkcountryoforigin
+from wwf594.ns_works;
+
+--Basically all the other inserts were like this, no changes
+
+--I couldn't cast my workcreationyear values into the central database properly, I added them in by hand with
+--UPDATES.
+
+
