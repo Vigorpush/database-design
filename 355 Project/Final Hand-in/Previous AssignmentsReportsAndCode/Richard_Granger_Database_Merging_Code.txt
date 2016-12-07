@@ -1,0 +1,233 @@
+--datatransfer
+\i 'databaseunified.txt';
+--ns_doors DOORS
+--ns_exhibitionlocations
+--ns_sponsorexhibitions DO LAST
+--ns_themes DO LAST
+--ns_worklocations
+--ns_workowners DONE
+--ns_works SORTA DONE
+--ns_worksinsurance SORTA DONE
+--ns_worksmedium DONE
+--ns_worktransaction
+--ns_exhibitions
+
+insert into ns_owners(ownname, ownemail, owncity, ownstate, ownstreetname, ownbuildingnumber, ownispartnermuseum)
+VALUES
+('Canadian Museum of Science and Technology', 'rig821@mail.usask.ca', 'Saskatoon', 'Saskatchewan', '8th Street', '302', 't'),
+('Sheldon Coopers Museum of Trains', 'Sheldon.Cooper@uofc.com', 'Los Angeles', 'California', 'Pasadena County', '94720', 'f'),
+('Robbie Reyes', 'RobbieReyes@ghostrider.com', 'Los Santos', 'California', 'Valhalla Street', '666', 'f'),
+('Dwight Schrute', 'Dwight.Schrute@dundermifflin.com', 'Scranton', 'Pennsylvania', 'Slough Avenue', '1725', 'f'),
+('Boat Rider Museum', 'BoatRiderisDaBeast@gmail.com', 'Oahu', 'Hawaii', 'Chinatown Avenue', '34', 'f'),
+('Pewter City Gallery', 'pk@gmail.com', 'Pewter City', 'Kanto', NULL, 1, 'f'),
+('Twinleaf Gallery', 'tj@gmail.com', 'Twinleaf Town', 'Johto', NULL, 2, 'f'),
+('Lumiose City Gallery', 'lk@gmail.com', 'Lumiose City', 'Kalos', NULL, 6, 'f');
+
+
+insert into ns_works(worworkcharid, worworknumid, wordatabaseentrymuseum, worworkname, worworkborrowable, worworkdescription, worworkcreator, worworkfieldofscience)
+select woralphadesig, wornumdesig, 'Canadian Museum of Science and Technology', woritemname, 't', wordescription, worauthor, wortype from tblworks;
+
+insert into ns_worksmedium(wmeworkcharid, wmeworknumid, wmedatabaseentrymuseum, wmeworkmedium)
+select medalphadesig, mednumdesig, 'Canadian Museum of Science and Technology', medmaterial from tblmedia;
+
+--insert the locations
+
+insert into ns_locations(loclocationname, locbuildingname, locistravellingexhibitionlocation, loclocationsuggestedcapacitymin, loclocationsuggestedcapacitymax, loclocationmeasurementwidth, loclocationmeasurementlength)
+VALUES
+('gallery A', 'Canadian Museum of Science and Technology', 'f', 7, 16, 50, 50),
+('gallery B', 'Canadian Museum of Science and Technology', 'f', 7, 16, 50, 50),
+('gallery C', 'Canadian Museum of Science and Technology', 'f', 14, 24, 50, 50),
+('gallery D', 'Canadian Museum of Science and Technology', 'f', 15, 25, 60, 60),
+('Storage', 'Canadian Museum of Science and Technology', 'f', 0, 600, 50, 50),
+('Lobby', 'Canadian Museum of Science and Technology', 'f', 2, 4, 50, 50),
+('Martensville Museum of History', 'Dwight Schrute', 't', NULL, NULL, NULL, NULL),
+('Warman Museum of History', 'Dwight Schrute', 't', NULL, NULL, NULL, NULL),
+('Eyebrow Museum of History', 'Dwight Schrute', 't', NULL, NULL, NULL, NULL),
+('Duck Lake Museum of History', 'Dwight Schrute', 't', NULL, NULL, NULL, NULL),
+('Rosthern Museum of History', 'Dwight Schrute', 't', NULL, NULL, NULL, NULL),
+('Lumiose City Gallery', 'Lumiose City Gallery', 'f', NULL, NULL, NULL, NULL),
+('Twinleaf Gallery', 'Twinleaf Gallery', 'f', NULL, NULL, NULL, NULL),
+('Pewter City Gallery', 'Pewter City Gallery', 'f', NULL, NULL, NULL, NULL);
+
+--populate works_insurance
+
+insert into ns_worksinsurance(winworkcharid, winworknumid, winworkdatabaseentrylocation, winworkinsurevalue, wininsuredatestart, wininsuredateend)
+select woralphadesig, wornumdesig, 'Canadian Museum of Science and Technology', worinsurvalue, woracquisition, NULL from tblworks;
+
+update ns_worksinsurance set wininsuredateend = '2016-11-01' where winworkcharid = 'MA';
+
+insert into ns_worksinsurance(winworkcharid, winworknumid, winworkdatabaseentrylocation, winworkinsurevalue, wininsuredatestart, wininsuredateend)
+select woralphadesig, wornumdesig, 'Canadian Museum of Science and Technology', worinsurvalue * 1.1, '2016-11-01', NULL from tblworks where woralphadesig = 'MA';
+
+--create doors table
+
+insert into ns_doors(dormuseumnameorigin, dorlocationnameorigin, dormuseumnamedestination, dorlocationnamedestination)
+VALUES
+('Canadian Museum of Science and Technology', 'Lobby', 'Canadian Museum of Science and Technology', 'gallery A'),
+('Canadian Museum of Science and Technology', 'gallery A', 'Canadian Museum of Science and Technology', 'Lobby'),
+('Canadian Museum of Science and Technology', 'Lobby', 'Canadian Museum of Science and Technology', 'gallery B'),
+('Canadian Museum of Science and Technology', 'gallery B', 'Canadian Museum of Science and Technology', 'Lobby'),
+('Canadian Museum of Science and Technology', 'gallery B', 'Canadian Museum of Science and Technology', 'gallery C'),
+('Canadian Museum of Science and Technology', 'gallery C', 'Canadian Museum of Science and Technology', 'gallery B'),
+('Canadian Museum of Science and Technology', 'gallery C', 'Canadian Museum of Science and Technology', 'gallery A'),
+('Canadian Museum of Science and Technology', 'gallery A', 'Canadian Museum of Science and Technology', 'gallery C'),
+('Canadian Museum of Science and Technology', 'gallery B', 'Canadian Museum of Science and Technology', 'gallery D'),
+('Canadian Museum of Science and Technology', 'gallery D', 'Canadian Museum of Science and Technology', 'gallery B'),
+('Canadian Museum of Science and Technology', 'Lobby', 'Canadian Museum of Science and Technology', 'Storage'),
+('Canadian Museum of Science and Technology', 'Storage', 'Canadian Museum of Science and Technology', 'Lobby'),
+('Canadian Museum of Science and Technology', 'gallery B', 'Canadian Museum of Science and Technology', 'gallery A'),
+('Canadian Museum of Science and Technology', 'gallery A', 'Canadian Museum of Science and Technology', 'gallery B');
+
+--add exhibits to the exhibits tables
+
+insert into ns_exhibitions(exhexhibitname, exhmuseumname, exhexhibitdescription, exhexhibitdatestart, exhexhibitdateend, exhsecuritypersonname, exhistravellingexhibition)
+select exhExhibitName, 'Canadian Museum of Science and Technology', exhdescription, exhstartdate, exhenddate, NULL, 'f' from tblexhibits; 
+
+--now move the travelling exhibitions to the proper boolean
+
+update ns_exhibitions set exhistravellingexhibition = 't' where exhexhibitname = 'RC Jacobson Photo Collection';
+update ns_exhibitions set exhsecuritypersonname = 'Dwight Schrute' where exhexhibitname = 'RC Jacobson Photo Collection';
+
+insert into ns_sponsorexhibitions(spesponsorname, speexhibitname, spemuseumname, speexhibitdatestart, spesponsoramount)
+select 'Rogers Incorporated', exhexhibitname, exhmuseumname, exhexhibitdatestart, 500 from ns_exhibitions where exhexhibitname = 'RC Jacobson Photo Collection';
+
+--add on loan as a location
+
+insert into ns_locations(loclocationname, locbuildingname, locistravellingexhibitionlocation, loclocationsuggestedcapacitymin, loclocationsuggestedcapacitymax, loclocationmeasurementwidth, loclocationmeasurementlength)
+values
+('ON LOAN', 'Canadian Museum of Science and Technology', 'f', NULL, NULL, NULL, NULL);
+-------------------------------------------------------------------------------------------------------------------------------------------
+--worksowners tables
+
+--add this temporarily to change the ownership
+insert into ns_owners(ownname, ownispartnermuseum)
+VALUES
+('Self', 'f');
+
+insert into ns_workowners(wonworkcharid, wonworknumid, wonworkdatabaseentrylocation, wonownername, wonownershipdatestart, wonownershipdateend)
+select woralphadesig, wornumdesig, 'Canadian Museum of Science and Technology', worowner, woracquisition, NULL from tblworks where woralphadesig != 'RTS';
+
+--change the owner to the proper owner
+
+update ns_workowners set wonownername = 'Canadian Museum of Science and Technology' where wonownername = 'Self';
+
+delete from ns_owners where ownname = 'Self';
+
+insert into ns_workowners(wonworkcharid, wonworknumid, wonworkdatabaseentrylocation, wonownername, wonownershipdatestart, wonownershipdateend)
+select woralphadesig, wornumdesig, 'Canadian Museum of Science and Technology', 'Sheldon Coopers Museum of Trains', woracquisition, NULL from tblworks where woralphadesig = 'RTS';
+
+update ns_workowners set wonownername = 'Canadian Museum of Science and Technology', wonownershipdateend = '2016-10-21' where wonworkcharid = 'FTE';
+
+insert into ns_workowners(wonworkcharid, wonworknumid, wonworkdatabaseentrylocation, wonownername, wonownershipdatestart, wonownershipdateend)
+select woralphadesig, wornumdesig, 'Canadian Museum of Science and Technology', 'Boat Rider Museum', '2016-10-21', NULL from tblworks where woralphadesig = 'FTE';
+
+--this updates the creation date data to a YYYY-MM-DD Format
+
+update ns_works set worworkcreationdate = to_date('1231'||(to_char((select worcreationdate from tblworks where wornumdesig = worworknumid), '9999')),'MMDDYYYY');
+
+
+
+----------------------------------------------------------------------------------------------------------
+--exhibitionslocations
+
+insert into ns_exhibitionlocations(eloexhibitname, eloexhibitdatestart, elolocationname, elomuseumoflocation, elomuseumofexhibition, elolocationdatestart, elolocationdateend)
+select elexhibitname, elstartdate, ellocationname, 'Canadian Museum of Science and Technology', 'Canadian Museum of Science and Technology', elstartdate, elenddate from tblexhibitslocations;
+
+
+insert into ns_exhibitionlocations(eloexhibitname, eloexhibitdatestart, elolocationname, elomuseumoflocation, elomuseumofexhibition, elolocationdatestart, elolocationdateend)
+select exhexhibitname, exhstartdate, 'Rosthern Museum of History', 'Dwight Schrute', 'Canadian Museum of Science and Technology', exhstartdate, exhenddate from tblexhibits where exhstartdate = '2016-11-01';
+
+insert into ns_exhibitionlocations(eloexhibitname, eloexhibitdatestart, elolocationname, elomuseumoflocation, elomuseumofexhibition, elolocationdatestart, elolocationdateend)
+select exhexhibitname, exhstartdate, 'Warman Museum of History', 'Dwight Schrute', 'Canadian Museum of Science and Technology', exhstartdate, exhenddate from tblexhibits where exhstartdate = '2016-12-04';
+
+insert into ns_exhibitionlocations(eloexhibitname, eloexhibitdatestart, elolocationname, elomuseumoflocation, elomuseumofexhibition, elolocationdatestart, elolocationdateend)
+select exhexhibitname, exhstartdate, 'Martensville Museum of History', 'Dwight Schrute', 'Canadian Museum of Science and Technology', exhstartdate, exhenddate from tblexhibits where exhstartdate = '2017-01-01';
+
+insert into ns_exhibitionlocations(eloexhibitname, eloexhibitdatestart, elolocationname, elomuseumoflocation, elomuseumofexhibition, elolocationdatestart, elolocationdateend)
+select exhexhibitname, exhstartdate, 'Eyebrow Museum of History', 'Dwight Schrute', 'Canadian Museum of Science and Technology', exhstartdate, exhenddate from tblexhibits where exhstartdate = '2017-02-01';
+
+insert into ns_exhibitionlocations(eloexhibitname, eloexhibitdatestart, elolocationname, elomuseumoflocation, elomuseumofexhibition, elolocationdatestart, elolocationdateend)
+select exhexhibitname, exhstartdate, 'Duck Lake Museum of History', 'Dwight Schrute', 'Canadian Museum of Science and Technology', exhstartdate, exhenddate from tblexhibits where exhstartdate = '2017-03-05';
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------
+--works_exhibitionstable
+
+insert into ns_exhibitionworks(exwexhibitname, exwexhibitdatestart, exwmuseumofexhibition, exwworkcharid, exwworknumid, exwworkdatabaseentrymuseum, exwdateworkadded, exwdateworkremoved)
+select weexhibitname, westartdate, 'Canadian Museum of Science and Technology', wealphadesig, wenumdesig, 'Canadian Museum of Science and Technology', westartdate, weenddate from tblworksexhibitions;
+
+--------------------------------------------------------------------------------------------------------------------------------
+--works locations
+--these are temporary to add to the new table and transfer
+insert into ns_owners(ownname, ownispartnermuseum)
+VALUES
+('TEST', 'f');
+insert into ns_locations(loclocationname, locbuildingname, locistravellingexhibitionlocation, loclocationsuggestedcapacitymin, loclocationsuggestedcapacitymax, loclocationmeasurementwidth, loclocationmeasurementlength)
+select loclocation, 'TEST', 'f', NULL, NULL, NULL, NULL from tbllocations;
+
+insert into ns_worklocations(wolworkcharid, wolworknumid, wolworkdatabaseentrymuseum, wollocationname, wolmuseumname, wolworktimearrival, wolworktimedeparture)
+select hisalphadesig, hisnumdesig, 'Canadian Museum of Science and Technology', hislocation, 'TEST', hisstartdate, hisenddate from tblhistory;
+
+update ns_worklocations set wollocationname = 'gallery A', wolmuseumname = 'Canadian Museum of Science and Technology' where wollocationname = 'A';
+update ns_worklocations set wollocationname = 'gallery B', wolmuseumname = 'Canadian Museum of Science and Technology' where wollocationname = 'B';
+update ns_worklocations set wollocationname = 'gallery C', wolmuseumname = 'Canadian Museum of Science and Technology' where wollocationname = 'C';
+update ns_worklocations set wollocationname = 'gallery D', wolmuseumname = 'Canadian Museum of Science and Technology' where wollocationname = 'D';
+update ns_worklocations set wollocationname = 'Storage', wolmuseumname = 'Canadian Museum of Science and Technology' where wollocationname = 'S';
+update ns_worklocations set wollocationname = 'Lobby', wolmuseumname = 'Canadian Museum of Science and Technology' where wollocationname = 'L';
+
+--add a travelling location
+insert into ns_locations(loclocationname, locbuildingname, locistravellingexhibitionlocation, loclocationsuggestedcapacitymin, loclocationsuggestedcapacitymax, loclocationmeasurementwidth, loclocationmeasurementlength)
+VALUES
+('Travelling', 'Canadian Museum of Science and Technology', 'f', NULL, NULL, NULL, NULL),
+('Offsite Location', 'Canadian Museum of Science and Technology', 'f', NULL, NULL, NULL, NULL);
+
+update ns_worklocations set wollocationname = 'Travelling', wolmuseumname = 'Canadian Museum of Science and Technology' where wollocationname = 'T';
+update ns_worklocations set wollocationname = 'Rosthern Museum of History', wolmuseumname = 'Dwight Schrute' where wollocationname = 'E';
+update ns_worklocations set wollocationname = 'Warman Museum of History', wolmuseumname = 'Dwight Schrute' where wollocationname = 'F';
+update ns_worklocations set wollocationname = 'Martensville Museum of History', wolmuseumname = 'Dwight Schrute' where wollocationname = 'G';
+update ns_worklocations set wollocationname = 'Eyebrow Museum of History', wolmuseumname = 'Dwight Schrute' where wollocationname = 'H';
+update ns_worklocations set wollocationname = 'Duck Lake Museum of History', wolmuseumname = 'Dwight Schrute' where wollocationname = 'I';
+
+update ns_worklocations set wolworktimedeparture = NULL where wollocationname = 'O';
+update ns_worklocations set wollocationname = 'Offsite Location', wolmuseumname = 'Canadian Museum of Science and Technology' where wollocationname = 'O';
+
+update tblloaninfo set lienddate = '2017-04-20';
+
+insert into ns_worklocations(wolworkcharid, wolworknumid, wolworkdatabaseentrymuseum, wollocationname, wolmuseumname, wolworktimearrival, wolworktimedeparture)
+select lialphadesig, linumdesig, 'Canadian Museum of Science and Technology', liloanname, liloanname, listartdate, lienddate from tblloaninfo;
+
+delete from ns_locations where char_length(loclocationname) = 1;
+
+delete from ns_owners where ownname = 'TEST';
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--transactions
+--when all the works were purchased
+
+insert into ns_worktransaction(wtrworkcharid, wtrworknumid, wtrworkdatabaseentrymuseum, wtrmuseuminvolved, wtrclient, wtrtransactiontype, wtrtransactiontime)
+select woralphadesig, wornumdesig, 'Canadian Museum of Science and Technology', 'Canadian Museum of Science and Technology', NULL, 'Purchased', woracquisition from tblworks where woralphadesig != 'NMGTCC' AND woralphadesig != 'RTS';
+
+insert into ns_worktransaction(wtrworkcharid, wtrworknumid, wtrworkdatabaseentrymuseum, wtrmuseuminvolved, wtrclient, wtrtransactiontype, wtrtransactiontime)
+select wolworkcharid, wolworknumid, 'Canadian Museum of Science and Technology', 'Canadian Museum of Science and Technology', wollocationname, 'Loaned', wolworktimearrival from ns_worklocations where wolworktimearrival = '2016-11-15 08:00:00';
+
+insert into ns_worktransaction(wtrworkcharid, wtrworknumid, wtrworkdatabaseentrymuseum, wtrmuseuminvolved, wtrclient, wtrtransactiontype, wtrtransactiontime)
+select woralphadesig, wornumdesig, 'Canadian Museum of Science and Technology', 'Canadian Museum of Science and Technology', 'Boat Rider Museum', 'Sold', worselldate from tblworks where worowner = 'Boat Rider Museum';
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+update ns_works set worworkphysicalproperty = 'Mechanical' where worworkcharid != 'CTDCD';
+update ns_works set worworkphysicalproperty = 'Electrical' where worworkcharid = 'CTDCD';
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+insert into ns_themes(wthworkcharid, wthworknumid, wthworkdatabaseentrylocation, wththeme)
+select worworkcharid, worworknumid, wordatabaseentrymuseum, 'Computing Devices' from ns_works where worworkcharid = 'CTDCD' OR worworkcharid = 'CTDPD' OR worworkcharid = 'CTACD';
+
+insert into ns_themes(wthworkcharid, wthworknumid, wthworkdatabaseentrylocation, wththeme)
+select worworkcharid, worworknumid, wordatabaseentrymuseum, 'Cameras and related' from ns_works where worworkcharid = 'PCC';
+
+insert into ns_themes(wthworkcharid, wthworknumid, wthworkdatabaseentrylocation, wththeme)
+select worworkcharid, worworknumid, wordatabaseentrymuseum, 'Astronomy and Space Travel' from ns_works where worworkcharid = 'STMS' OR worworkcharid = 'AOE';
+
+insert into ns_themes(wthworkcharid, wthworknumid, wthworkdatabaseentrylocation, wththeme)
+select worworkcharid, worworknumid, wordatabaseentrymuseum, 'Chemicals' from ns_works where worworkcharid = 'CLC';
+
+

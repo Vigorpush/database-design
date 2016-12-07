@@ -1,0 +1,27 @@
+INSERT INTO worktransaction (wtrworkcharid, wtrworknumid, wtrworkdatabaseentrymuseum, wtrmuseuminvolved, wtrclient, wtrtransactiontype, wtrtransactiontime)
+VALUES (${CHAR_ID||||String||pk ds=10 dt=VARCHAR}$, ${NUM_ID||||Long||pk ds=20 dt=BIGINT}$, ${Work_Database_Entry_Museum||||String||pk ds=50 dt=VARCHAR}$, ${Museum_Selling_The_Work||||String||pk ds=50 dt=VARCHAR}$, ${Museum_Purchasing_The_Work||||String||nullable ds=50 dt=VARCHAR}$, 'Sold', current_timestamp);
+
+UPDATE workowners SET wonownershipdateend = current_timestamp WHERE wonworkcharid = ${CHAR_ID||||String||pk ds=10 dt=VARCHAR}$ and wonworknumid = ${NUM_ID||||Long||pk ds=20 dt=BIGINT}$ and wonworkdatabaseentrylocation = ${Work_Database_Entry_Museum||||String||pk ds=50 dt=VARCHAR}$ and wonownername = ${Museum_Selling_The_Work||||String||pk ds=50 dt=VARCHAR}$ and wonownershipdateend is NULL;
+
+INSERT INTO workowners (wonworkcharid, wonworknumid, wonworkdatabaseentrylocation, wonownername, wonownershipdatestart, wonownershipdateend) 
+VALUES (${CHAR_ID||||String||pk ds=10 dt=VARCHAR}$, ${NUM_ID||||Long||pk ds=20 dt=BIGINT}$,  ${Work_Database_Entry_Museum||||String||pk ds=50 dt=VARCHAR}$, ${Museum_Purchasing_The_Work||||String||nullable ds=50 dt=VARCHAR}$, current_timestamp, NULL);
+
+UPDATE worklocations SET wolworktimedeparture = current_timestamp WHERE wolworkcharid = ${CHAR_ID||||String||pk ds=10 dt=VARCHAR}$ and wolworknumid = ${NUM_ID||||Long||pk ds=20 dt=BIGINT}$ and wolworkdatabaseentrymuseum = ${Work_Database_Entry_Museum||||String||pk ds=50 dt=VARCHAR}$ and wolworktimedeparture is NULL;
+
+INSERT INTO worklocations (wolworkcharid, wolworknumid, wolworkdatabaseentrymuseum, wollocationname, wolmuseumname, wolworktimearrival, wolworktimedeparture) 
+VALUES (${CHAR_ID||||String||pk ds=10 dt=VARCHAR}$, ${NUM_ID||||Long||pk ds=20 dt=BIGINT}$, ${Work_Database_Entry_Museum||||String||pk ds=50 dt=VARCHAR}$, ${New_Location_Name||||String||pk ds=50 dt=VARCHAR}$, ${Museum_Purchasing_The_Work||||String||nullable ds=50 dt=VARCHAR}$, current_timestamp, NULL);
+
+--this is selling to a new owner
+INSERT INTO owners (ownname, ownemail, owncity, ownstate, ownstreetname, ownbuildingnumber, ownispartnermuseum, ownphonenumber) VALUES (${Owner_Name||||String||pk ds=50 dt=VARCHAR}$, ${Owner_Email||||String||nullable ds=80 dt=VARCHAR}$, ${Owner_City||||String||nullable ds=60 dt=VARCHAR}$, ${Owner_State||||String||nullable ds=60 dt=VARCHAR}$, NULL, NULL, false, ${Phone_Number||||String||nullable ds=13 dt=VARCHAR}$);
+
+INSERT INTO worktransaction (wtrworkcharid, wtrworknumid, wtrworkdatabaseentrymuseum, wtrmuseuminvolved, wtrclient, wtrtransactiontype, wtrtransactiontime) 
+VALUES 
+(${CHAR_ID||||String||pk ds=10 dt=VARCHAR}$, ${NUM_ID||||Long||pk ds=20 dt=BIGINT}$, ${Work_Database_Entry_Museum||||String||pk ds=50 dt=VARCHAR}$, ${Museum_That_Owns_Work||||String||pk ds=50 dt=VARCHAR}$, ${Owner_Name||||String||pk ds=50 dt=VARCHAR}$, 'Sold', current_timestamp);
+
+UPDATE workowners SET wonownershipdateend = current_timestamp WHERE wonworkcharid = ${CHAR_ID||||String||pk ds=10 dt=VARCHAR}$ and wonworknumid = ${NUM_ID||||Long||pk ds=20 dt=BIGINT}$ and wonworkdatabaseentrylocation = ${Work_Database_Entry_Museum||||String||pk ds=50 dt=VARCHAR}$ and wonownername = ${Museum_That_Owns_Work||||String||pk ds=50 dt=VARCHAR}$ and wonownershipdateend is NULL;
+
+
+INSERT INTO workowners (wonworkcharid, wonworknumid, wonworkdatabaseentrylocation, wonownername, wonownershipdatestart, wonownershipdateend) 
+VALUES (${CHAR_ID||||String||pk ds=10 dt=VARCHAR}$, ${NUM_ID||||Long||pk ds=20 dt=BIGINT}$, ${Work_Database_Entry_Museum||||String||pk ds=50 dt=VARCHAR}$, ${Owner_Name||||String||pk ds=50 dt=VARCHAR}$, current_timestamp, NULL);
+
+

@@ -1,0 +1,178 @@
+CREATE TABLE NS_Owners (
+        ownName NS_OwnerName NOT NULL,
+        ownEmail NS_OwnerEmail,
+        ownCity NS_OwnerCity,
+        ownState NS_OwnerState,
+        ownStreetName NS_OwnerStreetName,
+        ownBuildingNumber NS_OwnerBuildingNumber,
+        ownisPartnerMuseum NS_IsPartnerMuseum NOT NULL,
+        PRIMARY KEY(ownName)
+);
+
+CREATE TABLE NS_Works (
+	worWorkCharID NS_WorkCharID NOT NULL,
+	worWorkNumID NS_WorkNumID NOT NULL,
+	worDatabaseEntryMuseum NS_OwnerName NOT NULL,		 --was of type DatabaseEntryMuseum in word doc but then it can't ref something
+	worWorkName NS_WorkName,
+	worWorkDescription NS_WorkDescription,
+	worWorkPhysicalProperty NS_WorkPhysicalProperty,
+	worWorkClassification NS_WorkClassification,
+	worWorkCreator NS_WorkCreator,
+	worWorkCreationDate NS_WorkCreationDate,
+	worWorkBorrowable NS_WorkBorrowable,		 --not null maybe?
+	worWorkGeographicRegionOfOrigin NS_GeographicRegionOfOrigin,		  --coordinate name
+	worWorkCountryOfOrigin NS_CountryOfOrigin,
+	worWorkFieldOfScience NS_FieldOfScience,	 --coordinate name
+	PRIMARY KEY(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
+	FOREIGN KEY(worDatabaseEntryMuseum) REFERENCES NS_Owners(ownName) ON UPDATE CASCADE
+);
+
+CREATE TABLE NS_WorksMedium (
+	wmeWorkCharID NS_WorkCharID NOT NULL,		
+	wmeWorkNumID NS_WorkNumID NOT NULL,
+	wmeDatabaseEntryMuseum NS_OwnerName NOT NULL,		 --Will change name to owner if it changes
+	wmeWorkMedium NS_WorkMedium NOT NULL,
+	PRIMARY KEY(wmeWorkCharID, wmeWorkNumID, wmeDatabaseEntryMuseum, wmeWorkMedium),
+	FOREIGN KEY(wmeWorkCharID, wmeWorkNumID, wmeDatabaseEntryMuseum) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum) ON UPDATE CASCADE
+);
+
+CREATE TABLE NS_Locations (
+	locLocationName NS_LocationName,	--was RoomName but could be towns
+	locBuildingName NS_OwnerName,	--will have to be owner name and the name building name should change
+	locIsTravellingExhibitionLocation NS_IsTravellingExhibitionLocation,
+	locLocationSuggestedCapacityMin NS_LocationSuggestedCapacityMin,
+	locLocationSuggestedCapacityMax NS_LocationSuggestedCapacityMax,
+	locLocationsWidth NS_LocationWidth,
+	locLocationLength NS_LocationLength,
+	FOREIGN KEY(locBuildingName) REFERENCES NS_Owners(ownName),
+	PRIMARY KEY(locLocationName, locBuildingName)
+);
+
+CREATE TABLE NS_WorkLocations (
+	wolWorkCharID NS_WorkCharID NOT NULL,
+	wolWorkNumID NS_WorkNumID NOT NULL,
+	wolWorkDatabaseEntryMuseum NS_OwnerName NOT NULL,
+	wolLocationName NS_LocationName NOT NULL,
+	wolMuseumName NS_OwnerName NOT NULL,
+	wolWorkArrivalTime NS_WorkArrivalTime NOT NULL,
+	wolWorkDepartureTime NS_WorkDepartureTime,
+	Foreign Key (wolWorkCharID, wolWorkNumID, wolWorkDatabaseEntryMuseum) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
+	Foreign Key (wolLocationName, wolMuseumName) REFERENCES NS_Locations(locLocationName, locBuildingName),
+	PRIMARY KEY(wolWorkCharID, wolWorkNumID, wolWorkDatabaseEntryMuseum, wolLocationName, wolMuseumName)
+);
+
+CREATE TABLE NS_Doors (
+	dorMuseumNameOrigin NS_OwnerName NOT NULL,
+	dorLocationNameOrigin NS_LocationName NOT NULL,
+	dorMuseumNameDestination NS_OwnerName NOT NULL,		 --should maybe be MuseumNameDestination
+	dorLocationNameDestination NS_LocationName NOT NULL,
+	FOREIGN KEY(dorMuseumNameOrigin, dorLocationNameOrigin) REFERENCES NS_Locations(locBuildingName, locLocationName),
+	FOREIGN KEY(dorMuseumNameDestination, dorLocationNameDestination) REFERENCES NS_Locations(locBuildingName, locLocationName),
+	PRIMARY KEY(dorMuseumNameOrigin, dorMuseumNameDestination)
+);
+
+CREATE TABLE NS_Exhibitions (
+	exhExhibitName NS_ExhibitName NOT NULL,
+	exhMuseumName NS_OwnerName NOT NULL,
+	exhExhibitStartDate NS_ExhibitStartDate NOT Null,
+	exhExhibitEndDate NS_ExhibitEndDate,		 --was not null in report
+	exhSecurityPersonName NS_SecurityPersonName,
+	exhIsTravellingExhibition NS_IsTravellingExhibition,
+	PRIMARY KEY(exhExhibitName, exhMuseumName, exhExhibitStartDate),
+	FOREIGN KEY(exhMuseumName) REFERENCES NS_Owners(OwnName)
+);
+
+CREATE TABLE NS_ExhibitionLocations (
+	eloExhibitName NS_ExhibitName NOT NULL,
+	eloExhibitStartDate NS_ExhibitStartDate NOT NULL,
+	eloLocationName NS_LocationName NOT NULL,
+	eloMuseumOfLocation NS_OwnerName NOT NULL,
+	eloMuseumOfExhibition NS_OwnerName NOT NULL,
+	eloLocationStartDate NS_LocationStartDate NOT NULL,
+	eloLocationEndDate NS_LocationEndDate,
+	PRIMARY KEY(eloExhibitName, eloExhibitStartDate, eloLocationName, eloMuseumOfLocation, eloLocationStartDate),
+	FOREIGN KEY(eloExhibitname, eloExhibitStartDate,eloMuseumOfExhibition) REFERENCES NS_Exhibitions(exhExhibitName, exhExhibitStartDate, exhMuseumName),
+	FOREIGN KEY(eloLocationName, eloMuseumOfLocation) REFERENCES NS_Locations(locLocationName, locBuildingName)
+);
+
+CREATE TABLE NS_ExhibitionWorks (
+	exwExhibitName NS_ExhibitName NOT NULL,
+	exwExhibitStartDate NS_ExhibitStartDate NOT NULL,
+	exwMuseumOfExhibition NS_OwnerName NOT NULL,
+	exwWorkCharID NS_WorkCharID NOT NULL,
+	exwWorkNumID NS_WorkNumID NOT NULL,
+	exwWorkDataBaseEntryMuseum NS_OwnerName NOT NULL,
+	exwDateWorkAdded NS_DateWorkAdded NOT NULL,
+	exwDateWorkRemoved NS_DateWorkRemoved,
+	PRIMARY KEY(exwExhibitname, exwExhibitStartDate, exwMuseumOfExhibition, exwWorkCharID, exwWorkNumID, exwWorkDataBaseEntryMuseum, exwDateWorkAdded),
+	FOREIGN KEY(exwExhibitName, exwExhibitStartDate,exwMuseumOfExhibition) REFERENCES NS_Exhibitions(exhExhibitName,exhExhibitStartDate, exhMuseumName),
+	FOREIGN KEY(exwWorkCharID, exwWorkNumID, exwWorkDatabaseEntryMuseum) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum)
+);
+
+CREATE TABLE NS_WorkOwners (
+	wonWorkCharID NS_WorkCharID NOT NULL,
+	wonWorkNumID NS_WorkNumID NOT NULL,
+	wonWorkDatabaseEntryLocation NS_OwnerName NOT NULL,
+	wonOwnerName NS_OwnerName NOT NULL,
+	wonOwnershipStartDate NS_OwnershipStartDate NOT NULL,
+	wonOwnershipEndDate NS_OwnershipStartDate,
+	PRIMARY KEY(wonWorkCharID, wonWorkNumId, wonworkDatabaseEntryLocation, wonOwnerName, wonOwnershipStartDate),
+	FOREIGN KEY(wonWorkCharID, wonWorkNumID, wonWorkDatabaseEntryLocation) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
+	FOREIGN KEY(wonOwnerName) REFERENCES NS_Owners(ownName)
+);
+
+CREATE TABLE NS_WorkTransaction (
+	wtrWorkCharID NS_WorkCharID NOT NULL,
+	wtrWorkNumID NS_WorkNumID NOT NULL,
+	wtrWorkDatabaseEntryMuseum NS_OwnerName NOT NULL,
+	wtrMuseumInvolved NS_OwnerName NOT NULL,
+	wtrClient NS_OwnerName,
+	wtrTransactiontype NS_TransactionType Not Null,
+	wtrTransactionTime NS_TransactionTime Not Null,
+	PRIMARY KEY(wtrWorkCharID, wtrWorkNumID, wtrWorkDatabaseEntryMuseum, wtrMuseumInvolved, wtrTransactionType, wtrTransactionTime),
+	FOREIGN KEY(wtrWorkCharID, wtrWorkNumID, wtrWorkDatabaseEntryMuseum) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
+	FOREIGN KEY(wtrWorkDatabaseEntryMuseum) REFERENCES NS_Owners(ownName),
+	FOREIGN KEY(wtrClient) REFERENCES NS_Owners(ownName)
+);
+
+CREATE TABLE NS_Sponsors (
+	spoSponsorName NS_SponsorName NOT NULL,
+	PRIMARY KEY(spoSponsorName)
+);	
+
+CREATE TABLE NS_SponsorExhibitions (
+	speSponsorName NS_SponsorName NOT NULL,
+	speExhibitName NS_ExhibitName NOT NULL,
+	speMuseumName NS_OwnerName NOT NULL,
+	speExhibitStartDate NS_ExhibitStartDate NOT NULL,
+	speSponsorAmount NS_SponsorAmount,
+	PRIMARY KEY(speSponsorName, speExhibitName, speMuseumName, speExhibitStartDate),
+	FOREIGN KEY(speSponsorName) REFERENCES NS_Sponsors(spoSponsorName),
+	FOREIGN KEY(speExhibitName, speMuseumName, speExhibitStartDate) REFERENCES NS_Exhibitions(exhExhibitName, exhMuseumName, exhExhibitStartDate)
+);
+
+CREATE TABLE NS_Themes (
+	theTheme NS_Theme,
+	PRIMARY KEY(theTheme)
+);
+
+CREATE TABLE NS_WorkThemes (
+	wthWorkCharID NS_WorkCharID NOT NULL,
+	wthWorkNumID NS_WorkNumID NOT NULL,
+	wthWorkDatabaseEntryLocation NS_OwnerName NOT NULL,
+	wthTheme NS_Theme NOT NULL,
+	PRIMARY KEY(wthWorkCharID, wthWorkNumID, wthWorkDatabaseEntryLocation, wthTheme),
+	FOREIGN KEY(wthWorkCharID, wthWorkNumID, wthWorkDatabaseEntryLocation) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum),
+	FOREIGN KEY(wthTheme) REFERENCES NS_Themes(theTheme)
+);
+
+CREATE TABLE NS_WorksInsurance (
+	winWorkCharID NS_WorkCharID NOT NULL,
+	winWorkNumID NS_WorkNumID NOT NULL,
+	winWorkDatabaseEntryLocation NS_OwnerName NOT NULL,
+	winWorkInsureValue NS_WorkInsureValue NOT NULL,
+	winInsureStartDate NS_InsureStartDate NOT NULL,
+	winInsureEndDate NS_InsureEndDate,
+	PRIMARY KEY(winWorkCharID, winWorkNumID, winWorkDatabaseEntryLocation, winInsureStartDate),
+	FOREIGN KEY(winWorkCharID, winWorkNumID, winWorkDatabaseEntryLocation) REFERENCES NS_Works(worWorkCharID, worWorkNumID, worDatabaseEntryMuseum)
+);
