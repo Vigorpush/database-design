@@ -1,0 +1,130 @@
+--Create and Drop the domains for individual users
+DROP DOMAIN NS-WorkCharID CASCADE;
+CREATE DOMAIN NS-WorkCharID as varchar(10);
+
+DROP DOMAIN NS-WorkNumID CASCADE;
+CREATE DOMAIN NS-WorkNumID as bigint;
+
+DROP DOMAIN DatabaseEntryLocation CASCADE;
+CREATE DOMAIN NS-DatabaseEntryLocation as varchar(60);
+
+DROP DOMAIN NS-WorkDescription CASCADE;
+CREATE DOMAIN NS-WorkDescription as text;
+
+DROP DOMAIN NS-PhysicalProperty CASCADE;
+CREATE DOMAIN NS-WorkPhysicalProperty as varchar(30);
+
+DROP DOMAIN NS-WorkClassification CASCADE;
+CREATE DOMAIN NS-WorkClassification as varchar(30);
+
+DROP DOMAIN NS-WorkCreationDate CASCADE;
+CREATE DOMAIN NS-WorkCreationDate as date;
+
+DROP DOMAIN NS-WorkCreator CASCADE;
+CREATE DOMAIN NS-WorkCreator as varchar(50);
+
+DROP DOMAIN NS-WorkMedium CASCADE;
+CREATE DOMAIN NS-WorkMedium as varchar(40);
+
+DROP DOMAIN NS-LocationName CASCADE;
+--I noticed in the report that we have 2 attributes of LocationName
+CREATE DOMAIN NS-LocationName as varchar(80);
+
+DROP DOMAIN NS-MuseumName CASCADE;
+--I am not sure if we are dropping the museum address
+--So I did not add it here
+CREATE DOMAIN NS-MuseumName as varchar(50);
+
+DROP DOMAIN NS-WorkInsureValue CASCADE;
+CREATE DOMAIN NS-WorkInsureValue as float;
+
+DROP DOMAIN NS-OwnerName CASCADE;
+CREATE DOMAIN NS-OwnerName as varchar(50);
+
+DROP DOMAIN NS-OwnerEmail CASCADE;
+CREATE DOMAIN NS-OwnerEmail as varchar(80);
+
+DROP DOMAIN NS-OwnershipStartDate CASCADE;
+CREATE DOMAIN NS-OwnershipStartDate as timestamp;
+
+DROP DOMAIN NS-OwnershipEndDate CASCADE;
+CREATE DOMAIN NS-OwnershipEndDate as timestamp;
+
+DROP DOMAIN NS-LocationSuggestedCapacity CASCADE;
+CREATE DOMAIN NS-LocationSuggestedCapacity as int;
+
+DROP DOMAIN NS-LocationWidth CASCADE;
+CREATE DOMAIN NS-LocationWidth as float;
+
+DROP DOMAIN NS-LocationLength CASCADE;
+CREATE DOMAIN NS-LocationLength as float;
+
+DROP DOMAIN NS-WorkDepartureTime CASCADE;
+CREATE DOMAIN NS-WorkDepartureTime as timestamp;
+
+DROP DOMAIN NS-WorkArrivalTime CASCADE;
+CREATE DOMAIN NS-WorkArrivalTime as timestamp;
+
+DROP DOMAIN NS-ExhibitName CASCADE;
+CREATE DOMAIN NS-ExhibitName as varchar(150);
+
+DROP DOMAIN NS-ExhibitDescription CASCADE;
+CREATE DOMAIN NS-ExhibitDescription as text;
+
+DROP DOMAIN NS-ExhibitStartDate CASCADE;
+CREATE DOMAIN NS-ExhibitStartDate as date;
+
+DROP DOMAIN NS-ExhibitEndDate CASCADE;
+CREATE DOMAIN NS-ExhibitEndDate as date;
+
+DROP DOMAIN NS-TransactionType CASCADE;
+CREATE DOMAIN NS-TransactionType as varchar(100);
+
+DROP DOMAIN NS-TransactionTime CASCADE;
+CREATE DOMAIN NS-TransactionTime as timestamp;
+
+DROP DOMAIN NS-WorkBorrowable CASCADE;
+CREATE DOMAIN NS-WorkBorrowable as boolean;
+
+DROP DOMAIN NS-SecurityName CASCADE;
+CREATE DOMAIN NS-SecurityName as varchar(200);
+
+DROP DOMAIN NS-ExhibitArrivalDate CASCADE;
+CREATE DOMAIN NS-ExhibitArrivalDate as timestamp;
+
+DROP DOMAIN NS-ExhibitDepartureDate CASCADE;
+CREATE DOMAIN NS-ExhibitDepartureDate as timestamp;
+
+DROP DOMAIN NS-DestinationPhone CASCADE;
+CREATE DOMAIN NS-DestinationPhone as bigint;
+
+DROP DOMAIN NS-SponsorName CASCADE;
+CREATE DOMAIN NS-SponsorName as varchar(100);
+
+DROP DOMAIN NS-SponsorAmount CASCADE;
+CREATE DOMAIN NS-SponsorAmount as float;
+
+DROP DOMAIN NS-InsureStartDate CASCADE;
+CREATE DOMAIN NS-InsureStartDate as timestamp;
+
+DROP DOMAIN NS-InsureEndDate CASCADE;
+CREATE DOMAIN NS-InsureEndDate as timestamp;
+
+--not sure if we named this differently or removed it.
+DROP DOMAIN NS-Theme CASCADE;
+CREATE DOMAIN NS-Theme as varchar(60);
+
+--Adding the new domains we discussed in the previous meeting
+DROP DOMAIN NS-GeographicRegion CASCADE;
+CREATE DOMAIN NS-GeographicRegion as varchar(100);
+
+DROP DOMAIN NS-FieldOfScience CASCADE;
+CREATE DOMAIN NS-FieldOfScience as varchar(100);
+
+DROP DOMAIN NS-Requirements CASCADE;
+CREATE DOMAIN NS-Requirements as text;
+
+
+
+
+
