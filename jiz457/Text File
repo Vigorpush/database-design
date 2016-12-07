@@ -1,0 +1,29 @@
+
+
+DROP TABLE IF EXISTS traveltable CASCADE;
+CREATE TABLE traveltable(
+	sponsor_name name_format,
+	address city_format,
+	security_name name_format,
+	insurance value_format,
+	room Room_format
+);
+\copy traveltable FROM 'travel.csv' DELIMITER ',' CSV
+
+
+
+--find the items is good for the traveling exhibition
+
+
+--update the items condition
+	UPDATE tblitemcondition
+	SET conkey = 'EX'
+	FROM loadTable t
+	WHERE 
+	t.idletterkey = idletterkey AND t.idnumberkey = idnumberkey
+
+
+--insert exhibitionitems table
+
+
+--insert locationitems table

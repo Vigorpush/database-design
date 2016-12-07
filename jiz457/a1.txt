@@ -1,0 +1,645 @@
+ 
+--DROP ALL TABLE
+DROP TABLE IF EXISTS tblItems CASCADE ;
+DROP TABLE IF EXISTS tblmedia CASCADE ;
+DROP TABLE IF EXISTS tblLocation CASCADE;
+DROP TABLE IF EXISTS tblMuseumInfo CASCADE;
+DROP TABLE IF EXISTS tblexhibitions CASCADE;
+DROP TABLE IF EXISTS tblHistory CASCADE;
+DROP TABLE IF EXISTS tblDoor CASCADE;
+DROP TABLE IF EXISTS tblAddiDoor CASCADE;
+DROP TABLE IF EXISTS tblSelectItems CASCADE;
+DROP TABLE IF EXISTS tblExhibitionsItems CASCADE;
+DROP TABLE IF EXISTS tblLocationItem CASCADE;
+--DROP ALL VIEW
+DROP VIEW IF EXISTS tblView CASCADE ;
+DROP VIEW IF EXISTS tblAdditionView CASCADE ;
+
+--DROP ALL DOMAIN
+DROP DOMAIN IF EXISTS key_latter_format CASCADE;
+DROP DOMAIN IF EXISTS name_format CASCADE;
+DROP DOMAIN IF EXISTS key_number_format CASCADE;
+DROP DOMAIN IF EXISTS media_format CASCADE;
+DROP DOMAIN IF EXISTS date_format CASCADE;
+DROP DOMAIN IF EXISTS city_format CASCADE;
+DROP DOMAIN IF EXISTS type_format CASCADE;
+DROP DOMAIN IF EXISTS phone_format CASCADE;
+DROP DOMAIN IF EXISTS subtype_format CASCADE;
+DROP DOMAIN IF EXISTS description_format CASCADE;
+DROP DOMAIN IF EXISTS long_para_text CASCADE;
+DROP DOMAIN IF EXISTS short_para_text CASCADE;
+DROP DOMAIN IF EXISTS condition_format CASCADE;
+DROP DOMAIN IF EXISTS S_Acquisition_date_format CASCADE;
+DROP DOMAIN IF EXISTS VALUES_format CASCADE;
+DROP DOMAIN IF EXISTS Room_format CASCADE;
+DROP DOMAIN IF EXISTS Dimension_format CASCADE;
+DROP DOMAIN IF EXISTS value_format CASCADE;
+DROP DOMAIN IF EXISTS Capacity_format CASCADE;
+
+--GENERAL DOMAIN
+CREATE DOMAIN  key_latter_format AS varchar(10);
+CREATE DOMAIN  key_number_format AS int;
+CREATE DOMAIN  name_format AS varchar(200); 
+CREATE DOMAIN  media_format AS varchar(50);
+CREATE DOMAIN  date_format AS date;
+CREATE DOMAIN  city_format AS varchar(50);
+CREATE DOMAIN  phone_format AS varchar(16);
+
+CREATE DOMAIN  value_format int;
+CREATE DOMAIN  type_format AS varchar (50) ;
+CREATE DOMAIN  subtype_format AS varchar (50) ;
+CREATE DOMAIN  description_format AS TEXT ;
+CREATE DOMAIN  long_para_text AS TEXT;
+CREATE DOMAIN  short_para_text AS TEXT;
+CREATE DOMAIN  condition_format AS text;
+CREATE DOMAIN  Room_format AS varchar(10);
+CREATE DOMAIN  Dimension_format AS smallint;
+CREATE DOMAIN  Capacity_format AS int;
+
+
+--SPECIAL DOMAIN 
+CREATE DOMAIN  S_Acquisition_date_format AS date CHECK (VALUE > TO_DATE('1990-01-01','YYYY-MM-DD'));
+CREATE DOMAIN  VALUES_format AS int CHECK (VALUE > 100);
+
+
+
+--MAIN TABLES
+CREATE TABLE tblItems(
+	
+	itmletter key_latter_format,
+	itmNumber key_number_format,
+	itmName	name_format NOT NULL,
+	itmMedia media_format,
+	itmcompletedDate date_format NOT NULL,
+	itmAcquisitionDate S_Acquisition_date_format NOT NULL,
+	itmAuthor name_format NOT NULL,
+	itmValue value_format NOT NULL,
+	itmType type_format NOT NULL,
+	itmSubtype type_format NOT NULL,
+	itmDescription description_format NOT NULL,
+
+	PRIMARY KEY(itmletter, itmNumber)
+
+);
+
+
+CREATE TABLE tblmedia(
+	itmAddletter key_latter_format,
+	itmAddNumber key_number_format,
+	itmaddMedia media_format,
+	PRIMARY KEY(itmAddletter, itmAddNumber,itmaddMedia),
+	FOREIGN KEY (itmAddletter, itmAddNumber)
+        	REFERENCES tblItems
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+
+\copy tblItems FROM 'main.txt'
+\copy tblmedia FROM 'media.txt'
+
+ALTER TABLE tblItems DROP COLUMN itmMedia;
+
+--tblitems
+DROP VIEW IF EXISTS itemsView CASCADE;
+CREATE VIEW itemsView
+AS 
+SELECT 
+	itmletter AS "Letter Key",
+	itmnumber AS "Number Key",
+	itmname AS "Name",
+	itmcompleteddate AS "Complete Date",
+	itmacquisitiondate AS "Acquisition Date",
+	itmAuthor AS "Author",
+	itmvalue AS "Value",
+	itmtype AS "Type",
+	itmsubtype AS "Subtype",
+	itmdescription AS "Description"
+FROM tblitems; 
+
+
+
+--tblmedia
+DROP VIEW IF EXISTS mediaView CASCADE;
+CREATE VIEW mediaView
+AS 
+SELECT 
+	itmaddletter AS "Letter Key",
+	itmaddnumber AS "Number Key",
+	itmaddmedia AS "Media"
+FROM tblmedia; 
+
+--view museum maneger
+DROP VIEW IF EXISTS manegerView CASCADE;
+CREATE VIEW manegerView
+AS 
+SELECT 
+	t.itmaddletter AS "Letter Key",
+	t.itmaddnumber AS "Number Key",
+	t.itmaddmedia AS "Media",
+	itmname AS "Name",
+	itmcompleteddate AS "Complete Date",
+	itmacquisitiondate AS "Acquisition Date",
+	itmAuthor AS "Author",
+	itmvalue AS "Value",
+	itmtype AS "Type",
+	itmsubtype AS "Subtype",
+	itmdescription AS "Description"
+FROM tblmedia t, tblItems s
+WHERE 
+s.itmletter = t.itmaddletter AND s.itmnumber = t.itmaddnumber
+; 
+
+
+
+CREATE TABLE tblMuseumInfo(
+	minfo_CityLocation city_format,
+	minfo_name name_format,
+	minfo_tel phone_format  NOT NULL,
+	minfo_ContactName name_format NOT NULL,
+	PRIMARY KEY (minfo_CityLocation,minfo_name)
+
+);
+
+
+CREATE TABLE tblLocation(
+	locCity city_format,
+	locMuseumName name_format,
+	locRoomName Room_format,
+	locLength  Dimension_format NOT NULL,
+	locWidth  Dimension_format NOT NULL,
+	locCapacity Capacity_format,
+	PRIMARY KEY (locMuseumName,locRoomName),
+	FOREIGN KEY(locCity,locMuseumName) REFERENCES tblMuseumInfo
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+
+
+
+CREATE TABLE tblLocationItem(
+
+	LocItem_MuseumName name_format,
+	LocItem_city city_format,
+	LocItem_location Room_format,
+	LocItem_letterkey key_latter_format,
+	LocItem_numberkey key_number_format,
+	LocItem_startDate date_format,
+	LocItem_endDate date_format,
+	PRIMARY KEY (LocItem_MuseumName,LocItem_city,LocItem_location,LocItem_letterkey,LocItem_numberkey,LocItem_startDate),
+	FOREIGN KEY(LocItem_letterkey,LocItem_numberkey) REFERENCES tblItems
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+
+CREATE TABLE tblExhibitions(
+	exiMuseumName name_format,
+	exiRoomLocation Room_format,
+	exiCityLocation city_format,
+	exiStartDate date_format,
+	exiEndDate date_format,--can be NULL
+	exiExhibitionsName name_format NOT NULL,
+	exidescption description_format NOT NULL,
+	PRIMARY KEY (exiMuseumName,exiRoomLocation,exiStartDate), --end date can not be pk, because it will changing overtime.
+	FOREIGN KEY(exiMuseumName,exiRoomLocation) REFERENCES tblLocation
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+	FOREIGN KEY(exiCityLocation,exiMuseumName) REFERENCES tblMuseumInfo
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+
+
+
+
+CREATE TABLE tblDoor (
+	DooMuseumNameFrom name_format,
+	DooFrom_Location Room_format,
+	DooMuseumNameTo name_format,
+	DooTo_Location Room_format,
+	PRIMARY KEY (DooMuseumNameFrom,DooFrom_Location,DooTo_Location,DooMuseumNameTo),
+	FOREIGN KEY(DooMuseumNameFrom,DooFrom_Location) REFERENCES tblLocation
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+	FOREIGN KEY(DooMuseumNameTo,DooTo_Location) REFERENCES tblLocation
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+); 
+
+
+
+--change the view
+--select items into this table
+CREATE TABLE tblExhibitionsItems(
+	selMuseumname name_format,
+	selMuseumCity city_format,
+	selRoom Room_format,
+	selStartDate date_format,
+	selEndDate date_format,
+	selLetterItem key_latter_format,
+	selNumberItem key_number_format,
+	PRIMARY KEY (selMuseumname,selStartDate,selLetterItem,selNumberItem),
+	FOREIGN KEY(selLetterItem,selNumberItem) REFERENCES tblItems
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+	FOREIGN KEY(selMuseumname,selRoom,selStartDate) REFERENCES tblExhibitions
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+	FOREIGN KEY (selMuseumCity,selMuseumname) REFERENCES tblMuseumInfo
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+
+--------------------------------------------------------------------------------------------
+
+--tbldoor
+DROP VIEW IF EXISTS DoorView CASCADE;
+CREATE VIEW DoorView
+AS 
+SELECT 
+	doomuseumnamefrom AS "Departure Museum",
+	doofrom_location AS "Departure Room",
+	doomuseumnameto AS "Destination Museum",
+	dooto_location AS "Destination Room"
+FROM tbldoor;
+
+
+--tblexhibitions
+DROP VIEW IF EXISTS exhibitionsView CASCADE;
+CREATE VIEW exhibitionsView
+AS 
+SELECT 
+	eximuseumname AS "Museum Name",
+	exiroomlocation AS "Room",
+	exicitylocation AS "City",
+	existartdate AS "Start Date",
+	exienddate AS "End Date",
+	exiexhibitionsname AS "Exhibition Name",
+	exidescption AS "Description"
+FROM tblexhibitions;
+
+--tblexhibitionsitems
+DROP VIEW IF EXISTS exhibitionsitemsView CASCADE;
+CREATE VIEW exhibitionsitemsView
+AS 
+SELECT 
+	selmuseumname AS "Museum Name",
+	selmuseumcity AS "City",
+	selroom AS "Room",
+	selstartdate AS "Start Date",
+	selenddate AS "End Date",
+	selletteritem AS "Letter Key",
+	selnumberitem AS "Number Key"
+FROM tblexhibitionsitems; 
+
+--tbllocation
+DROP VIEW IF EXISTS locationView CASCADE;
+CREATE VIEW locationView
+AS 
+SELECT 
+	loccity AS "City",
+	locmuseumname AS "Museum Name",
+	locroomname AS "Room",
+	loclength AS "Length",
+	locwidth AS "Width",
+	loccapacity AS "Capacity"
+FROM tbllocation; 
+--tbllocationitem
+DROP VIEW IF EXISTS locationitemView CASCADE;
+CREATE VIEW locationitemView
+AS 
+SELECT 
+	locitem_museumname AS "Museum Name",
+	locitem_city AS "City",
+	locitem_location AS "Room",
+	locitem_letterkey AS "Letter Key",
+	locitem_numberkey AS "Number Key",
+	locitem_startdate AS "Start Date",
+	locitem_enddate AS "End Date"
+FROM tbllocationitem; 
+
+--tblmuseuminfo
+DROP VIEW IF EXISTS museuminfoView CASCADE;
+CREATE VIEW museuminfoView
+AS 
+SELECT 
+	minfo_citylocation AS "City",
+	minfo_name AS "Name",
+	minfo_tel AS "Phone",
+	minfo_contactname AS "Contact Name"
+FROM tblmuseuminfo; 
+
+----------------------------------------------------
+
+----------------------------------------------------
+
+
+INSERT INTO tblMuseumInfo VALUES('Israel','Israel_Museum','3062616056','Vigor');
+
+
+
+INSERT INTO tblLocation VALUES ('Israel','Israel_Museum','lobby','50','10',2);
+INSERT INTO tblLocation VALUES ('Israel','Israel_Museum','storage','50','100',50);
+INSERT INTO tblLocation VALUES ('Israel','Israel_Museum','gallery A','25','40',9);
+INSERT INTO tblLocation VALUES ('Israel','Israel_Museum','gallery B','25','40',10);
+INSERT INTO tblLocation VALUES ('Israel','Israel_Museum','gallery C','50','50',16);
+
+--9
+INSERT INTO tblExhibitions VALUES ('Israel_Museum','gallery A','Israel','2016-7-1','2016-12-20','Dimension of Culture: Asian','China, Japan, Vietnam, North Korea and South Korea) and the Indian subcontinent. Like the West, Eastern culture was heavily influenced by religion during its early development, we has some works that can show the beauty of the asian such as patings and Sculpture');
+--10
+INSERT INTO tblExhibitions VALUES ('Israel_Museum','gallery B','Israel','2016-9-1','2017-3-20','Dimension of Culture: Western ','United in diversity - a cunningly chosen motto by the EU, as this is what many Europeans love about their continent - the many beautiful, stimulating and varied cultures concentrated in a relatively small place, and the possibility to travel, study and work seamlessly across most of the continent and experience this amazing diversity. We have a lot of works which can represent the culture of European Culture');
+--16
+INSERT INTO tblExhibitions VALUES ('Israel_Museum','gallery C','Israel','2016-8-1','2016-12-20','Dimension of Culture: Middle Eastern','The countries of the Middle East have some but not all things in common. This is not a surprise, since the area consists of approximately 20 countries, according to PBS. The Arabic language is one thing that is common throughout the region; however, the wide variety of dialect can sometimes make communication difficult. Religion is another cultural area that the countries of the Middle East have in common.  The Middle East is the birthplace of Judaism, Christianity and Islam.');
+
+
+INSERT INTO tblDoor VALUES('Israel_Museum','storage','Israel_Museum','lobby');
+INSERT INTO tblDoor VALUES('Israel_Museum','lobby','Israel_Museum','storage');
+INSERT INTO tblDoor VALUES('Israel_Museum','lobby','Israel_Museum','gallery A');
+INSERT INTO tblDoor VALUES('Israel_Museum','lobby','Israel_Museum','gallery B');
+INSERT INTO tblDoor VALUES('Israel_Museum','gallery A','Israel_Museum','gallery B');
+INSERT INTO tblDoor VALUES('Israel_Museum','gallery A','Israel_Museum','gallery C');
+INSERT INTO tblDoor VALUES('Israel_Museum','gallery A','Israel_Museum','lobby');
+INSERT INTO tblDoor VALUES('Israel_Museum','gallery B','Israel_Museum','gallery A');
+INSERT INTO tblDoor VALUES('Israel_Museum','gallery B','Israel_Museum','lobby');
+INSERT INTO tblDoor VALUES('Israel_Museum','gallery B','Israel_Museum','gallery C');
+INSERT INTO tblDoor VALUES('Israel_Museum','gallery C','Israel_Museum','gallery B');
+INSERT INTO tblDoor VALUES('Israel_Museum','gallery C','Israel_Museum','gallery A');
+
+
+
+
+
+--Place all items initially in your museum's storage facility
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2015-05-30' 
+FROM tblitems;
+
+
+--Assign two special works to be displayed in the lobby. 
+DROP TABLE IF EXISTS tmp_table CASCADE;
+CREATE TABLE tmp_table
+  AS (
+  SELECT itmletter,itmnumber 
+	FROM tblItems 
+	where itmValue 
+	IN 
+	(
+		(select MAX(itmValue) FROM tblItems where  itmType = 'European Art' ) , 
+		(select MAX(itmValue) FROM tblItems where itmType ='Modern Art ') 
+	)
+  
+  );
+  
+UPDATE 
+	tblLocationItem
+SET
+	locitem_location = 'lobby',
+	locitem_enddate = '2017-2-1'
+FROM
+
+	(SELECT itmletter,itmnumber FROM tmp_table) i
+WHERE
+	tblLocationItem.locitem_letterkey = i.itmletter AND
+	tblLocationItem.locitem_numberkey = i.itmnumber
+	
+;
+DROP TABLE IF EXISTS tmp_table CASCADE;
+
+
+
+----------------------------------------------------
+--gallery A','Israel','2016-7-1','2016-12-20',
+----------------------------------------------------
+
+DROP TABLE IF EXISTS tmp_table CASCADE;
+CREATE TABLE tmp_table
+  AS (
+  SELECT itmletter,itmnumber FROM tblItems WHERE itmType = 'Asian Art ' limit 9
+);
+  
+  
+--UPDATE the item information
+UPDATE 
+	tblLocationItem
+SET
+	locitem_location = 'gallery A',
+	locitem_enddate = '2016-12-20'
+FROM
+
+	(SELECT itmletter,itmnumber FROM tmp_table) i
+WHERE
+	tblLocationItem.locitem_letterkey = i.itmletter AND
+	tblLocationItem.locitem_numberkey = i.itmnumber
+	
+;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery A','2016-7-1','2016-12-20',itmletter,itmnumber 
+FROM tmp_table ;
+
+DROP TABLE IF EXISTS tmp_table CASCADE;
+
+
+----------------------------------------------------
+--Israel_Museum','gallery B','Israel','2016-9-1','2017-3-20','Dimension of Culture: Western 
+----------------------------------------------------
+
+DROP TABLE IF EXISTS tmp_table CASCADE;
+CREATE TABLE tmp_table
+  AS (
+  SELECT itmletter,itmnumber FROM tblItems WHERE itmType = 'European Art' AND itmnumber <> 15 limit 10
+);
+  
+  
+--UPDATE the item information
+UPDATE 
+	tblLocationItem
+SET
+	locitem_location = 'gallery B',
+	locitem_enddate = '2017-3-20'
+FROM
+
+	(SELECT itmletter,itmnumber FROM tmp_table) i
+WHERE
+	tblLocationItem.locitem_letterkey = i.itmletter AND
+	tblLocationItem.locitem_numberkey = i.itmnumber
+	
+;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery B','2016-9-1','2017-3-20',itmletter,itmnumber 
+FROM tmp_table ;
+
+DROP TABLE IF EXISTS tmp_table CASCADE;
+
+----------------------------------------------------
+--'Israel_Museum','gallery C','Israel','2016-8-1','2016-12-20','Dimension of Culture: Middle Eastern
+----------------------------------------------------
+DROP TABLE IF EXISTS tmp_table CASCADE;
+CREATE TABLE tmp_table
+  AS (
+  SELECT itmletter,itmnumber 
+	FROM tblItems 
+	WHERE itmType = 'Israel Art '
+	UNION ALL
+	SELECT itmletter,itmnumber 
+	FROM tblItems 
+	WHERE itmType = 'Africa' limit 16
+);
+  
+  
+--UPDATE the item information
+UPDATE 
+	tblLocationItem
+SET
+	locitem_location = 'gallery C',
+	locitem_enddate = '2016-12-20'
+FROM
+
+	(SELECT itmletter,itmnumber FROM tmp_table) i
+WHERE
+	tblLocationItem.locitem_letterkey = i.itmletter AND
+	tblLocationItem.locitem_numberkey = i.itmnumber
+	
+;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery C','2016-8-1','2016-12-20',itmletter,itmnumber 
+FROM tmp_table ;
+
+DROP TABLE IF EXISTS tmp_table CASCADE;
+
+DROP VIEW IF EXISTS visitorView CASCADE;
+CREATE VIEW visitorView
+AS 
+SELECT 
+	s.LocItem_letterkey AS "Letter Key",
+	s.LocItem_numberkey AS "Number Key",
+	t.eximuseumname AS "Museum Name",
+	t.exiroomlocation AS "Room",
+	t.exicitylocation AS "City",
+	t.existartdate AS "Start Date",
+	t.exienddate AS "End Date",
+	t.exiexhibitionsname AS "Exhibition Name",
+	t.exidescption AS "Description"
+
+FROM tblexhibitions t, tbllocationitem s
+WHERE   s.LocItem_location='gallery C' OR  s.LocItem_location='gallery B' OR  s.LocItem_location='gallery A' OR  s.LocItem_location='gallery C' OR  s.LocItem_location='lobby'
+;
+
+ 
+--Produce for the head of the museum a listing of all works (including their identifier, name, and insurance value} that are currently in storage.
+DROP view IF exists Part31  CASCADE;
+DROP view IF exists Part32  CASCADE;
+DROP view IF exists Part33  CASCADE;
+DROP view IF exists Part34  CASCADE;
+DROP view IF exists Part34  CASCADE;
+CREATE VIEW Part31 AS(
+SELECT s."Letter Key", s."Number Key", s."Name", s."Value"
+FROM 
+itemsview s,
+(SELECT "Letter Key" , "Number Key" 
+	FROM locationitemview
+	WHERE "Room" = 'storage') t
+WHERE
+	s."Letter Key" = t."Letter Key" AND
+	s."Number Key" = t."Number Key")
+;
+
+
+CREATE VIEW Part32 AS (
+       SELECT
+        s."Exhibition Name",
+        s."Description",
+        s."Room",
+       (SELECT count ('Exhibition Name') FROM exhibitionsitemsview t WHERE t."Room"=s."Room") AS "Number"
+       
+       FROM exhibitionsview s
+);
+
+       
+       
+
+
+CREATE VIEW Part33 AS (
+SELECT 
+w."Exhibition Name",
+t."Letter Key",
+t."Number Key",
+t."Name",
+t."Complete Date",
+t."Acquisition Date",
+t."Author",
+t."Value",
+t."Type",
+t."Subtype",
+t."Description",
+s."Museum Name",
+s."City",
+s."Room",
+s."Start Date",
+s."End Date"
+
+
+FROM exhibitionsitemsview s, itemsview t, exhibitionsview w
+WHERE 
+	(s."Room" = 'gallery A' OR s."Room" = 'gallery B' OR s."Room" = 'gallery C' )
+AND 
+	s."Letter Key" = t."Letter Key"
+AND
+	s."Number Key" = t."Number Key"
+AND
+	s."Room" = w."Room"
+ORDER BY t."Name" ,w."Exhibition Name")
+;
+
+
+
+DROP VIEW IF EXISTS  Part34 CASCADE;
+CREATE VIEW Part34 AS (
+SELECT 
+	s."Name",
+	w.locitem_letterkey,
+	w.locitem_numberkey,
+	s."Type",
+	s."Subtype"
+	
+	
+FROM locationitemview t, (SELECT locitem_letterkey , locitem_numberkey ,locitem_enddate
+	FROM tbllocationitem) w, itemsview s
+WHERE
+     w.locitem_letterkey = t."Letter Key" AND  w.locitem_numberkey = t."Number Key"
+     AND
+     s."Letter Key" =  w.locitem_letterkey AND s."Number Key" =  w.locitem_numberkey
+     ORDER BY locitem_enddate IS NULL DESC ,  locitem_enddate
+	 ASC,
+	 s."Type",
+	 s."Subtype",
+	 s."Name"
+);
+
+
+CREATE VIEW Part35 AS (
+SELECT
+        t.exiexhibitionsname,
+        t.exiroomlocation,
+        (s.loccapacity-( SELECT COUNT(*) FROM tblexhibitionsitems w WHERE w.selroom = t.exiroomlocation) )AS "count"
+FROM
+        tblexhibitions t, tbllocation s
+WHERE 
+        t.exiroomlocation = s.locroomname 
+        )
+;
+
+DROP view IF exists Part31  CASCADE;
+DROP view IF exists Part32  CASCADE;
+DROP view IF exists Part33  CASCADE;
+DROP view IF exists Part34  CASCADE;
+DROP view IF exists Part34  CASCADE;
+DROP VIEW IF EXISTS manegerView CASCADE;
+DROP VIEW IF EXISTS mediaView CASCADE;
+DROP VIEW IF EXISTS DoorView CASCADE;
+DROP VIEW IF EXISTS exhibitionsView CASCADE;
+DROP VIEW IF EXISTS exhibitionsitemsView CASCADE;
+DROP VIEW IF EXISTS locationView CASCADE;
+DROP VIEW IF EXISTS museuminfoView CASCADE;

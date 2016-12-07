@@ -1,0 +1,90 @@
+/*
+wme_workcharid
+wme_worknumid
+wme_databaseentrymuseum
+wme_workmedium*/
+/*
+itmaddletter
+itmaddnumber
+itmaddmedia*/
+/*
+conletter
+connumber*/
+
+
+INSERT Into test.ns_worksmedium
+select
+t.itmaddletter,
+t.itmaddnumber,
+'Israel_Museum',
+t.itmaddmedia
+from
+tblmedia t, tblidenification s
+Where
+t.itmaddletter = s.idletterkey
+And
+t.itmaddnumber = s.idnumberkey
+And
+s.id_museumname = 'Israel_Museum'
+
+;
+
+
+
+
+INSERT Into test.ns_worksmedium
+select
+t.itmaddletter,
+t.itmaddnumber,
+'Israel_Museum',
+t.itmaddmedia
+from
+tblmedia t, tblidenification s
+Where
+t.itmaddletter = s.idletterkey
+And
+t.itmaddnumber = s.idnumberkey
+And
+s.id_museumname = 'UNKNOW'
+
+;
+
+
+
+
+INSERT Into test.ns_worksmedium
+select
+t.itmaddletter,
+t.itmaddnumber,
+'Israel_Museum',
+t.itmaddmedia
+from
+tblmedia t, tblidenification s
+Where
+t.itmaddletter = s.idletterkey
+And
+t.itmaddnumber = s.idnumberkey
+And
+s.id_museumname = 'Timon'
+
+;
+
+
+
+
+INSERT Into test.ns_worksmedium
+select
+t.itmaddletter,
+t.itmaddnumber,
+'Israel_Museum',
+t.itmaddmedia
+from
+tblmedia t, tblidenification s
+Where
+t.itmaddletter = s.idletterkey
+And
+t.itmaddnumber = s.idnumberkey
+And
+s.id_museumname = 'Mickey Mouse'
+
+;

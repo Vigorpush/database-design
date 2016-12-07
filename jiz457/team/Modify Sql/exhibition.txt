@@ -1,0 +1,75 @@
+
+-- exh_exhibitname
+-- exh_museumname
+-- exh_exhibitdatestart
+-- exh_exhibitdateend
+-- exh_securitypersonname
+-- exh_istravellingexhibition
+
+
+/*
+eximuseumname
+exiroomlocation
+exicitylocation
+existartdate
+exienddate
+exiexhibitionsname
+exidescption*/
+
+
+
+INSERT Into test.ns_exhibitions 
+select
+exiexhibitionsname,
+eximuseumname,
+--exiroomlocation
+--exicitylocation
+existartdate,
+exienddate,
+'Jenny Green',
+--exidescption,
+false
+from tblexhibitions
+where 
+eximuseumname = 'Israel_Museum' -- how to solve the one exhibtion have multi location
+And 
+exiexhibitionsname <> 'TOP NOTCHED show'
+;
+
+
+
+INSERT Into test.ns_exhibitions 
+select
+exiexhibitionsname,
+eximuseumname,
+--exiroomlocation
+--exicitylocation
+existartdate,
+exienddate,
+'Jenny Green',
+--exidescption,
+false
+from tblexhibitions
+where 
+eximuseumname = 'Israel_Museum' -- how to solve the one exhibtion have multi location
+And 
+exiexhibitionsname = 'TOP NOTCHED show'
+limit 1;
+
+
+
+INSERT Into test.ns_exhibitions 
+select
+exiexhibitionsname,
+eximuseumname,
+--exiroomlocation
+--exicitylocation
+existartdate,
+exienddate,
+'Sam Green',
+--exidescption,
+false
+from tblexhibitions
+where 
+eximuseumname <> 'Israel_Museum'  
+;

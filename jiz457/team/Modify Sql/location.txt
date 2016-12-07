@@ -1,0 +1,38 @@
+-- loc_locationname
+-- loc_buildingname
+-- loc_istravellingexhibitionlocation
+-- loc_locationsuggestedcapacitymin
+-- loc_locationsuggestedcapacitymax
+-- loc_locationmeasurementwidth
+-- loc_locationmeasurementlength
+
+-- INSERT Into test.ns_owners VALUES ('Israel_Museum',null, 'Israel', null, null,null, true);
+
+insert into test.ns_locations
+select
+locroomname,
+locmuseumname,
+true, --true or false --loccity
+mincapacity,
+maxcapacity,
+locwidth,
+loclength
+--roomcondition
+from tbllocation
+where loccity <> 'Israel';
+
+
+
+
+insert into test.ns_locations
+select
+locroomname,
+locmuseumname,
+false, --true or false --loccity
+mincapacity,
+maxcapacity,
+locwidth,
+loclength
+--roomcondition
+from tbllocation
+where loccity = 'Israel';

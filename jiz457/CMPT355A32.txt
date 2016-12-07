@@ -1,0 +1,197 @@
+
+
+DROP VIEW if EXISTS keywordview CASCADE;
+CREATE VIEW keywordview as 
+    SELECT 
+      itmletter,
+      itmnumber,
+      keyword 
+    FROM tblitems
+;
+
+DROP TABLE IF EXISTS tblkeyword CASCADE;
+CREATE TABLE tblkeyword (
+  	itmletter key_latter_format,
+	itmNumber key_number_format,
+	keyword name_format,
+	PRIMARY KEY (itmletter, itmNumber),
+	foreign key (itmletter, itmNumber) references tblitems
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+
+
+INSERT INTO tblkeyword 
+SELECT itmletter, itmnumber, keyword FROM keywordview;
+
+
+ALTER TABLE tblitems
+DROP  keywordvector CASCADE ,
+DROP  keyword CASCADE;
+
+
+DROP TABLE if exists purcworks cascade; 
+CREATE TABLE purcworks (
+  	itmletter key_latter_format,
+	itmNumber key_number_format
+);
+
+\copy purcworks  (itmletter,itmNumber)  FROM 'a3workpur.csv' DELIMITER ',' CSV
+\copy tblitems   FROM 'a3work.csv' DELIMITER ',' CSV
+\copy tblmedia   FROM 'a3media.csv' DELIMITER ',' CSV
+
+
+DROP VIEW IF EXISTS purcworksview CASCADE;
+CREATE VIEW purcworksview AS 
+SELECT 
+  itmletter, 
+  itmNumber
+from 
+  purcworks
+  ;
+
+  --DROP TABLE if exists purcworks cascade; 
+
+
+
+--tblitemcondition
+INSERT INTO tblitemcondition 
+SELECT 
+
+  itmletter,
+  itmnumber,
+  'P',
+  'WE GOT THIS'
+  FROM 
+  purcworksview;
+
+--tblidenification
+INSERT INTO tblidenification 
+SELECT 
+
+  itmletter,
+  itmnumber,
+  'Israel',
+  'Israel_Museum'
+FROM 
+  purcworksview;
+
+INSERT INTO tbllocationitem 
+SELECT 
+  'Israel_Museum',
+  'Israel',
+  'storage',
+  itmletter,
+  itmnumber,
+  '2016-10-25'
+
+FROM 
+  purcworksview;
+
+  
+  
+
+DROP VIEW IF exists Usingworks cascade;
+CREATE VIEW Usingworks AS 
+(
+  select * FROM GB_table
+  union
+  select * FROM GA_table
+  union
+  select * FROM guesttable
+  union
+  select * FROM guesttableD
+  union
+  select * FROM lobby_table
+  union
+  select * FROM GC_table
+);
+
+
+DROP VIEW IF exists soldwork cascade;
+CREATE VIEW soldwork 
+As
+(
+select 
+        t.itmletter,
+        t.itmnumber
+ FROM
+        tblitems t
+ where 
+       not EXISTS 
+       (SELECT 
+                x.itmletter,
+                x.itmnumber 
+                FROM usingworks x
+                where 
+                x.itmletter = t.itmletter
+                AND
+                x.itmnumber = t.itmnumber
+        )
+limit 
+3
+)
+;
+
+update tblitemcondition 
+set conkey= 'SOD'
+WHERE 
+conletter in
+  (SELECT                 
+    x.itmletter
+          from
+          tblitems x, soldwork s 
+          WHERE 
+          x.itmletter = s.itmletter
+          and 
+          x.itmnumber = s.itmnumber
+  )
+  AND 
+ connumber in
+   (SELECT                 
+    x.itmnumber
+          from
+          tblitems x, soldwork s 
+          WHERE 
+          x.itmletter = s.itmletter
+          and 
+          x.itmnumber = s.itmnumber
+   )
+  ;
+ 
+ INSERT into tblmuseuminfo 
+ 
+ (
+    minfo_citylocation,
+    minfo_name,
+    minfo_tel,
+    minfo_contactname
+)
+ VALUES('UNKNOW','UNKNOW',00000, 'UNKNOW');
+ 
+ update tblidenification
+ set idcitylocation = 'UNKNOW' , id_museumname = 'UNKNOW'
+  WHERE 
+  idletterkey in
+    (SELECT                 
+      x.itmletter
+	    from
+	    tblitems x, soldwork s 
+	    WHERE 
+	    x.itmletter = s.itmletter
+	    and 
+	    x.itmnumber = s.itmnumber
+    )
+    AND 
+  idnumberkey in
+    (SELECT                 
+      x.itmnumber
+	    from
+	    tblitems x, soldwork s 
+	    WHERE 
+	    x.itmletter = s.itmletter
+	    and 
+	    x.itmnumber = s.itmnumber
+    )
+   ;
+ 

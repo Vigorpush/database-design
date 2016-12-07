@@ -1,0 +1,18 @@
+-- wth_workcharid
+-- wth_worknumid
+-- wth_workdatabaseentrylocation
+-- wth_theme
+
+insert into test.ns_themes
+select 
+t.itmletter,
+t.itmnumber,
+w.won_workdatabaseentrylocation,
+t.itmtype
+from
+tblitems t, test.ns_workowners w
+where
+w.won_workcharid=t.itmletter
+AND 
+w.won_worknumid=t.itmnumber
+;

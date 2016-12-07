@@ -1,0 +1,16 @@
+
+--owner table
+INSERT Into test.ns_owners VALUES ('Israel_Museum',null, 'Israel', null, null,null, true);
+INSERT Into test.ns_owners VALUES ('Bugs Bunny',null, 'NewYork', null, null,null, false);
+INSERT Into test.ns_owners VALUES ('Bart Simpson',null, 'Chicago', null, null,null, false);
+INSERT Into test.ns_owners VALUES ('Mickey Mouse',null, 'NewYork', null, null,null, false);
+INSERT Into test.ns_owners VALUES ('Timon',null, 'Israel', null, null,null, false);
+INSERT Into test.ns_owners VALUES ('UNKNOW',null, 'UNKNOW', null, null,null, false);--UNKNOW buyer
+INSERT Into test.ns_owners VALUES ('Beijing_Museum','123@gmail.com', 'BEIJING', null, null,null, true);
+INSERT Into test.ns_owners VALUES ('Shanghai_Museum','456@gmail.com', 'SHANGHAI', null, null,null, true);
+INSERT Into test.ns_owners VALUES ('Hangzhou_Museum','789@gmail.com', 'HANGZHOU', null, null,null, true);
+INSERT Into test.ns_owners VALUES ('ReginaArt',null, 'Regina', null, null,null, true);
+INSERT Into test.ns_owners VALUES ('YorktonArt',null, 'Yorkton', null, null,null, true);
+INSERT Into test.ns_owners VALUES ('WarmanArt',null, 'Warman', null, null,null, true);
+INSERT Into test.ns_owners VALUES ('Prince_AlbertArt',null, 'Prince_Albert', null, null,null, true);
+INSERT Into test.ns_owners VALUES ('North_BattlefordArt',null, 'North_Battleford', null, null,null, true);

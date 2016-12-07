@@ -1,0 +1,252 @@
+
+
+
+
+--two of the works to be loaned must have been exhibited in your first set of exhibitions
+DROP TABLE IF EXISTS loanTable CASCADE;
+CREATE TABLE loanTable(
+	idletterkey key_latter_format,
+	idnumberkey key_number_format,
+	MuseumName name_format,
+	city city_format,
+	LocItem_startDate date_format,
+	LocItem_endDate date_format,
+	stats text,
+		FOREIGN KEY (idletterkey, idnumberkey)
+        	REFERENCES tblItems
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+		,
+		FOREIGN KEY (city, MuseumName)
+        	REFERENCES tblMuseumInfo
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+
+DROP DOMAIN IF EXISTS email_format CASCADE;
+CREATE DOMAIN  email_format AS varchar(50);
+
+
+ALTER TABLE tblMuseumInfo
+ADD column email email_format;
+
+
+INSERT INTO 
+tblMuseumInfo 
+VALUES('BEIJING','Beijing_Museum','88344','LiLei','123@gmail.com');
+
+INSERT INTO 
+tblMuseumInfo 
+VALUES('SHANGHAI','Shanghai_Museum','5854999','Hanmeimei','456@gmail.com');
+
+INSERT INTO 
+tblMuseumInfo 
+VALUES('HANGZHOU','Hangzhou_Museum','4655888','Xiaoxin','789@gmail.com');
+
+
+
+ --DROP FUNCTION IF EXISTS trigg_function() CASCADE;
+
+  
+
+--find the avaiable item which we own
+drop Table if EXISTS loanwork CASCADE;
+create Table loanwork  as(
+
+SELECT
+  itmletter,
+  itmnumber
+FROM
+  tblItems
+where
+  NOT EXISTS (
+                SELECT 
+                        * 
+                from  
+                        usingworks 
+                where
+                        usingworks.itmletter = tblItems.itmletter
+		      AND
+                        usingworks.itmnumber = tblItems.itmnumber             
+                
+                
+                )
+                limit 4
+                
+                );
+                
+insert into loanwork
+select
+* from usingworks limit 2;
+
+
+--first set of exhibitions
+                
+                
+  
+CREATE OR REPLACE FUNCTION load_function1()
+  RETURNS trigger AS
+$BODY$
+  BEGIN
+	    update loanTable 
+	    set stats = 'loaded'
+	    where LocItem_startDate = '2016-11-01'
+	    ;
+	    
+	   return new;
+  END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_load21
+  After INSERT 
+  ON loanTable
+  FOR EACH ROW
+  WHEN (age(CURRENT_DATE,'2016-11-01'::date)>='0 day'::interval)
+  EXECUTE PROCEDURE load_function1();
+                
+  
+  CREATE OR REPLACE FUNCTION return_function1()
+  RETURNS trigger AS
+$BODY$
+  BEGIN
+	    update loanTable 
+	    set stats = 'returned'
+	    where LocItem_startDate = '2017-01-01'
+	    ;
+	    
+	   return new;
+  END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_load2
+  After INSERT 
+  ON loanTable
+  FOR EACH ROW
+  WHEN (age(CURRENT_DATE,'2017-01-01'::date)>='0 day'::interval)
+  EXECUTE PROCEDURE return_function1();
+  
+  
+  
+  
+  CREATE OR REPLACE FUNCTION load_function2()
+  RETURNS trigger AS
+$BODY$
+  BEGIN
+	    update loanTable 
+	    set stats = 'loaded'
+	    where LocItem_startDate = '2017-01-05'
+	    ;
+	    
+	   return new;
+  END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_load31
+  After INSERT 
+  ON loanTable
+  FOR EACH ROW
+  WHEN (age(CURRENT_DATE,'2017-01-05'::date)>='0 day'::interval)
+  EXECUTE PROCEDURE load_function2();
+                
+  
+  CREATE OR REPLACE FUNCTION return_function2()
+  RETURNS trigger AS
+$BODY$
+  BEGIN
+	    update loanTable 
+	    set stats = 'returned'
+	    where LocItem_startDate = '2017-03-05'
+	    ;
+	    
+	   return new;
+  END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_load3
+  After INSERT 
+  ON loanTable
+  FOR EACH ROW
+  WHEN (age(CURRENT_DATE,'2017-03-05'::date)>='0 day'::interval)
+  EXECUTE PROCEDURE return_function2();
+  
+  
+  ------------------------
+   
+  CREATE OR REPLACE FUNCTION load_function3()
+  RETURNS trigger AS
+$BODY$
+  BEGIN
+	    update loanTable 
+	    set stats = 'loaded'
+	    where LocItem_startDate = '2017-03-07'
+	    ;
+	    
+	   return new;
+  END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_load41
+  After INSERT 
+  ON loanTable
+  FOR EACH ROW
+  WHEN (age(CURRENT_DATE,'2017-03-07'::date)>='0 day'::interval)
+  EXECUTE PROCEDURE load_function3();
+                
+  
+  CREATE OR REPLACE FUNCTION return_function3()
+  RETURNS trigger AS
+$BODY$
+  BEGIN
+	    update loanTable 
+	    set stats = 'returned'
+	    where LocItem_startDate = '2017-05-07'
+	    ;
+	    
+	   return new;
+  END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_load4
+  After INSERT 
+  ON loanTable
+  FOR EACH ROW
+  WHEN (age(CURRENT_DATE,'2017-05-07'::date)>='0 day'::interval)
+  EXECUTE PROCEDURE return_function3();
+  
+  
+  insert into loanTable
+   SELECT
+    itmletter,
+    itmnumber,
+    'Beijing_Museum',
+    'BEIJING',
+    '2016-11-01',
+    '2017-01-01'
+          
+  from loanwork;
+  
+  insert into loanTable
+  SELECT
+    itmletter,
+    itmnumber,
+    'Shanghai_Museum',
+    'SHANGHAI',
+    '2017-01-05',
+    '2017-03-05'
+          
+  from loanwork;
+  
+  
+  insert into loanTable
+  SELECT
+    itmletter,
+    itmnumber,
+    'Hangzhou_Museum',
+    'HANGZHOU',
+    '2017-03-07',
+    '2017-05-07'
+  from loanwork;
+  
+ 
+
+  

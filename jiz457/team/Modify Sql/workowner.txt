@@ -1,0 +1,159 @@
+
+
+
+-- won_workcharid
+-- won_worknumid
+-- won_workdatabaseentrylocation
+-- won_ownername
+-- won_ownershipdatestart
+-- won_ownershipdateend
+
+-- idletterkey
+-- idnumberkey
+-- idcitylocation
+-- id_museumname
+
+
+insert into test.ns_workowners
+select
+t.idletterkey,
+t.idnumberkey,
+'Israel_Museum',
+'Israel_Museum',
+'1950-01-01 12:00:00',
+null
+from
+tblidenification t, tblitemcondition s
+where 
+t.id_museumname = 'Israel_Museum'
+And
+s.conletter = t.idletterkey
+And
+s.connumber = t.idnumberkey
+And 
+s.conkey = 'N';
+;
+
+
+
+
+insert into test.ns_workowners
+select
+idletterkey,
+idnumberkey,
+'Israel_Museum',
+'Mickey Mouse',
+'1950-01-01 12:00:00',
+null
+from
+tblidenification
+where 
+id_museumname = 'Mickey Mouse'
+;
+
+
+
+insert into test.ns_workowners
+select
+idletterkey,
+idnumberkey,
+'Israel_Museum',
+'Timon',
+'1950-01-01 12:00:00',
+null
+from
+tblidenification
+where 
+id_museumname = 'Timon'
+;
+
+
+
+
+select
+idletterkey,
+idnumberkey,
+id_museumname
+from
+tblidenification
+where
+id_museumname in ('Bugs Bunny','Bart Simpson');
+
+
+
+insert into test.ns_workowners
+select
+idletterkey,
+idnumberkey,
+'Israel_Museum',
+id_museumname,
+'1950-01-01 12:00:00',
+null
+from
+tblidenification
+where
+id_museumname in ('Bugs Bunny','Bart Simpson');
+
+
+
+
+
+----UNKNOW
+insert into test.ns_workowners
+select
+t.idletterkey,
+t.idnumberkey,
+'Israel_Museum',
+'UNKNOW',
+'1950-01-01 12:00:00',--change this
+'2016-10-25 12:00:00'
+from
+tblidenification t, tblitemcondition s
+where 
+s.conkey = 'P'
+And
+t.idletterkey=s.conletter
+ANd
+t.idnumberkey=s.connumber
+;
+
+
+----UNKNOW
+insert into test.ns_workowners
+select
+t.idletterkey,
+t.idnumberkey,
+'Israel_Museum',
+'Israel_Museum',
+'2016-10-25 12:00:00',--change this
+null
+from
+tblidenification t, tblitemcondition s
+where 
+s.conkey = 'P'
+And
+t.idletterkey=s.conletter
+ANd
+t.idnumberkey=s.connumber
+;
+
+
+
+----UNKNOW
+insert into test.ns_workowners
+select
+t.idletterkey,
+t.idnumberkey,
+'Israel_Museum',
+'Israel_Museum',
+'1950-10-21 12:00:00',
+'2016-10-21 12:00:00'
+from
+tblidenification t, tblitemcondition s
+where 
+s.conkey = 'SOD'
+And
+t.idletterkey=s.conletter
+ANd
+t.idnumberkey=s.connumber
+;

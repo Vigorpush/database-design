@@ -1,0 +1,43 @@
+
+/*
+spe_sponsorname
+spe_exhibitname
+spe_museumname
+spe_exhibitdatestart
+spe_sponsoramount*/
+
+/*
+eximuseumname
+exiroomlocation
+exicitylocation
+existartdate
+exienddate
+exiexhibitionsname
+exidescption*/
+
+insert into test.ns_sponsorexhibitions 
+select 
+'Bill',
+exiexhibitionsname,
+eximuseumname,
+existartdate,
+10000
+from 
+tblexhibitions
+where
+exiexhibitionsname <> 'TOP NOTCHED show'
+;
+
+insert into test.ns_sponsorexhibitions 
+select 
+'Zang,Tim',
+exiexhibitionsname,
+eximuseumname,
+existartdate,
+10000
+from 
+tblexhibitions
+where
+exiexhibitionsname = 'TOP NOTCHED show'
+limit 1
+;

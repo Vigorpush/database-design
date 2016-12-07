@@ -1,0 +1,23 @@
+
+
+-- win_workcharid
+-- win_worknumid
+-- win_workdatabaseentrylocation
+-- win_workinsurevalue
+-- win_insuredatestart
+-- win_insuredateend
+
+insert into test.ns_worksinsurance
+select
+t.wor_workcharid,
+t.wor_worknumid,
+t.wor_databaseentrymuseum,
+s.itmvalue,
+'2012-01-01',
+'2022-01-01'
+from test.ns_works t, tblitems s
+where 
+t.wor_workcharid = s.itmletter
+and
+t.wor_worknumid = s.itmnumber
+;

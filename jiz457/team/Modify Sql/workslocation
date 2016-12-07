@@ -1,0 +1,38 @@
+-- wol_workcharid
+-- wol_worknumid
+-- wol_workdatabaseentrymuseum
+-- wol_locationname
+-- wol_museumname
+-- wol_worktimearrival
+-- wol_worktimedeparture
+
+
+-- locitem_museumname
+-- locitem_city
+-- locitem_location
+-- locitem_letterkey
+-- locitem_numberkey
+-- locitem_startdate
+-- locitem_enddate
+-- starttime
+-- endtime
+
+
+
+
+insert into test.ns_worklocations
+select
+t.locitem_letterkey,
+t.locitem_numberkey,
+w.won_workdatabaseentrylocation,
+t.locitem_location,
+t.locitem_museumname,
+t.locitem_startdate + interval '12h',
+t.locitem_enddate + interval '12h'
+from
+tbllocationitem t, test.ns_workowners w
+where
+w.won_workcharid=t.locitem_letterkey
+AND 
+w.won_worknumid=t.locitem_numberkey
+;

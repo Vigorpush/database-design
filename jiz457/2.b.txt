@@ -1,0 +1,168 @@
+--start of adding new room
+
+DROP DOMAIN IF EXISTS room_condition_format CASCADE;
+CREATE DOMAIN room_condition_format varchar(3);
+
+ALTER TABLE tbllocation
+ADD COLUMN roomcondition room_condition_format;
+
+--The gallery will be ready for use in two months from today
+INSERT INTO tbllocation
+(
+	loccity,
+	locmuseumname,
+	locroomname,
+	loclength,
+	locwidth,
+	mincapacity,
+	maxcapacity,
+	roomcondition
+)
+  VALUES ('Israel','Israel_Museum','gallery D','25','100',15,25,'p');
+
+--end of adding new room
+
+--start of adding connect of the room which I just made
+
+
+--tbllocation
+DROP VIEW IF EXISTS locationView2_b1 CASCADE;
+CREATE VIEW locationView2_b1
+AS 
+SELECT 
+	loccity AS "City",
+	locmuseumname AS "Museum Name",
+	locroomname AS "Room",
+	loclength AS "Length",
+	locwidth AS "Width",
+	mincapacity AS "Min Capacity",
+	maxcapacity AS "Max Capacity"
+FROM tbllocation; 
+
+INSERT INTO tbldoor
+(
+	doomuseumnamefrom,
+	doofrom_location,
+	doomuseumnameto,
+	dooto_location
+)
+VALUES('Israel_Museum','gallery D','Israel_Museum','gallery C');
+
+INSERT INTO tbldoor
+(
+	doomuseumnamefrom,
+	doofrom_location,
+	doomuseumnameto,
+	dooto_location
+)
+VALUES('Israel_Museum','gallery C','Israel_Museum','gallery D');
+--end of adding connect of the room which I just made
+
+
+---------------------
+------TRIGGER---------
+---------------------
+
+--DROP FUNCTION IF EXISTS trigg_function() CASCADE;
+
+CREATE OR REPLACE FUNCTION trigg_function()
+  RETURNS trigger AS
+$BODY$
+  BEGIN
+	    UPDATE tbllocation
+	    SET roomcondition = 'ok'
+	    FROM tblexhibitions
+	    WHERE tbllocation.locroomname = 'gallery D' AND tblexhibitions.exiroomlocation = tbllocation.locroomname;
+	    
+	   return new;
+  END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_exhibition
+  BEFORE INSERT 
+  ON tblexhibitions
+  FOR EACH ROW
+  WHEN (age(CURRENT_DATE,'2017-6-6'::date)>='0 day'::interval)
+  EXECUTE PROCEDURE trigg_function();
+
+--start adding new exhibition with multiple room
+INSERT INTO tblexhibitions
+(
+	eximuseumname,
+	exiroomlocation,
+	exicitylocation,
+	existartdate,
+	exienddate,
+	exiexhibitionsname,
+	exidescption
+)
+VALUES 
+(
+	'Israel_Museum','gallery D','Israel','2017-6-6','2017-08-08','TOP NOTCHED show','This is exhibition will be the exhibition for the long term  works that could be borrowed '
+);
+INSERT INTO tblexhibitions
+(
+	eximuseumname,
+	exiroomlocation,
+	exicitylocation,
+	existartdate,
+	exienddate,
+	exiexhibitionsname,
+	exidescption
+)
+VALUES 
+(
+	'Israel_Museum','gallery C','Israel','2017-6-6','2017-08-08','TOP NOTCHED show','This is exhibition will be the exhibition for the long term  works that could be borrowed '
+);
+--end adding new exhibition with multiple rooms
+
+
+
+---------------------
+------VIEWs--------
+---------------------
+
+--tbllocation
+DROP VIEW IF EXISTS locationView2_b CASCADE;
+CREATE VIEW locationView2_b
+AS 
+SELECT 
+	loccity AS "City",
+	locmuseumname AS "Museum Name",
+	locroomname AS "Room",
+	loclength AS "Length",
+	locwidth AS "Width",
+	mincapacity AS "Min Capacity",
+	maxcapacity AS "Max Capacity"
+FROM tbllocation; 
+
+--tblexhibitions
+DROP VIEW IF EXISTS exhibitionsView2_b CASCADE;
+CREATE VIEW exhibitionsView2_b
+AS 
+SELECT 
+	eximuseumname AS "Museum Name",
+	exiroomlocation AS "Room",
+	exicitylocation AS "City",
+	existartdate AS "Start Date",
+	exienddate AS "End Date",
+	exiexhibitionsname AS "Exhibition Name",
+	exidescption AS "Description"
+FROM tblexhibitions;
+
+
+--tbldoor
+DROP VIEW IF EXISTS DoorView2_b CASCADE;
+CREATE VIEW DoorView2_b
+AS 
+SELECT 
+	doomuseumnamefrom AS "Departure Museum",
+	doofrom_location AS "Departure Room",
+	doomuseumnameto AS "Destination Museum",
+	dooto_location AS "Destination Room"
+FROM tbldoor;
+
+
+DROP VIEW IF EXISTS locationView2_b CASCADE;
+DROP VIEW IF EXISTS exhibitionsView2_b CASCADE;
+DROP VIEW IF EXISTS DoorView2_b CASCADE;

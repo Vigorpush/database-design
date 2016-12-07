@@ -1,0 +1,14 @@
+ 
+\i 'a1.txt'
+
+\i '1.a.txt'
+\i '1.b.txt'
+\i '2.a.txt'
+\i '2.b.txt'
+\i '2.c.txt'
+\i 'CMPT355A31.txt'
+
+\i 'CMPT355A32.txt'
+\i 'CMPT355A33.txt'
+\i 'CMPT355A34.txt'
+\i 'CMPT355A35.txt'

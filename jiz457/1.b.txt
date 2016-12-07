@@ -1,0 +1,304 @@
+
+
+
+INSERT INTO tblExhibitions VALUES ('Israel_Museum','gallery C','Israel','2017-01-06','2017-05-06','REVISION of Culture:Asian','RECALL: China, Japan, Vietnam, North Korea and South Korea) and the Indian subcontinent. Like the West, Eastern culture was heavily influenced by religion during its early development, we has some works that can show the beauty of the asian such as patings and Sculpture and Modern Art works is also in this exhibition');
+--18 works, 3 months, 2016-12-20
+
+
+INSERT INTO tblExhibitions VALUES ('Israel_Museum','gallery B','Israel','2017-3-25','2017-8-25','REVISION of Culture:European','RECALL: United in diversity - a cunningly chosen motto by the EU, as this is what many Europeans love about their continent - the many beautiful, stimulating and varied cultures concentrated in a relatively small place, and the possibility to travel, study and work seamlessly across most of the continent and experience this amazing diversity. We have a lot of works which can represent the culture of European Culture');
+--9 works,5 months, 2017-3-20
+
+
+
+INSERT INTO tblExhibitions VALUES ('Israel_Museum','gallery A','Israel','2016-12-25','2017-3-25','REVISION of Culture:Middle East','RECALL: The countries of the Middle East have some but not all things in common. This is not a surprise, since the area consists of approximately 20 countries, according to PBS. The Arabic language is one thing that is common throughout the region; however, the wide variety of dialect can sometimes make communication difficult. Religion is another cultural area that the countries of the Middle East have in common.  The Middle East is the birthplace of Judaism, Christianity and Islam.');
+--8 works, 4 months, 2017-01-01
+
+
+
+----------------------------------------------------
+--gallery C','Israel','2017-01-06','2017-05-06'
+----------------------------------------------------
+
+
+--Find the 18 item
+DROP TABLE IF EXISTS tmp_table CASCADE;
+CREATE TABLE tmp_table
+  AS (
+  SELECT itmletter,itmnumber FROM tblItems WHERE itmType = 'Asian Art ' OR itmType = 'Modern Art '  limit 18
+);
+  
+
+--on the day after the end of a current exhibit all works are returned to storage
+INSERT INTO tblLocationItem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate
+)
+SELECT 'Israel_Museum','Israel','storage',t.selLetterItem, t.selNumberItem, '2017-01-02'
+FROM 
+	(
+	SELECT selLetterItem, selNumberItem
+	FROM tblExhibitionsItems
+	WHERE selRoom = 'gallery C') t
+ ;
+
+
+--on the next day works are taken from storage to the location of the new exhibi
+INSERT INTO tblLocationItem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate,
+	locitem_enddate
+)
+SELECT 'Israel_Museum','Israel','gallery C',itmletter, itmnumber, '2017-01-03','2017-4-06'
+FROM tmp_table ;
+
+--on the fifth day after the end of the previous exhibit the new exhibit opens
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery C','2017-01-06','2017-4-06',itmletter,itmnumber 
+FROM tmp_table ;
+
+DROP TABLE IF EXISTS tmp_table CASCADE;
+
+
+----------------------------------------------------
+--gallery B','Israel','2017-3-25','2017-8-25'
+----------------------------------------------------
+
+
+--Find the 9 item
+DROP TABLE IF EXISTS tmp_table CASCADE;
+CREATE TABLE tmp_table
+  AS (
+  SELECT itmletter,itmnumber FROM tblItems WHERE itmType = 'European Art' AND itmnumber <> 15 limit 9
+);
+  
+
+
+--on the day after the end of a current exhibit all works are returned to storage
+INSERT INTO tblLocationItem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate
+)
+SELECT 'Israel_Museum','Israel','storage',t.selLetterItem, t.selNumberItem, '2016-12-21'
+FROM (
+	SELECT selLetterItem, selNumberItem
+	FROM tblExhibitionsItems
+	WHERE selRoom = 'gallery B'
+
+) t ;
+
+
+--on the next day works are taken from storage to the location of the new exhibi
+INSERT INTO tblLocationItem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate,
+	locitem_enddate
+)
+SELECT 'Israel_Museum','Israel','gallery B',itmletter, itmnumber, '2017-3-22','2017-8-25'
+FROM tmp_table ;
+
+--on the fifth day after the end of the previous exhibit the new exhibit opens
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery B','2017-3-25','2017-8-25',itmletter,itmnumber 
+FROM tmp_table ;
+
+DROP TABLE IF EXISTS tmp_table CASCADE;
+
+
+
+----------------------------------------------------
+--gallery A','Israel','2016-12-25','2017-3-25'
+----------------------------------------------------
+
+
+--8 works, 4 months, 2017-01-01
+
+--Find the 8 item
+DROP TABLE IF EXISTS tmp_table CASCADE;
+CREATE TABLE tmp_table
+  AS (
+  SELECT itmletter,itmnumber 
+	FROM tblItems 
+	WHERE itmType = 'Israel Art '
+	UNION ALL
+	SELECT itmletter,itmnumber 
+	FROM tblItems 
+	WHERE itmType = 'Africa' limit 8
+);
+  
+
+
+--on the day after the end of a current exhibit all works are returned to storage
+INSERT INTO tblLocationItem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate
+)
+SELECT 'Israel_Museum','Israel','storage',t.selLetterItem, t.selNumberItem, '2017-01-02'
+FROM (
+	SELECT selLetterItem, selNumberItem
+	FROM tblExhibitionsItems
+	WHERE selRoom = 'gallery A'
+
+
+) t;
+
+
+--on the next day works are taken from storage to the location of the new exhibi
+INSERT INTO tblLocationItem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate,
+	locitem_enddate
+)
+SELECT 'Israel_Museum','Israel','gallery A',itmletter, itmnumber, '2016-12-22','2017-04-25'
+FROM tmp_table ;
+
+--on the fifth day after the end of the previous exhibit the new exhibit opens
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery A','2016-12-25','2017-4-25',itmletter,itmnumber 
+FROM tmp_table ;
+
+DROP TABLE IF EXISTS tmp_table CASCADE;
+
+
+--------------------------------------------
+----------------VIEWs----------------------
+--------------------------------------------
+
+DROP VIEW IF EXISTS exhibitionsitemView_IN_C_1_b CASCADE; 
+CREATE VIEW exhibitionsitemView_IN_C_1_b
+AS 
+SELECT 
+	selmuseumname AS "Museum Name",
+	selmuseumcity AS "City",
+	selroom AS "Room",
+	selstartdate AS "Start Date",
+	selenddate AS "End Date",
+	selletteritem AS "Letter Key",
+	selnumberitem AS "Number Key"
+FROM tblexhibitionsitems
+WHERE
+	selstartdate = '2017-01-06'
+;  
+DROP VIEW IF EXISTS exhibitionsitemView_IN_B_1_b CASCADE; 
+CREATE VIEW exhibitionsitemView_IN_B_1_b
+AS 
+SELECT 
+	selmuseumname AS "Museum Name",
+	selmuseumcity AS "City",
+	selroom AS "Room",
+	selstartdate AS "Start Date",
+	selenddate AS "End Date",
+	selletteritem AS "Letter Key",
+	selnumberitem AS "Number Key"
+FROM tblexhibitionsitems
+WHERE
+	selstartdate = '2017-3-25'
+;  
+DROP VIEW IF EXISTS exhibitionsitemView_IN_A_1_b CASCADE; 
+CREATE VIEW exhibitionsitemView_IN_A_1_b
+AS 
+SELECT 
+	selmuseumname AS "Museum Name",
+	selmuseumcity AS "City",
+	selroom AS "Room",
+	selstartdate AS "Start Date",
+	selenddate AS "End Date",
+	selletteritem AS "Letter Key",
+	selnumberitem AS "Number Key"
+FROM tblexhibitionsitems
+WHERE
+	selstartdate = '2016-12-25'
+;  
+
+--tblexhibitions
+DROP VIEW IF EXISTS exhibitionsView1_b CASCADE;
+CREATE VIEW exhibitionsView1_b
+AS 
+SELECT 
+	eximuseumname AS "Museum Name",
+	exiroomlocation AS "Room",
+	exicitylocation AS "City",
+	existartdate AS "Start Date",
+	exienddate AS "End Date",
+	exiexhibitionsname AS "Exhibition Name",
+	exidescption AS "Description"
+FROM tblexhibitions;
+
+--tblexhibitionsitems
+DROP VIEW IF EXISTS exhibitionsitemsView1_b CASCADE;
+CREATE VIEW exhibitionsitemsView1_b
+AS 
+SELECT 
+	selmuseumname AS "Museum Name",
+	selmuseumcity AS "City",
+	selroom AS "Room",
+	selstartdate AS "Start Date",
+	selenddate AS "End Date",
+	selletteritem AS "Letter Key",
+	selnumberitem AS "Number Key"
+FROM tblexhibitionsitems; 
+
+--tbllocation
+DROP VIEW IF EXISTS locationView1_b CASCADE;
+CREATE VIEW locationView1_b
+AS 
+SELECT 
+	loccity AS "City",
+	locmuseumname AS "Museum Name",
+	locroomname AS "Room",
+	loclength AS "Length",
+	locwidth AS "Width",
+	mincapacity AS "Min Capacity",
+	maxcapacity AS "Max Capacity"
+FROM tbllocation; 
+--tbllocationitem
+DROP VIEW IF EXISTS locationitemView1_b CASCADE;
+CREATE VIEW locationitemView1_b
+AS 
+SELECT 
+	locitem_museumname AS "Museum Name",
+	locitem_city AS "City",
+	locitem_location AS "Room",
+	locitem_letterkey AS "Letter Key",
+	locitem_numberkey AS "Number Key",
+	locitem_startdate AS "Start Date",
+	locitem_enddate AS "End Date"
+FROM tbllocationitem; 
+
+ 
+DROP VIEW IF EXISTS exhibitionsitemView_IN_C_1_b CASCADE; 
+DROP VIEW IF EXISTS exhibitionsitemView_IN_B_1_b CASCADE; 
+DROP VIEW IF EXISTS exhibitionsitemView_IN_A_1_b CASCADE; 
+DROP VIEW IF EXISTS exhibitionsView1_b CASCADE;
+DROP VIEW IF EXISTS exhibitionsitemsView1_b CASCADE;
+DROP VIEW IF EXISTS locationView1_b CASCADE;
+DROP VIEW IF EXISTS locationitemView1_b CASCADE;

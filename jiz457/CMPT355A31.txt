@@ -1,0 +1,369 @@
+
+
+
+DROP VIEW IF EXISTS before_uponworks CASCADE;
+CREATE VIEW before_uponworks AS(
+select 
+  t.exiexhibitionsname,
+  t.exiroomlocation,
+  t.existartdate,
+  t.exienddate,
+  s.maxcapacity,
+  (
+	  SELECT
+	    count (q.selstartdate)
+	    from
+	      tblexhibitionsitems q
+	    where
+	    
+		q.selroom = s.locroomname
+	      AND 
+	      	q.selstartdate = t.existartdate
+	      
+	       
+    ) as amount
+
+from 
+  tblexhibitionsitems w,
+  tblexhibitions t,
+  tbllocation s
+  
+where 
+    '2016-10-29' < t.exienddate
+  and
+    s.locroomname = t.exiroomlocation
+  and
+    w.selstartdate = t.existartdate
+ 
+    group by t.exiexhibitionsname, t.exiroomlocation, t.existartdate, t.exienddate, s.maxcapacity,s.locroomname, w.selstartdate
+ );
+
+
+
+ALTER TABLE tblexhibitionsitems
+DROP CONSTRAINT tblexhibitionsitems_pkey;
+ALTER TABLE tblexhibitionsitems 
+ADD PRIMARY KEY (
+                selmuseumname,
+                selstartdate,
+                selletteritem,
+                selnumberitem,
+                selroom
+                );
+
+
+DROP VIEW if EXISTS tblLocationItem_saved CASCADE;
+DROP VIEW if EXISTS tblexhibitionsitems_saved CASCADE;
+
+CREATE VIEW tblLocationItem_saved as
+select * from tblLocationItem;
+
+CREATE VIEW tblexhibitionsitems_saved as
+select * from tblexhibitionsitems;
+
+
+--unifying the data
+delete FROM  tblLocationItem;
+delete FROM  tblexhibitionsitems;
+
+
+--Place all items initially in your museum's storage facility
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2015-05-30' 
+FROM tblitems;
+
+
+--lobby view
+DROP VIEW IF EXISTS lobby_table CASCADE;
+CREATE VIEW lobby_table
+  AS (
+  SELECT itmletter,itmnumber 
+	FROM tblItems 
+	where itmValue 
+	IN 
+	(
+		(select MAX(itmValue) FROM tblItems where  itmType = 'European Art' ) , 
+		(select MAX(itmValue) FROM tblItems where itmType = 'Modern Art ') 
+	)
+  
+  );
+  
+UPDATE 
+	tblLocationItem
+SET
+	locitem_location = 'lobby',
+	locitem_enddate = '2017-2-1'
+FROM
+
+	(SELECT itmletter,itmnumber FROM lobby_table) i
+WHERE
+	tblLocationItem.locitem_letterkey = i.itmletter AND
+	tblLocationItem.locitem_numberkey = i.itmnumber
+	
+;
+--DROP VIEW IF EXISTS lobby_table CASCADE;
+
+
+--GC
+DROP VIEW IF EXISTS GC_table CASCADE;
+CREATE VIEW GC_table
+  AS (
+  SELECT itmletter,itmnumber FROM tblItems WHERE itmType = 'Asian Art ' limit 24
+);
+
+/*
+2016-08-01	2016-12-20
+2017-01-06	2017-05-06
+2017-06-06	2017-08-08*/
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery C', itmletter, itmnumber,'2016-07-31','2016-12-21' 
+FROM GC_table;
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2016-12-22','2017-01-05' 
+FROM GC_table;
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery C', itmletter, itmnumber,'2017-01-06','2017-05-07' 
+FROM GC_table;
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2017-05-08','2017-06-05' 
+FROM GC_table;
+
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery C', itmletter, itmnumber,'2017-06-06','2017-08-08'
+FROM GC_table;
+
+
+--GA
+DROP VIEW IF EXISTS GA_table CASCADE;
+CREATE VIEW GA_table
+  AS (
+  SELECT itmletter,itmnumber 
+	FROM tblItems 
+	WHERE itmType = 'Israel Art '
+	UNION ALL
+	SELECT itmletter,itmnumber 
+	FROM tblItems 
+	WHERE itmType = 'Africa' limit 16
+);
+
+
+
+DROP VIEW if exists guesttable CASCADE;
+CREATE VIEW guesttable AS(
+
+	  SELECT * FROM longtermitem
+	  UNION
+	  SELECT * FROM potentialitem
+	  limit 16
+
+); 
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery A', itmletter, itmnumber,'2016-10-28','2016-12-20' 
+FROM GA_table;
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2016-12-21','2016-12-24' 
+FROM GA_table;
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery A', itmletter, itmnumber,'2016-12-25','2017-03-25' 
+FROM GA_table;
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2017-03-26','2017-04-02' 
+FROM GC_table;
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery A', "Letter Key", "Number Key",'2017-04-03','2017-08-08' 
+FROM guesttable;
+
+
+
+--GB
+DROP VIEW IF EXISTS GB_table CASCADE;
+CREATE VIEW GB_table
+  AS (
+  SELECT itmletter,itmnumber
+  
+  FROM tblItems 
+	WHERE itmType = 'Modern Art '
+	UNION ALL
+	SELECT itmletter,itmnumber 
+	FROM tblItems 
+	WHERE  itmType = 'European Art' AND itmnumber <> 15
+	limit 16
+);
+
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery B', itmletter, itmnumber,'2016-10-28','2017-03-20' 
+FROM GB_table;
+
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2017-03-21','2017-03-24' 
+FROM GB_table;
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery B', itmletter, itmnumber,'2017-03-25','2017-08-25' 
+FROM GB_table;
+
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2017-08-26'
+FROM GB_table;
+
+-- exhibtion items reset
+/*
+
+GA_table
+GB_table
+GC_table
+guesttable --A
+
+*/
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery A','2017-04-03','2017-08-08',"Letter Key", "Number Key"
+FROM guesttable ;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery A','2016-12-25','2017-03-25',itmletter,itmnumber 
+FROM GA_table ;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery A','2016-07-01','2016-12-20',itmletter,itmnumber 
+FROM GA_table ;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery B','2017-03-25','2017-08-25',itmletter,itmnumber 
+FROM GB_table ;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery B','2016-09-01','2017-03-20',itmletter,itmnumber 
+FROM GB_table ;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery C','2017-01-06','2017-05-06',itmletter,itmnumber 
+FROM GC_table ;
+
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery C','2016-08-01','2016-12-20',itmletter,itmnumber 
+FROM GC_table ;
+
+
+DROP VIEW if exists guesttableD CASCADE;
+CREATE VIEW guesttableD AS(
+
+	  SELECT * FROM longtermitem
+	  UNION
+	  SELECT * FROM potentialitem
+	  limit 25
+); 
+
+--GC_table
+
+
+-- location item
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery D',"Letter Key", "Number Key",'2017-06-05','2017-08-09' 
+FROM guesttableD;
+
+
+
+-- exhibition item
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery D','2017-06-06','2017-08-08',"Letter Key", "Number Key"
+FROM guesttableD ;
+
+
+
+-- location item
+INSERT INTO tbllocationitem 
+SELECT 
+	'Israel_Museum','Israel','gallery C',itmletter,itmnumber ,'2017-06-05','2017-08-09' 
+FROM GC_table;
+
+
+
+-- exhibition item
+INSERT INTO tblexhibitionsitems (selmuseumname,selmuseumcity,selroom,selstartdate,selenddate,selletteritem,selnumberitem)
+SELECT  'Israel_Museum','Israel','gallery C','2017-06-06','2017-08-08',itmletter,itmnumber 
+FROM GC_table ;
+
+
+
+
+
+
+DROP VIEW IF EXISTS after_uponworks CASCADE;
+CREATE VIEW after_uponworks AS(
+select 
+  t.exiexhibitionsname,
+  t.exiroomlocation,
+  t.existartdate,
+  t.exienddate,
+  s.maxcapacity,
+  (
+	  SELECT
+	    count (q.selstartdate)
+	    from
+	      tblexhibitionsitems q
+	    where
+	    
+		q.selroom = s.locroomname
+	      AND 
+	      	q.selstartdate = t.existartdate
+	      
+	       
+    ) as amount
+
+from 
+  tblexhibitionsitems w,
+  tblexhibitions t,
+  tbllocation s
+  
+where 
+    '2016-10-29' < t.exienddate
+  and
+    s.locroomname = t.exiroomlocation
+  and
+    w.selstartdate = t.existartdate
+ 
+    group by t.exiexhibitionsname, t.exiroomlocation, t.existartdate, t.exienddate, s.maxcapacity,s.locroomname
+ );
+
+
+
+
+

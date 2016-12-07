@@ -1,0 +1,82 @@
+--Clean the view which made in the assignment 1
+DROP view IF exists Part31  CASCADE;
+DROP view IF exists Part32  CASCADE;
+DROP view IF exists Part33  CASCADE;
+DROP view IF exists Part34  CASCADE;
+DROP view IF exists Part35  CASCADE;
+/*
+UPDATE tblexhibitions
+SET exienddate = '2017-01-01'
+WHERE exiroomlocation = 'gallery C'
+;
+*/
+--Editing the location table about the mincapacity and maxcapacity
+ALTER TABLE tbllocation DROP COLUMN IF EXISTS  loccapacity CASCADE;
+ALTER TABLE tbllocation DROP COLUMN IF EXISTS  mincapacity CASCADE;
+ALTER TABLE tbllocation DROP COLUMN IF EXISTS  maxcapacity CASCADE;
+ALTER TABLE tbllocation
+ADD COLUMN
+	mincapacity int;
+
+
+ALTER TABLE tbllocation
+ADD COLUMN
+	maxcapacity int;
+ 
+--UPDATE the new capacity interval of capacity of each location
+UPDATE tbllocation
+SET maxcapacity = 16, mincapacity = 7
+WHERE locroomname ='gallery A';
+
+UPDATE tbllocation
+SET maxcapacity = 16, mincapacity = 7
+WHERE locroomname ='gallery B';
+
+UPDATE tbllocation
+SET maxcapacity = 24, mincapacity = 14
+WHERE locroomname ='gallery C';
+
+UPDATE tbllocation
+SET maxcapacity = 4, mincapacity = 2
+WHERE locroomname ='lobby';
+
+UPDATE tbllocation
+SET maxcapacity = 600, mincapacity = 0
+WHERE locroomname ='storage';
+
+
+--------------------------------------------
+----------------VIEWs----------------------
+--------------------------------------------
+
+DROP VIEW IF EXISTS locationview1_a CASCADE;
+CREATE VIEW locationview1_a 
+AS(
+	SELECT
+		loccity AS "City",
+		locmuseumname AS "Museum Name",
+		locroomname AS "Room",
+		loclength AS "Length",
+		locwidth AS "Width",
+		mincapacity AS "Min Capacity",
+		maxcapacity AS "Max Capacity"
+	FROM 
+		tbllocation
+); 
+
+DROP VIEW IF EXISTS exhibitionsView1_a CASCADE;
+CREATE VIEW exhibitionsView1_a
+AS 
+SELECT 
+	eximuseumname AS "Museum Name",
+	exiroomlocation AS "Room",
+	exicitylocation AS "City",
+	existartdate AS "Start Date",
+	exienddate AS "End Date",
+	exiexhibitionsname AS "Exhibition Name",
+	exidescption AS "Description"
+FROM tblexhibitions;
+
+
+DROP VIEW IF EXISTS locationview1_a CASCADE;
+DROP VIEW IF EXISTS exhibitionsView1_a CASCADE;

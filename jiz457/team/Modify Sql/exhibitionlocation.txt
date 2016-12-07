@@ -1,0 +1,36 @@
+/*
+
+elo_exhibitname
+elo_exhibitdatestart
+elo_locationname
+
+elo_museumoflocation
+elo_museumofexhibition
+
+elo_locationdatestart
+elo_locationdateend*/
+
+
+/*
+eximuseumname
+exiroomlocation
+exicitylocation
+existartdate
+exienddate
+exiexhibitionsname
+exidescption*/
+/*
+INSERT INTO test.ns_exhibitionlocations (elo_exhibitname,elo_exhibitdatestart,elo_locationname,elo_museumoflocation,elo_museumofexhibition,elo_locationdatestart,elo_locationdateend) 
+VALUES ('Dimension of Culture: Asian', '2016-07-01','gallery A', 'Israel_Museum','Israel_Museum',  '2016-07-01', '2016-12-20');*/
+
+insert into test.ns_exhibitionlocations
+select 
+exiexhibitionsname,
+existartdate,
+exiroomlocation,
+eximuseumname,
+eximuseumname,
+existartdate ,
+exienddate
+from
+tblexhibitions;

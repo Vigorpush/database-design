@@ -1,0 +1,58 @@
+ -- assignment1 exhibition
+
+drop table if exists assignment1exhibition cascade;
+Create table assignment1exhibition as (
+select 
+    selletteritem,
+    selnumberitem
+  from 
+    tblexhibitionsitems
+  where
+    selstartdate = '2016-07-01'
+    AND 
+    selenddate = '2016-12-20'
+
+union
+    
+  select 
+    selletteritem,
+    selnumberitem
+  from 
+    tblexhibitionsitems
+  where
+    selstartdate = '2016-09-01'
+    AND 
+    selenddate = '2017-03-20'
+
+union
+    
+  select 
+    selletteritem,
+    selnumberitem
+  from 
+    tblexhibitionsitems
+  where
+    selstartdate = '2016-07-01'
+    AND 
+    selenddate = '2017-03-20'
+  
+);
+
+select
+  itmletter,
+  itmnumber
+from 
+  tblitems
+Where
+  NOT exists 
+(
+  
+  select 
+    selletteritem,
+    selnumberitem
+  from
+    assignment1exhibition
+)
+;  
+  
+  

@@ -1,0 +1,110 @@
+Before I do the assignment, I clean the some view I created in assugnment 1 and assignment 2 which are shows the result of query and which are not using in this assignment 
+
+
+Firstly, find the earlest date of exhibition
+and find out all the traveling work by using following code:
+
+
+ 
+DROP VIEW IF EXISTS travelingwork CASCADE;
+CREATE VIEW travelingwork As
+(
+    With Un_travelingWork AS 
+    (
+
+      select * from lobby_table
+      UNION
+      select * from guesttabled
+      UNION
+      select * from guesttable
+      UNION
+      select "Letter Key", "Number Key" from potentialitem
+      UNION
+      select * from usingworks
+    )
+    SELECT 
+      itmletter, 
+      itmnumber 
+    FROM
+      tblitems
+    where
+      NOT EXISTS 
+      (
+	  SELECT
+	    itmletter, 
+	    itmnumber 
+	  From 
+	    Un_travelingWork
+	  WHERE 
+	    tblitems.itmletter = Un_travelingWork.itmletter
+	    AND 
+	    tblitems.itmnumber = Un_travelingWork.itmnumber
+      )
+      limit 4
+
+);
+
+
+This code will find the 4 works which not used in current and future exhibition,
+then I created some information of museum information about museum which are museum which our items traveling 
+by following code :
+
+--insert information into the table information
+INSERT INTO tblmuseuminfo
+values ('Regina','ReginaArt',672323,'Tom');
+
+
+INSERT INTO tbllocationitem
+SELECT 
+  'ReginaArt', 'Regina', 'A', itmletter, itmnumber, '2016-06-02','2016-06-23'
+FROM
+  travelingwork;
+
+INSERT INTO tblmuseuminfo
+values ('Yorkton','YorktonArt',1235235, 'Jerry');
+
+
+INSERT INTO tbllocationitem
+SELECT 
+  'YorktonArt', 'Yorkton', 'B', itmletter, itmnumber, '2016-06-24','2016-07-15'
+FROM
+  travelingwork;
+
+INSERT INTO tblmuseuminfo
+values ('Warman','WarmanArt', 979832, 'Parker');
+
+
+INSERT INTO tbllocationitem
+SELECT 
+  'WarmanArt', 'Warman', 'C', itmletter, itmnumber, '2016-07-16','2016-08-06'
+FROM
+  travelingwork;
+
+INSERT INTO tblmuseuminfo
+values ('Prince_Albert','Prince_AlbertArt', 7823684,'Vits');
+
+INSERT INTO tbllocationitem
+SELECT 
+  'Prince_AlbertArt', 'Prince_Albert', 'D', itmletter, itmnumber, '2016-08-07','2016-08-29'
+FROM
+  travelingwork;
+
+INSERT INTO tblmuseuminfo
+values ('North_Battleford','North_BattlefordArt',92837, 'Jeff');
+
+INSERT INTO tbllocationitem
+SELECT 
+  'North_BattlefordArt', 'North_Battleford', 'E', itmletter, itmnumber, '2016-08-30','2016-09-20'
+FROM
+  travelingwork;
+  
+  
+ because it need me to control the exhibition then I need to know location inforamtion, then I insert inforamtion about the location inforamtion about the new exhibition
+ 
+ Then I create  five exhibiton which plan in the Saskatchewan 
+ 
+ 
+ And then, I insert into location item table and exhibiton items which will contain the information about all items which are traveling
+ in this case, the arravd date and start date of exhibition and departure date and the end date of exhibition to be same date 
+ 
+ 

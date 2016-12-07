@@ -1,0 +1,11 @@
+ select
+      existartdate,
+      exienddate
+    from
+      tblexhibitions 
+    where
+      exiexhibitionsname = 'X_exhibition'
+      
+      
+      
+  --select 

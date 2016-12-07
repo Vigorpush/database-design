@@ -1,0 +1,143 @@
+
+
+
+ALTER TABLE tblitems
+ADD COLUMN keywordvector tsvector;
+UPDATE tblitems SET KEYWORDvector = TO_TSVECTOR(itmdescription);
+
+DROP VIEW IF EXISTS  lexemesview CASCADE;
+CREATE  VIEW lexemesview 
+AS
+(
+	SELECT
+                DISTINCT ON (ts_stat.*) ts_stat.*
+	FROM 
+                tblitems,
+                ts_stat('SELECT keywordvector FROM tblitems') 
+);
+
+
+DROP VIEW IF EXISTS  ts_stat_view CASCADE;
+CREATE VIEW ts_stat_view
+AS
+SELECT * FROM ts_stat('SELECT keywordvector FROM tblitems');
+
+
+--query 1 
+DROP VIEW IF EXISTS  query2c1 CASCADE;
+CREATE VIEW query2c1 
+AS
+SELECT * FROM ts_stat('SELECT keywordvector FROM tblitems')
+ORDER by ndoc desc;
+
+
+
+
+
+--query 2
+DROP VIEW IF EXISTS query2c2 CASCADE;
+CREATE VIEW query2c2
+AS
+SELECT * FROM ts_stat('SELECT keywordvector FROM tblitems')
+ORDER BY word;
+
+
+
+
+
+
+
+
+--finding the most lexemes in the description
+DROP VIEW IF EXISTS  prkey_collection CASCADE;
+CREATE VIEW prkey_collection
+AS
+select *
+from ts_stat('select to_tsvector(itmdescription) from tblitems')
+order by ts_stat.nentry desc
+limit 40
+;
+
+alter TABLE tblitems
+ADD COLUMN keyword name_format;
+
+ 
+DROP VIEW IF EXISTS artkeyview CASCADE;
+CREATE VIEW artkeyview
+AS
+  select 
+    itmletter,
+    itmnumber
+  from tblitems
+  where to_tsvector(itmdescription) @@ to_tsquery('art')
+  ;
+
+ UPDATE tblitems 
+ SET keyword = 'art'
+ FROM artkeyview t
+ WHERE t.itmnumber = tblitems.itmnumber AND t.itmletter = tblitems.itmletter
+;
+
+
+ 
+ 
+DROP VIEW IF EXISTS jerusalemkeyview CASCADE;
+CREATE VIEW jerusalemkeyview
+AS
+  select 
+    itmletter,
+    itmnumber
+  from tblitems
+  where to_tsvector(itmdescription) @@ to_tsquery('jerusalem')
+  ;
+
+ UPDATE tblitems 
+ SET keyword = 'jerusalem'
+ FROM jerusalemkeyview t
+ WHERE t.itmnumber = tblitems.itmnumber AND t.itmletter = tblitems.itmletter
+;
+ 
+ 
+
+DROP VIEW IF EXISTS jewishkeyview CASCADE;
+CREATE VIEW jewishkeyview
+AS
+  select 
+    itmletter,
+    itmnumber
+  from tblitems
+  where to_tsvector(itmdescription) @@ to_tsquery('jewish')
+  ;
+
+ UPDATE tblitems 
+ SET keyword = 'jewish'
+ FROM jewishkeyview t
+ WHERE t.itmnumber = tblitems.itmnumber AND t.itmletter = tblitems.itmletter
+;
+ 
+ 
+
+DROP VIEW IF EXISTS israelkeyview CASCADE;
+CREATE VIEW israelkeyview
+AS
+  select 
+    itmletter,
+    itmnumber
+  from tblitems
+  where to_tsvector(itmdescription) @@ to_tsquery('israel')
+  ;
+
+ UPDATE tblitems 
+ SET keyword = 'israel'
+ FROM israelkeyview t
+ WHERE keyword IS NULL
+;
+
+DROP VIEW IF EXISTS  lexemesview CASCADE;
+DROP VIEW IF EXISTS query2c2 CASCADE;
+DROP VIEW IF EXISTS  query2c1 CASCADE;
+DROP VIEW IF EXISTS  prkey_collection CASCADE;
+DROP VIEW IF EXISTS jerusalemkeyview CASCADE;
+DROP VIEW IF EXISTS israelkeyview CASCADE;
+DROP VIEW IF EXISTS jewishkeyview CASCADE;
+DROP VIEW IF EXISTS artkeyview CASCADE;

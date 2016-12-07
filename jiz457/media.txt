@@ -1,0 +1,101 @@
+AA	1	Gilt bronze
+AA	1	turquoise 
+AA	1	semi-precious stones
+AA	2	Japanese cypress wood
+AA	2	gold lacquer
+AA	2	crystal eyes 
+AA	3	Opaque watercolor
+AA	3	paper 
+AA	4	Opaque watercolor
+AA	4	paper 
+AA	5	Opaque watercolor
+AA	5	paper 
+AA	6	Opaque watercolor
+AA	6	paper 
+AA	7	Opaque watercolor
+AA	7	paper 
+AA	8	Opaque watercolor
+AA	8	paper 
+AA	9	Opaque watercolor
+AA	9	paper 
+AA	10	oil
+AA	10	canvas
+AA	11	oil
+AA	11	canvas
+AA	12	oil
+AA	12	canvas
+AA	13	oil
+AA	13	canvas
+AA	14	oil
+AA	14	canvas
+AA	15	oil
+AA	15	canvas
+AA	16	oil
+AA	16	canvas
+AA	17	oil
+AA	17	canvas
+AA	18	oil
+AA	18	canvas
+AA	19	oil
+AA	19	canvas
+AA	20	oil
+AA	20	canvas
+AA	21	oil
+AA	21	canvas
+AA	22	oil
+AA	22	canvas
+AA	23	oil
+AA	23	canvas
+AA	24	oil
+AA	24	canvas
+AA	25	oil
+AA	25	canvas
+AA	26	oil
+AA	26	canvas
+AA	27	oil
+AA	27	canvas
+AA	28	oil
+AA	28	canvas
+AA	29	oil
+AA	29	canvas
+AA	30	oil
+AA	30	canvas
+BB	273	Wood
+BB	145	Wood
+BB	483	Wood
+BB	627	Wood
+BB	622	Wood
+BB	169	Wood
+BB	535	Wood
+BB	730	Wood
+BB	518	Wood
+BB	334	Stucco 
+BB	270	Stone
+BB	497	Red earthenware
+BB	337	Red burnished earthenware
+BB	189	Plaster
+BB	570	Parian marble
+BB	824	painted wood frame
+BB	430	Painted wood
+BB	656	Painted wood
+BB	445	Painted steel
+BB	435	Painted limestone
+BB	349	Marble
+BB	995	Marble
+BB	544	Lapis lazuli
+BB	75	grisaille
+BB	911	galvanized iron
+BB	296	Corten steel
+BB	410	Corten steel
+BB	700	Ceramic
+BB	908	Ceramic
+BB	699	Bronze
+BB	195	Bronze
+BB	107	Bronze
+BB	860	Bronze
+BB	787	Bronze
+BB	286	Bronze
+BB	121	Bronze
+BB	321	Bronze
+BB	667	Brass
+BB	167	Brass

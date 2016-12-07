@@ -1,0 +1,681 @@
+
+--works
+/*
+wor_workcharid
+wor_worknumid
+wor_databaseentrymuseum
+wor_workname
+wor_workdescription
+wor_workphysicalproperty
+wor_workclassification
+wor_workcreator
+wor_workcreationdate
+wor_workborrowable
+wor_workgeographicregionoforigin
+wor_workcountryoforigin
+wor_workfieldofscience
+*/
+
+/*
+wor_workcharid
+wor_worknumid
+wor_databaseentrymuseum
+wor_workname
+wor_workdescription
+wor_workphysicalproperty
+wor_workclassification
+wor_workcreator
+wor_workcreationdate
+wor_workborrowable
+wor_workgeographicregionoforigin
+wor_workcountryoforigin
+wor_workfieldofscience
+*/
+
+
+--'Painting'--Carving
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'Asian Art Painting', -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+ 
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'Asian Art Painting'
+    ;
+    
+    
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Asian Art Sculpture', -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+ 
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'Asian Art Sculpture'
+    ;  
+  
+      
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Egyptian Archaeology Sculpture', -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+ 
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'Egyptian Archaeology Sculpture'
+    ;  
+    
+    
+   
+--'Painting'--Carving
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'European Art Painting', -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'European Art Painting'
+    ;  
+    
+    
+    
+   
+   
+      
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'European Art Sculpture', -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+ 
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'European Art Sculpture'
+    ;  
+    
+    
+    
+    
+    
+
+   
+   
+      
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'Israel Art Painting' ,-- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+ 
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'Israel Art Painting'
+    ;  
+    
+    
+    
+   
+   
+      
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Israel Art Sculpture' ,-- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+ 
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'Israel Art Sculpture'
+    ;  
+    
+    
+    
+     
+    
+   
+   
+      
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'Modern Art  Painting', -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+ 
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'Modern Art  Painting'
+    ;  
+    
+    
+    
+      
+     
+    
+   
+   
+      
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Modern Art  Sculpture', -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcountryoforigin
+  null --worworkfieldofscience --itmvalue,
+ 
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'Modern Art  Sculpture'
+    ;  
+
+--'Painting'--Carving
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'Asian Art Painting',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Israel_Museum'
+    AND 
+    t.itmsubtype = 'Others Sculpture'
+    ;  
+    
+    
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Asian Art Sculpture',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Bugs Bunny'
+    AND 
+    t.itmsubtype = 'Asian Art Sculpture'
+    ;  
+    
+    ---checking the Bugs Bunny
+    select t.itmsubtype
+      from tblitems t, tblidenification s
+      where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Bugs Bunny'
+    ;  
+    
+
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Asian Art Sculpture',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Bart Simpson'
+    AND 
+    t.itmsubtype = 'Asian Art Sculpture'
+    ; 
+    
+ 
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'Asian Art Painting',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Bart Simpson'
+    AND 
+    t.itmsubtype = 'Asian Art Painting'
+    ; 
+    
+    ---checking the Bart Simpson
+    select t.itmsubtype
+      from tblitems t, tblidenification s
+      where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Bart Simpson'
+    ;  
+    
+    
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Asian Art Sculpture',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Mickey Mouse'
+    AND 
+    t.itmsubtype = 'Asian Art Sculpture'
+    ; 
+    
+    
+    ---checking the Mickey Mouse
+    select t.itmsubtype
+      from tblitems t, tblidenification s
+      where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Mickey Mouse'
+    ;  
+    
+    
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'European Art Painting',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'UNKNOW'
+    AND 
+    t.itmsubtype = 'European Art Painting'
+    ; 
+    
+    
+       
+INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Others Sculpture',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'UNKNOW'
+    AND 
+    t.itmsubtype = 'Others Sculpture'
+    ; 
+    
+        ---checking the UNKNOW
+    select t.itmsubtype
+      from tblitems t, tblidenification s
+      where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'UNKNOW'
+    ;  
+    
+    
+    INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Asian Art Sculpture',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Timon'
+    AND 
+    t.itmsubtype = 'Asian Art Sculpture'
+    ; 
+    
+    
+        
+    INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Carving',--worworkphysicalproperty,
+  'Israel Art Sculpture',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Timon'
+    AND 
+    t.itmsubtype = 'Israel Art Sculpture'
+    ; 
+    
+    
+    
+    
+        
+    INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'Israel Art Painting',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Timon'
+    AND 
+    t.itmsubtype = 'Israel Art Painting'
+    ; 
+    
+     
+    
+    
+        
+    INSERT Into test.ns_works 
+select 
+  t.itmletter,--worworkcharid
+  t.itmnumber,--worworknumid
+  'Israel_Museum',--wordatabaseentrymuseum
+  t.itmname,--worworkname
+  t.itmdescription,--worworkdescription
+  'Painting',--worworkphysicalproperty,
+  'Asian Art Painting',  -- worworkclassification,
+  t.itmauthor,--worworkcreator
+  t.itmcompleteddate,--worworkcreationdate--itmacquisitiondate
+  true,--worworkborrowable
+  null,--worworkgeographicregionoforigin
+  null,--worworkcount
+  null --worworkfieldofscience --itmvalue,
+  from tblitems t, tblidenification s
+  where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Timon'
+    AND 
+    t.itmsubtype = 'Asian Art Painting'
+    ; 
+    
+    
+    
+        ---checking the Timon
+    select t.itmsubtype
+      from tblitems t, tblidenification s
+      where 
+    t.itmletter = s.idletterkey
+    And 
+    t.itmnumber = s.idnumberkey
+    And 
+    s.id_museumname = 'Timon'
+    ;  
+    
+    
+    

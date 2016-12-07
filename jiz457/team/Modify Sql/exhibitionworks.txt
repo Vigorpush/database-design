@@ -1,0 +1,67 @@
+-- exw_exhibitname
+-- exw_exhibitdatestart
+-- exw_museumofexhibition
+-- exw_workcharid
+-- exw_worknumid
+-- exw_workdatabaseentrymuseum
+-- exw_dateworkadded
+-- exw_dateworkremoved
+
+-- selmuseumname
+-- selmuseumcity
+-- selroom
+-- selstartdate
+-- selenddate
+-- selletteritem
+-- selnumberitem
+-- starttime
+-- endtime
+
+insert into test.ns_exhibitionworks
+select
+s.exiexhibitionsname,
+s.existartdate,
+s.eximuseumname,
+t.selletteritem,
+t.selnumberitem,
+'Israel_Museum',
+t.selstartdate,
+t.selenddate
+from
+tblexhibitionsitems t, tblexhibitions s
+
+where
+s.eximuseumname=t.selmuseumname
+And
+s.exiroomlocation=t.selroom
+And
+s.existartdate=t.selstartdate
+and 
+s.exiexhibitionsname<> 'TOP NOTCHED show'
+;
+
+
+insert into test.ns_exhibitionworks
+select distinct
+s.exiexhibitionsname,
+s.existartdate,
+s.eximuseumname,
+t.selletteritem,
+t.selnumberitem,
+'Israel_Museum',
+t.selstartdate,
+t.selenddate
+from
+tblexhibitionsitems t, tblexhibitions s
+
+where
+s.eximuseumname=t.selmuseumname
+And
+s.exiroomlocation=t.selroom
+And
+s.existartdate=t.selstartdate
+and 
+s.exiexhibitionsname= 'TOP NOTCHED show'
+;
+
+

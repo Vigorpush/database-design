@@ -1,0 +1,13 @@
+-- dor_museumnameorigin
+-- dor_locationnameorigin
+-- dor_museumnamedestination
+-- dor_locationnamedestination
+
+INSERT Into test.ns_doors 
+select
+doomuseumnamefrom,
+doofrom_location,
+doomuseumnameto,
+dooto_location
+from
+tbldoor;

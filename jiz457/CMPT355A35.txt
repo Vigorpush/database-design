@@ -1,0 +1,255 @@
+
+
+DROP VIEW IF EXISTS ts_stat_view;
+DROP VIEW IF EXISTS itemsview;
+DROP VIEW IF EXISTS locationitemview;
+DROP VIEW IF EXISTS locationview2_b1;
+DROP VIEW IF EXISTS visitorview;
+--find the earliest end date of exhibition
+--because there is not any exhibition before the exhibition, then have any date which is earlest date in the exhibition will be the ealrest available date for exhibition
+
+SELECT 
+	MIN (exienddate) 
+FROM
+	tblexhibitions;
+
+--loadwork
+--GC_table
+--GB_table
+--GA_table
+--track the traveling exhibition 
+
+ 
+DROP VIEW IF EXISTS travelingwork CASCADE;
+CREATE VIEW travelingwork As
+(
+    With Un_travelingWork AS 
+    (
+
+      select * from lobby_table
+      UNION
+      select * from guesttabled
+      UNION
+      select * from guesttable
+      UNION
+      select "Letter Key", "Number Key" from potentialitem
+      UNION
+      select * from usingworks
+    )
+    SELECT 
+      itmletter, 
+      itmnumber 
+    FROM
+      tblitems
+    where
+      NOT EXISTS 
+      (
+	  SELECT
+	    itmletter, 
+	    itmnumber 
+	  From 
+	    Un_travelingWork
+	  WHERE 
+	    tblitems.itmletter = Un_travelingWork.itmletter
+	    AND 
+	    tblitems.itmnumber = Un_travelingWork.itmnumber
+      )
+      limit 4
+
+);
+
+
+
+-- Regina Yorkton Warman Prince Albert North Battleford
+
+--insert information into the table information
+INSERT INTO tblmuseuminfo
+values ('Regina','ReginaArt',672323,'Tom');
+
+
+INSERT INTO tbllocationitem
+SELECT 
+  'ReginaArt', 'Regina', 'A', itmletter, itmnumber, '2016-06-02','2016-06-23'
+FROM
+  travelingwork;
+
+INSERT INTO tblmuseuminfo
+values ('Yorkton','YorktonArt',1235235, 'Jerry');
+
+
+INSERT INTO tbllocationitem
+SELECT 
+  'YorktonArt', 'Yorkton', 'B', itmletter, itmnumber, '2016-06-24','2016-07-15'
+FROM
+  travelingwork;
+
+INSERT INTO tblmuseuminfo
+values ('Warman','WarmanArt', 979832, 'Parker');
+
+
+INSERT INTO tbllocationitem
+SELECT 
+  'WarmanArt', 'Warman', 'C', itmletter, itmnumber, '2016-07-16','2016-08-06'
+FROM
+  travelingwork;
+
+INSERT INTO tblmuseuminfo
+values ('Prince_Albert','Prince_AlbertArt', 7823684,'Vits');
+
+INSERT INTO tbllocationitem
+SELECT 
+  'Prince_AlbertArt', 'Prince_Albert', 'D', itmletter, itmnumber, '2016-08-07','2016-08-29'
+FROM
+  travelingwork;
+
+INSERT INTO tblmuseuminfo
+values ('North_Battleford','North_BattlefordArt',92837, 'Jeff');
+
+INSERT INTO tbllocationitem
+SELECT 
+  'North_BattlefordArt', 'North_Battleford', 'E', itmletter, itmnumber, '2016-08-30','2016-09-20'
+FROM
+  travelingwork;
+
+
+
+--insert into the table we could see
+INSERT INTO tbllocation 
+VALUES ('Regina','ReginaArt','A','25','25', 7, 16 )
+;
+
+INSERT INTO tbllocation 
+VALUES ('Yorkton','YorktonArt','B','25','25', 7, 16 )
+;
+
+INSERT INTO tbllocation 
+VALUES ('Warman','WarmanArt','C','25','25', 7, 16 )
+;
+
+INSERT INTO tbllocation 
+VALUES ('Prince_Albert','Prince_AlbertArt','D','25','25', 7, 16 )
+;
+
+INSERT INTO tbllocation 
+VALUES ('North_Battleford','North_BattlefordArt','E','25','25', 7, 16 )
+;
+
+
+--exhibition
+--insert exhibition table
+--plan a traveling exhibition
+-- 2016-06-02
+--Regina exhibition
+
+INSERT INTO tblexhibitions
+values 
+(
+  'ReginaArt',
+  'A',
+  'Regina',
+  '2016-06-02',
+  '2016-06-23',
+  'traveling show: --Regina',
+  'China, Japan, Vietnam, North Korea and South Korea'
+  );
+
+INSERT INTO tblexhibitionsitems
+SELECT 
+  'ReginaArt', 'Regina', 'A', '2016-06-02','2016-06-23', itmletter, itmnumber,'12:00','12:00'
+FROM
+  travelingwork;
+  
+
+--Yorkton exhibition
+INSERT INTO tblexhibitions
+values 
+(
+  'YorktonArt',
+  'B',
+  'Yorkton',
+  '2016-06-24',
+  '2016-07-15',
+  'traveling show: --Yorkton',
+  'China, Japan, Vietnam, North Korea and South Korea'
+  );
+  
+ 
+
+ 
+INSERT INTO tblexhibitionsitems
+SELECT 
+  'YorktonArt', 'Yorkton', 'B', '2016-06-24','2016-07-15', itmletter, itmnumber,'12:00','12:00'
+FROM
+  travelingwork;
+  
+
+--Warman exhibition
+INSERT INTO tblexhibitions
+values 
+(
+  'WarmanArt',
+  'C',
+  'Warman',
+  '2016-07-16',
+  '2016-08-06',
+  'traveling show: --Warman',
+  'China, Japan, Vietnam, North Korea and South Korea'
+  );
+
+
+ 
+INSERT INTO tblexhibitionsitems
+SELECT 
+  'WarmanArt', 'Warman', 'C', '2016-07-16','2016-08-06', itmletter, itmnumber,'12:00','12:00'
+FROM
+  travelingwork;
+  
+  
+--Prince Albert exhibtion
+INSERT INTO tblexhibitions
+values 
+(
+  'Prince_AlbertArt',
+  'D',
+  'Prince_Albert',
+  '2016-08-07',
+  '2016-08-29',
+  'traveling show: Prince Albert ',
+  'China, Japan, Vietnam, North Korea and South Korea'
+  );
+
+ 
+INSERT INTO tblexhibitionsitems
+SELECT 
+  'Prince_AlbertArt', 'Prince_Albert', 'D', '2016-08-07','2016-08-29', itmletter, itmnumber,'12:00','12:00'
+FROM
+  travelingwork;
+  
+   
+  
+  
+--North Battleford exhibtion
+INSERT INTO tblexhibitions
+values 
+(
+  'North_BattlefordArt',
+  'E',
+  'North_Battleford',
+  '2016-08-30',
+  '2016-09-20',
+  'traveling show: North Battleford',
+  'China, Japan, Vietnam, North Korea and South Korea'
+  );
+
+
+INSERT INTO tblexhibitionsitems
+SELECT 
+  'North_BattlefordArt', 'North_Battleford', 'E', '2016-08-30','2016-09-20', itmletter, itmnumber,'12:00','12:00'
+FROM
+  travelingwork;
+  
+   
+  
+  
+
+

@@ -1,0 +1,315 @@
+
+--Revise data definitions to include identification of whether works are: owned works or borrowed works, or works that might be potentially borrowed from some other owner (and any other information relating to this expanded base of works).
+--Added the items and media into data
+\copy tblitems FROM 'works.csv' DELIMITER ',' CSV
+\copy tblmedia FROM 'media.csv' DELIMITER ',' CSV
+
+INSERT  INTO tblmuseuminfo
+(
+  minfo_citylocation,
+  minfo_name,
+  minfo_tel,
+  minfo_contactname
+)
+VALUES ('NewYork', 'Bugs Bunny','123456','Bugs Bunny');
+
+INSERT  INTO tblmuseuminfo
+(
+  minfo_citylocation,
+  minfo_name,
+  minfo_tel,
+  minfo_contactname
+)
+VALUES ('Chicago', 'Bart Simpson','5852444','Bart Simpson');
+
+INSERT  INTO tblmuseuminfo
+(
+  minfo_citylocation,
+  minfo_name,
+  minfo_tel,
+  minfo_contactname
+)
+VALUES ('NewYork', 'Mickey Mouse','7755494','Mickey Mouse');
+
+
+INSERT  INTO tblmuseuminfo
+(
+  minfo_citylocation,
+  minfo_name,
+  minfo_tel,
+  minfo_contactname
+)
+VALUES ('Israel', 'Timon','5852750','Timon');
+
+
+DROP TABLE IF EXISTS tblIdenification CASCADE;
+DROP TABLE IF EXISTS tblitemcondition CASCADE;
+DROP DOMAIN IF EXISTS condition_format CASCADE;
+CREATE DOMAIN  condition_format AS varchar(3);
+
+CREATE TABLE tblIdenification (
+	idletterkey key_latter_format,
+	idnumberkey key_number_format,
+	
+	idcitylocation city_format,
+	id_museumname name_format,
+	PRIMARY KEY(idletterkey, idnumberkey),
+		
+		FOREIGN KEY (idletterkey, idnumberkey)
+        	REFERENCES tblItems
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+		,
+		FOREIGN KEY (idcitylocation, id_museumname)
+        	REFERENCES tblMuseumInfo
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+--added the Idenification information for each work
+\copy tblIdenification FROM 'idenification.csv' DELIMITER ',' CSV
+
+
+CREATE TABLE tblitemcondition(
+	conletter key_latter_format NOT NULL,
+	conNumber key_number_format NOT NULL,
+	conkey condition_format,
+	conDescription description_format,
+	PRIMARY KEY(conletter, conNumber, conkey),
+	FOREIGN KEY (conletter, conNumber)
+        	REFERENCES tblItems
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+--added the condition for each of the work
+
+
+\copy tblitemcondition FROM 'condition.csv' DELIMITER ',' CSV
+
+
+
+
+--CREATE view for long term borrowed items
+DROP VIEW IF EXISTS longtermitem CASCADE;
+CREATE VIEW longtermitem
+AS	
+	SELECT 
+		conletter AS "Letter Key",
+		conNumber AS "Number Key"
+	FROM tblitemcondition
+	WHERE 
+		conkey = 'LB'
+;
+
+--CREATE view for potential works that could be borrowed
+DROP VIEW IF EXISTS potentialitem CASCADE;
+CREATE VIEW potentialitem
+AS	
+	SELECT 
+		conletter AS "Letter Key",
+		conNumber AS "Number Key"
+	FROM tblitemcondition
+	WHERE 
+		conkey = 'PB'
+;
+
+
+
+--INSERT INTO locationitem about the long term borrowed works
+INSERT INTO tbllocationitem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate
+)
+SELECT 'Israel_Museum',	'Israel',	'storage',	"Letter Key",	"Number Key",	'2015-05-30'	
+FROM longtermitem;
+
+
+
+
+--create new exhibition
+INSERT INTO tblexhibitions
+(
+	eximuseumname,
+	exiroomlocation,
+	exicitylocation,
+	existartdate,
+	exienddate,
+	exiexhibitionsname,
+	exidescption
+)
+VALUES (
+'Israel_Museum','gallery A','Israel', '2017-4-3','2017-8-8','Special Exhibition','Welcome! this exhibition will be the specail exhibition which just for our guests!!'
+);
+
+
+--INSERT INTO locationitem about potential works that could be borrowed
+INSERT INTO tbllocationitem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate,
+	locitem_enddate
+)
+SELECT 'Israel_Museum',	'Israel',	'storage',	t."Letter Key",	t."Number Key",	'2017-4-1','2017-4-2'
+FROM potentialitem t, tblexhibitions s
+WHERE 
+	s.exiexhibitionsname='Special Exhibition' 
+
+;
+
+--INSERT INTO locationitem about potential works that could be borrowed
+INSERT INTO tbllocationitem
+(
+	locitem_museumname,
+	locitem_city,
+	locitem_location,
+	locitem_letterkey,
+	locitem_numberkey,
+	locitem_startdate,
+	locitem_enddate
+)
+SELECT 'Israel_Museum',	'Israel',	'storage',	t."Letter Key",	t."Number Key",	'2017-4-3','2017-8-8'
+FROM potentialitem t, tblexhibitions s
+WHERE 
+	s.exiexhibitionsname='Special Exhibition' 
+	--AND current_date  =  '2017-2-3'
+;
+
+INSERT INTO tblexhibitionsitems
+(
+	selmuseumname,
+	selmuseumcity,
+	selroom,
+	selstartdate,
+	selenddate,
+	selletteritem,
+	selnumberitem
+)
+SELECT 'Israel_Museum', 'Israel','gallery A','2017-4-3','2017-8-8',"Letter Key","Number Key"
+FROM potentialitem;
+
+
+
+
+
+--------------------------------------------
+----------------VIEWs----------------------
+--------------------------------------------
+
+
+DROP VIEW IF EXISTS exhibitionsitemView_IN_A_2_a CASCADE; 
+CREATE VIEW exhibitionsitemView_IN_A_2_a
+AS 
+SELECT 
+	selmuseumname AS "Museum Name",
+	selmuseumcity AS "City",
+	selroom AS "Room",
+	selstartdate AS "Start Date",
+	selenddate AS "End Date",
+	selletteritem AS "Letter Key",
+	selnumberitem AS "Number Key"
+FROM tblexhibitionsitems
+WHERE
+	selstartdate = '2017-4-3'
+;  
+
+--tblexhibitions
+DROP VIEW IF EXISTS exhibitionsView2_a CASCADE;
+CREATE VIEW exhibitionsView2_a
+AS 
+SELECT 
+	eximuseumname AS "Museum Name",
+	exiroomlocation AS "Room",
+	exicitylocation AS "City",
+	existartdate AS "Start Date",
+	exienddate AS "End Date",
+	exiexhibitionsname AS "Exhibition Name",
+	exidescption AS "Description"
+FROM tblexhibitions;
+
+--tblexhibitionsitems
+DROP VIEW IF EXISTS exhibitionsitemsView2_a CASCADE;
+CREATE VIEW exhibitionsitemsView2_a
+AS 
+SELECT 
+	selmuseumname AS "Museum Name",
+	selmuseumcity AS "City",
+	selroom AS "Room",
+	selstartdate AS "Start Date",
+	selenddate AS "End Date",
+	selletteritem AS "Letter Key",
+	selnumberitem AS "Number Key"
+FROM tblexhibitionsitems; 
+
+--tbllocation
+DROP VIEW IF EXISTS locationView2_a CASCADE;
+CREATE VIEW locationView2_a
+AS 
+SELECT 
+	loccity AS "City",
+	locmuseumname AS "Museum Name",
+	locroomname AS "Room",
+	loclength AS "Length",
+	locwidth AS "Width",
+	mincapacity AS "Min Capacity",
+	maxcapacity AS "Max Capacity"
+FROM tbllocation; 
+--tbllocationitem
+DROP VIEW IF EXISTS locationitemView2_a CASCADE;
+CREATE VIEW locationitemView2_a
+AS 
+SELECT 
+	locitem_museumname AS "Museum Name",
+	locitem_city AS "City",
+	locitem_location AS "Room",
+	locitem_letterkey AS "Letter Key",
+	locitem_numberkey AS "Number Key",
+	locitem_startdate AS "Start Date",
+	locitem_enddate AS "End Date"
+FROM tbllocationitem; 
+DROP VIEW IF EXISTS IdenificationView CASCADE;
+CREATE VIEW IdenificationView
+AS
+SELECT
+	idletterkey AS "Letter Key",
+	idnumberkey AS "Number Key",
+	idcitylocation AS "City",
+	id_museumname AS "Museum Name"
+	FROM tblIdenification
+;
+DROP VIEW IF EXISTS museumView2_a CASCADE;
+CREATE VIEW museumView2_a
+AS
+SELECT 
+	minfo_citylocation AS "City",
+	minfo_name AS "Name",
+	minfo_tel AS "Phone",
+	minfo_contactname AS "Contact Name"
+FROM tblmuseuminfo
+;
+DROP VIEW IF EXISTS ItemConditionview CASCADE;
+CREATE VIEW ItemConditionview
+AS
+SELECT
+	conletter AS "Letter Key",
+	conNumber AS "Number Key",
+	conkey AS "Condition ID",
+	conDescription AS "Condition Description"
+FROM tblitemcondition
+;
+
+DROP VIEW IF EXISTS exhibitionsView2_a CASCADE;
+DROP VIEW IF EXISTS exhibitionsitemsView2_a CASCADE;
+DROP VIEW IF EXISTS exhibitionsitemView_IN_A_2_a CASCADE; 
+DROP VIEW IF EXISTS locationView2_a CASCADE;
+DROP VIEW IF EXISTS locationitemView2_a CASCADE;
+DROP VIEW IF EXISTS IdenificationView CASCADE;
+DROP VIEW IF EXISTS museumView2_a CASCADE;
+DROP VIEW IF EXISTS ItemConditionview CASCADE;

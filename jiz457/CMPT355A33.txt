@@ -1,0 +1,295 @@
+
+/*
+Because I was use insert for all the new data, therefore, I will saved my date in the structure which I had, 
+*/
+
+
+--CREATE 3 exhibition 
+INSERT INTO tblexhibitions
+values 
+(
+  'Israel_Museum',
+  'gallery A',
+  'Israel',
+  '2016-04-02',
+  '2016-06-02',
+  'Dimension of Culture: Asian',
+  'China, Japan, Vietnam, North Korea and South Korea'
+  );
+
+INSERT INTO tblexhibitions
+values 
+(
+  'Israel_Museum',
+  'gallery B',
+  'Israel',
+  '2016-04-02',
+  '2016-06-02',
+  'Mike Show',
+ 'China, Japan, Vietnam, North Korea and South Korea'
+  );
+
+INSERT INTO tblexhibitions
+values 
+(
+  'Israel_Museum',
+  'gallery C',
+  'Israel',
+  '2016-04-02',
+  '2016-06-02',
+  'Great Show',
+  'China, Japan, Vietnam, North Korea and South Korea'
+  );
+--into location items
+-- GC_table
+-- GB_table
+-- GA_table
+INSERT INTO tbllocationitem
+SELECT 
+	'Israel_Museum','Israel','gallery A', itmletter, itmnumber,'2016-04-01','2016-06-03' 
+FROM GA_table;
+
+INSERT INTO tbllocationitem
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2016-06-04','2016-06-30' 
+FROM GA_table;
+
+INSERT INTO tbllocationitem
+SELECT 
+	'Israel_Museum','Israel','gallery B', itmletter, itmnumber,'2016-04-01','2016-06-03' 
+FROM GB_table;
+
+INSERT INTO tbllocationitem
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2016-06-04','2016-08-31' 
+FROM GB_table;
+
+INSERT INTO tbllocationitem
+SELECT 
+	'Israel_Museum','Israel','gallery C', itmletter, itmnumber,'2016-04-01','2016-06-03' 
+FROM GC_table;
+
+INSERT INTO tbllocationitem
+SELECT 
+	'Israel_Museum','Israel','storage', itmletter, itmnumber,'2016-06-04','2016-07-31' 
+FROM GC_table;
+
+--into exhibiton items
+INSERT INTO tblexhibitionsitems
+SELECT 
+	'Israel_Museum','Israel','gallery A','2016-04-02','2016-06-02' , itmletter, itmnumber
+FROM GA_table;
+
+INSERT INTO tblexhibitionsitems
+SELECT 
+	'Israel_Museum','Israel','gallery B', '2016-04-02','2016-06-02' , itmletter, itmnumber
+FROM GB_table;
+
+INSERT INTO tblexhibitionsitems
+SELECT 
+	'Israel_Museum','Israel','gallery C', '2016-04-02','2016-06-02' , itmletter, itmnumber
+FROM GC_table;
+
+
+
+DROP DOMAIN IF EXISTS Time_format CASCADE;
+
+CREATE DOMAIN  Time_format AS TIME;
+
+ALTER TABLE tblexhibitionsitems
+ADD column starttime Time_format,
+ADD column endtime Time_format;
+
+
+ALTER TABLE tbllocationitem
+ADD column starttime Time_format,
+ADD column endtime Time_format;
+
+
+
+
+
+UPDATE tblexhibitionsitems
+SET  starttime = '12:00', endtime = '12:00';
+
+UPDATE tbllocationitem
+SET starttime = '12:00';
+
+UPDATE tbllocationitem
+SET  endtime = '12:00'
+WHERE locitem_enddate is not null;
+
+
+--a
+/*
+select 
+  locitem_location,
+  locitem_letterkey,
+  locitem_numberkey,
+  locitem_startdate,
+  starttime,
+  locitem_enddate,
+  endtime
+FROM
+  tbllocationitem
+  ;
+ */
+ DROP VIEW IF EXISTS aview CASCADE;
+ CREATE VIEW aview AS(
+ select 
+  s.locitem_location,
+  s.locitem_letterkey,
+  s.locitem_numberkey,
+  s.locitem_startdate,
+  s.locitem_enddate
+ from  tbllocationitem s
+ WHERE
+     
+    s.locitem_numberkey = 731 -- choice one items current in the exhibition
+  AND
+    s.locitem_letterkey = 'BB'
+  AND
+    s.locitem_startdate < '2016-11-01' 
+
+
+UNION
+
+ select 
+  s.locitem_location,
+  s.locitem_letterkey,
+  s.locitem_numberkey,
+  s.locitem_startdate,
+  s.locitem_enddate
+ from  tbllocationitem s
+ WHERE
+     
+    s.locitem_numberkey = 731-- choice one items current in the exhibition
+  AND
+    s.locitem_letterkey = 'BB'
+  AND
+    s.locitem_enddate <'2015-11-01' 
+    
+    
+UNION
+
+ select 
+  s.locitem_location,
+  s.locitem_letterkey,
+  s.locitem_numberkey,
+  s.locitem_startdate,
+  s.locitem_enddate
+ from  tbllocationitem s
+ WHERE
+     
+    s.locitem_numberkey = 731-- choice one items current in the exhibition
+  AND
+    s.locitem_letterkey = 'BB'
+  AND
+    s.locitem_enddate <'2015-11-01'
+  AND 
+    s.locitem_enddate is NULL
+    );
+
+  
+--b
+/*
+select 
+  s.itmname,
+  t.selstartdate,
+  t.selenddate
+from
+  tblexhibitionsitems t, tblitems s
+WHERE 
+    t.selletteritem = s.itmletter
+  AND 
+    t.selnumberitem = s.itmnumber
+order by
+  t.selstartdate,
+  s.itmname
+;
+
+*/
+
+-- find the exhibition by the date 
+DROP VIEW IF EXISTS bview CASCADE;
+CREATE VIEW bview AS (
+with currentexhibition 
+as
+(
+  select 
+      exiroomlocation,
+      existartdate,
+      exienddate,
+      exiexhibitionsname
+  from
+    tblexhibitions
+  where
+    existartdate < '2016-11-01'
+  
+  UNION
+  
+    select 
+      exiroomlocation,
+      existartdate,
+      exienddate,
+      exiexhibitionsname
+  from
+    tblexhibitions
+  where
+    exienddate > '2015-11-01' and existartdate < '2016-11-01'
+    
+  
+  )
+  select 
+      w.itmname,
+      s.selstartdate,
+      s.selenddate
+  From 
+      currentexhibition t, tblexhibitionsitems s, tblitems w
+  Where 
+      s.selroom = t.exiroomlocation
+    AND
+      s.selstartdate= t.existartdate
+    AND
+      s.selenddate = t.exienddate
+    AND
+      s.selletteritem = w.itmletter
+    AND
+      s.selnumberitem = w.itmnumber
+  order by 
+    t.existartdate,
+    w.itmname
+    )
+    ;
+  
+
+
+--c
+
+/*
+select 
+  exiexhibitionsname,
+  exiroomlocation,
+  existartdate,
+  exienddate
+from
+  tblexhibitions
+;
+*/
+
+DROP VIEW IF EXISTS cview CASCADE;
+CREATE VIEW cview as(
+select 
+  exiexhibitionsname,
+  exiroomlocation,
+  existartdate,
+  exienddate
+from
+  tblexhibitions
+where
+  tblexhibitions.existartdate < '2016-11-01'
+order by 
+    tblexhibitions.existartdate
+    )
+;
+
